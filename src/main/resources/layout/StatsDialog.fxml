@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright (C) 2019 Raven Computing
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. -->
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane styleClass="editor-dialog" xmlns="http://javafx.com/javafx/8.0.171"
+  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.raven.icecrusher.ui.dialog.StatsDialogController">
+  <children>
+    <VBox prefHeight="100.0" prefWidth="480.0">
+      <children>
+        <Label fx:id="mainLabel" text="Stats">
+          <font>
+            <Font name="System Bold" size="14.0" />
+          </font>
+          <VBox.margin>
+            <Insets bottom="25.0" left="40.0" />
+          </VBox.margin>
+        </Label>
+        <HBox prefHeight="100.0" prefWidth="200.0" spacing="70.0">
+          <children>
+            <Label text="Minimum:">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelMin" text="N/A">
+              <HBox.margin>
+                <Insets />
+              </HBox.margin>
+            </Label>
+          </children>
+          <VBox.margin>
+            <Insets left="60.0" right="30.0" top="5.0" />
+          </VBox.margin>
+        </HBox>
+        <HBox layoutX="70.0" layoutY="78.0" prefHeight="100.0"
+          prefWidth="200.0" spacing="66.0">
+          <children>
+            <Label text="Maximum:">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelMax" text="N/A">
+              <HBox.margin>
+                <Insets />
+              </HBox.margin>
+            </Label>
+          </children>
+          <VBox.margin>
+            <Insets left="60.0" right="30.0" top="5.0" />
+          </VBox.margin>
+        </HBox>
+        <HBox layoutX="70.0" layoutY="78.0" prefHeight="100.0"
+          prefWidth="200.0" spacing="76.0">
+          <children>
+            <Label text="Average:" HBox.hgrow="ALWAYS">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelAvg" text="N/A" HBox.hgrow="ALWAYS">
+              <HBox.margin>
+                <Insets />
+              </HBox.margin>
+            </Label>
+          </children>
+          <VBox.margin>
+            <Insets left="60.0" right="30.0" top="5.0" />
+          </VBox.margin>
+        </HBox>
+        <HBox layoutX="70.0" layoutY="78.0" prefHeight="18.0"
+          prefWidth="200.0" spacing="40.0">
+          <children>
+            <Label prefWidth="100.0" text="Sum:">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelSum" text="N/A">
+              <HBox.margin>
+                <Insets />
+              </HBox.margin>
+            </Label>
+          </children>
+          <VBox.margin>
+            <Insets left="60.0" top="5.0" />
+          </VBox.margin>
+        </HBox>
+        <HBox alignment="CENTER">
+          <children>
+            <JFXButton onAction="#onClose" text="Close">
+              <HBox.margin>
+                <Insets bottom="5.0" right="5.0" />
+              </HBox.margin>
+              <font>
+                <Font name="System Bold" size="15.0" />
+              </font>
+            </JFXButton>
+          </children>
+          <padding>
+            <Insets top="5.0" />
+          </padding>
+          <VBox.margin>
+            <Insets bottom="5.0" top="30.0" />
+          </VBox.margin>
+        </HBox>
+      </children>
+      <StackPane.margin>
+        <Insets />
+      </StackPane.margin>
+      <padding>
+        <Insets bottom="10.0" top="20.0" />
+      </padding>
+    </VBox>
+  </children>
+</StackPane>

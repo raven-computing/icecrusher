@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright (C) 2019 Raven Computing
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. -->
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane style="-fx-background-color: #282828;"
+  stylesheets="@../css/dark_theme.css" xmlns="http://javafx.com/javafx/8.0.171"
+  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.raven.icecrusher.ui.plot.LineChartController">
+  <children>
+    <BorderPane AnchorPane.bottomAnchor="0.0"
+      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+      AnchorPane.topAnchor="0.0">
+      <center>
+        <AnchorPane BorderPane.alignment="TOP_CENTER">
+          <children>
+            <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+              <children>
+                <ScrollPane id="line-chart-control-scroll-pane"
+                  fitToHeight="true" fitToWidth="true" maxHeight="250.0"
+                  minHeight="250.0" prefHeight="250.0" vbarPolicy="NEVER">
+                  <content>
+                    <BorderPane maxHeight="250.0" prefHeight="250.0">
+                      <left>
+                        <AnchorPane prefWidth="200.0"
+                          BorderPane.alignment="TOP_LEFT">
+                          <children>
+                            <JFXComboBox fx:id="cbColumnX"
+                              labelFloat="true" promptText="X-Axis"
+                              AnchorPane.leftAnchor="30.0"
+                              AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="25.0" />
+                            <JFXComboBox fx:id="cbColumnY"
+                              labelFloat="true" layoutX="40.0" layoutY="40.0"
+                              promptText="Y-Axis" AnchorPane.leftAnchor="30.0"
+                              AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="75.0" />
+                            <JFXTextField fx:id="txtChartTitle"
+                              labelFloat="true" promptText="Title"
+                              AnchorPane.leftAnchor="30.0"
+                              AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="125.0" />
+                            <JFXButton fx:id="btnPlotExport"
+                              buttonType="RAISED" disable="true"
+                              focusTraversable="false" onAction="#onPlot"
+                              text="Plot" AnchorPane.leftAnchor="30.0"
+                              AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="180.0">
+                              <padding>
+                                <Insets bottom="10.0" top="10.0" />
+                              </padding>
+                            </JFXButton>
+                          </children>
+                        </AnchorPane>
+                      </left>
+                      <right>
+                        <AnchorPane BorderPane.alignment="TOP_RIGHT">
+                          <children>
+                            <ScrollPane fitToHeight="true"
+                              fitToWidth="true" hbarPolicy="NEVER"
+                              maxHeight="240.0" prefHeight="200.0"
+                              prefWidth="339.0" styleClass="settingsview"
+                              AnchorPane.leftAnchor="20.0"
+                              AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="10.0">
+                              <content>
+                                <AnchorPane styleClass="settingsview">
+                                  <children>
+                                    <com.raven.icecrusher.ui.plot.SettingsListView
+                                      fx:id="settingsList" alignment="TOP_RIGHT"
+                                      spacing="10.0" styleClass="settingsview"
+                                      AnchorPane.bottomAnchor="0.0"
+                                      AnchorPane.leftAnchor="0.0"
+                                      AnchorPane.rightAnchor="0.0"
+                                      AnchorPane.topAnchor="0.0" />
+                                  </children>
+                                </AnchorPane>
+                              </content>
+                              <padding>
+                                <Insets right="10.0" />
+                              </padding>
+                            </ScrollPane>
+                          </children>
+                        </AnchorPane>
+                      </right>
+                      <center>
+                        <AnchorPane BorderPane.alignment="TOP_CENTER">
+                          <children>
+                            <JFXTextField fx:id="txtAxisXLabel"
+                              labelFloat="true" prefWidth="150.0"
+                              promptText="X-Axis Label"
+                              AnchorPane.leftAnchor="20.0"
+                              AnchorPane.topAnchor="25.0" />
+                            <JFXTextField fx:id="txtAxisYLabel"
+                              labelFloat="true" layoutX="30.0" layoutY="40.0"
+                              prefWidth="150.0" promptText="Y-Axis Label"
+                              AnchorPane.leftAnchor="20.0"
+                              AnchorPane.topAnchor="75.0" />
+                            <JFXComboBox fx:id="cbTitlePosition"
+                              labelFloat="true" prefWidth="150.0"
+                              promptText="Title Position"
+                              AnchorPane.leftAnchor="20.0"
+                              AnchorPane.topAnchor="125.0" />
+                            <JFXComboBox fx:id="cbLegendPosition"
+                              labelFloat="true" layoutX="10.0" layoutY="10.0"
+                              prefWidth="150.0" promptText="Legend Position"
+                              AnchorPane.leftAnchor="20.0"
+                              AnchorPane.topAnchor="175.0" />
+                            <JFXCheckBox fx:id="checkXIsDate"
+                              checkedColor="#1668ff" selected="true"
+                              text="Date" AnchorPane.leftAnchor="200.0"
+                              AnchorPane.topAnchor="5.0" />
+                            <JFXComboBox fx:id="cbDateFormat"
+                              prefWidth="150.0" promptText="Format"
+                              AnchorPane.leftAnchor="200.0"
+                              AnchorPane.topAnchor="25.0" />
+                            <JFXButton fx:id="btnYAdd"
+                              disable="true" layoutY="66.0" onAction="#onAdd"
+                              prefHeight="43.0" prefWidth="120.0" text="Add"
+                              AnchorPane.leftAnchor="200.0"
+                              AnchorPane.topAnchor="180.0">
+                              <padding>
+                                <Insets bottom="10.0" top="10.0" />
+                              </padding>
+                            </JFXButton>
+                            <JFXCheckBox fx:id="checkDataPoints"
+                              checkedColor="#1668ff" selected="false"
+                              text="Show Datapoints"
+                              AnchorPane.leftAnchor="200.0"
+                              AnchorPane.topAnchor="75.0" />
+                            <JFXCheckBox fx:id="checkShowGrid"
+                              checkedColor="#1668ff" layoutX="210.0"
+                              layoutY="85.0" selected="true" text="Show Grid"
+                              AnchorPane.leftAnchor="200.0"
+                              AnchorPane.topAnchor="110.0" />
+                            <JFXCheckBox fx:id="checkWhiteBackground"
+                              checkedColor="#1668ff" layoutX="210.0"
+                              layoutY="120.0" text="White Background"
+                              AnchorPane.leftAnchor="200.0"
+                              AnchorPane.topAnchor="145.0" />
+                          </children>
+                        </AnchorPane>
+                      </center>
+                    </BorderPane>
+                  </content>
+                </ScrollPane>
+                <AnchorPane fx:id="chartPane" cache="true">
+                  <VBox.margin>
+                    <Insets />
+                  </VBox.margin>
+                  <children>
+                    <LineChart fx:id="chart"
+                      AnchorPane.bottomAnchor="0.0"
+                      AnchorPane.leftAnchor="0.0"
+                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <xAxis>
+                        <NumberAxis fx:id="chartXAxis" side="BOTTOM" />
+                      </xAxis>
+                      <yAxis>
+                        <NumberAxis fx:id="chartYAxis" side="LEFT" />
+                      </yAxis>
+                    </LineChart>
+                  </children>
+                </AnchorPane>
+              </children>
+            </VBox>
+          </children>
+        </AnchorPane>
+      </center>
+      <top>
+        <AnchorPane styleClass="bigmenubar"
+          BorderPane.alignment="CENTER">
+          <children>
+            <HBox alignment="CENTER_LEFT">
+              <children>
+                <JFXButton contentDisplay="GRAPHIC_ONLY"
+                  onAction="#onClose" text="Close">
+                  <graphic>
+                    <ImageView fitHeight="50.0" fitWidth="56.0"
+                      pickOnBounds="true" preserveRatio="true">
+                      <image>
+                        <Image url="@../icon/ic_back_white_48dp.png" />
+                      </image>
+                    </ImageView>
+                  </graphic>
+                </JFXButton>
+              </children>
+            </HBox>
+            <VBox alignment="CENTER" fillWidth="false"
+              mouseTransparent="true" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+              <children>
+                <Label alignment="CENTER" contentDisplay="CENTER"
+                  text="Line Chart" textFill="WHITE"
+                  AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="200.0"
+                  AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="10.0">
+                  <font>
+                    <Font size="20.0" />
+                  </font>
+                </Label>
+              </children>
+            </VBox>
+          </children>
+        </AnchorPane>
+      </top>
+    </BorderPane>
+  </children>
+</AnchorPane>

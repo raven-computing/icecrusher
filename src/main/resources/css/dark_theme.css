@@ -1,0 +1,1129 @@
+/* 
+ * Copyright (C) 2019 Raven Computing
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+* {
+    -fx-primary : #282828;
+    -fx-secondary : #383838;
+    -fx-primarytext : #b2b2b2;
+    -fx-secondarytext : #ffffff;
+    -fx-primarylabel : #1668ff;
+    -fx-secondarylabel:#1976d2;
+    -fx-dialog-text : #ffffff;
+    -fx-dialog-prompt-text : #787878;
+    -fx-dialog-input-line : #ffffff;
+}
+
+.root{
+    -fx-background-color: -fx-primary;
+}
+
+#mainTabsContainer{
+    -fx-box-border: transparent;
+}
+
+.split-pane:vertical .split-pane-divider{
+    -fx-background-color: linear-gradient(to top,
+        derive(#74747a,-60%), derive(#74747a,60%));
+}
+
+.scroll-pane .viewport{
+    -fx-background-color: -fx-primary;
+}
+
+.preference-separator{
+    -fx-text-fill: -fx-primarylabel;
+}
+
+.about-label{
+    -fx-text-fill: -fx-primarylabel;
+}
+
+.menu-bar{
+    -fx-base: -fx-primary;
+    -fx-background-color: -fx-primary;
+}
+
+.context-menu{
+    -fx-background-color:  derive(-fx-primary, 20%);
+}
+
+.context-menu .menu-item{
+    -fx-text-fill: -fx-secondarytext;
+}
+
+.context-menu .menu-item .label{
+    -fx-text-fill: -fx-secondarytext;
+}
+
+.scroll-bar:vertical{
+    -fx-background-color: -fx-secondary;
+}
+
+.scroll-bar:horizontal{
+    -fx-background-color: -fx-secondary;
+    -fx-border-color: transparent -fx-secondary -fx-secondary -fx-secondary;
+}
+
+.increment-button, .decrement-button{
+    -fx-background-color: -fx-secondary;
+    -fx-border-color: -fx-secondary;
+}
+
+.increment-button:hover, .decrement-button:hover{
+    -fx-background-color: derive(-fx-secondary, 20%);
+    -fx-border-color: derive(-fx-secondary, 20%);
+}
+
+.increment-button:pressed, .decrement-button:pressed{
+    -fx-background-color: derive(-fx-secondary, -20%);
+    -fx-border-color: derive(-fx-secondary, -20%);
+}
+
+.increment-button .increment-arrow, .decrement-button .decrement-arrow{
+    -fx-background-color: -fx-secondarytext;
+}
+
+.scroll-bar:vertical .track{
+    -fx-background-color: linear-gradient(to right, 
+        derive(-fx-secondary,50%), derive(-fx-secondary,80%));
+}
+
+.scroll-bar:horizontal .track{
+    -fx-background-color: linear-gradient(to bottom, 
+        derive(-fx-secondary,50%), derive(-fx-secondary,80%));
+}
+
+.scroll-bar:vertical:hover .track, .scroll-bar:vertical:pressed .track{
+    -fx-background-color: linear-gradient(to right, 
+        derive(-fx-secondary,60%), derive(-fx-secondary,90%));
+}
+
+.scroll-bar:horizontal:hover .track, .scroll-bar:horizontal:pressed .track{
+    -fx-background-color: linear-gradient(to bottom, 
+        derive(-fx-secondary,60%), derive(-fx-secondary,90%));
+}
+
+.scroll-bar:vertical .thumb{
+    -fx-background-color: linear-gradient(to right, 
+        derive(-fx-secondary,-40%), derive(-fx-secondary,10%));
+
+    -fx-background-radius: 2em;
+}
+
+.scroll-bar:horizontal .thumb{
+    -fx-background-color: linear-gradient(to bottom, 
+        derive(-fx-secondary,-40%), derive(-fx-secondary,10%));
+
+    -fx-background-radius: 2em;
+}
+
+.scroll-bar:vertical .thumb:hover{
+    -fx-background-color: linear-gradient(to right, 
+        derive(-fx-primarylabel,-20%), derive(-fx-primarylabel,30%));
+}
+
+.scroll-bar:horizontal .thumb:hover{
+    -fx-background-color: linear-gradient(to bottom, 
+        derive(-fx-primarylabel,-20%), derive(-fx-primarylabel,30%));
+}
+
+.scroll-bar:vertical .thumb:pressed{
+    -fx-background-color: linear-gradient(to right, 
+        derive(-fx-primarylabel,-40%), derive(-fx-primarylabel,10%));
+}
+
+.scroll-bar:horizontal .thumb:pressed{
+    -fx-background-color: linear-gradient(to bottom, 
+        derive(-fx-primarylabel,-40%), derive(-fx-primarylabel,10%));
+}
+
+
+
+/********** button **********/
+.jfx-button{
+    -fx-text-fill: white;
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-primarylabel;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-font-size: 13pt;
+}
+
+/********** toggle button **********/
+.jfx-toggle-button{
+    -jfx-toggle-color: -fx-primarylabel;
+}
+
+/********** text-field **********/
+.jfx-text-field{
+    -fx-highlight-fill: -fx-primarylabel;
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+    -jfx-focus-color: -fx-dialog-prompt-text;
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.jfx-text-field .text{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.jfx-text-field .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.jfx-text-field .input-focused-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+/********** text-area **********/
+.text-area{
+    -fx-highlight-fill: -fx-primarylabel;
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+    -jfx-focus-color: -fx-primarylabel;
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.text-area .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.text-area .content{
+      -fx-background-color: derive(-fx-primary, -20%);
+  }
+
+/********** combo-box **********/
+.jfx-combo-box{
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+    -jfx-focus-color: -fx-dialog-prompt-text;
+}
+
+.jfx-combo-box .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.jfx-combo-box .arrow{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.jfx-combo-box .list-view{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.jfx-combo-box .list-cell:selected{
+    -fx-background-color: -fx-primarylabel;
+}
+
+.jfx-combo-box .list-cell:filled{
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-primarylabel;
+}
+
+.jfx-combo-box .list-cell:filled:hover{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.jfx-combo-box .list-cell:filled:selected:hover{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.jfx-combo-box .list-cell .text{
+    -fx-fill: -fx-dialog-text;
+}
+
+.jfx-combo-box .input-focused-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+/********** check-box **********/
+.jfx-check-box{
+    -fx-text-fill: -fx-dialog-text;
+    -fx-checked-color: -fx-primarylabel;
+    -fx-unchecked-color: -fx-primarylabel;
+}
+
+.jfx-check-box .jfx-rippler .box-container .box{
+    -fx-border-color: -fx-primarylabel;
+}
+
+/********** spinner **********/
+.jfx-spinner:indeterminate .arc{
+    -fx-stroke: -fx-primarylabel;
+}
+
+/********** progress bar **********/
+.jfx-progress-bar > .bar {
+    -fx-background-color: -fx-primarylabel;
+}
+
+
+
+/**********************************************
+*             Preferences Activity            *
+***********************************************/
+
+.preferences-activity .scroll-pane{
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-primary;
+    -fx-focus-color: transparent;
+}
+
+.preferences-activity .scroll-pane .viewport{
+    -fx-border-color: -fx-primary;
+}
+
+
+
+/**********************************************
+*              Activity Menu Bar              *
+***********************************************/
+
+.bigmenubar{
+    -fx-background-color: #000000;
+}
+
+.bigmenubar .button{
+    -fx-background-color: #000000;
+    -fx-border-color: #000000;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+}
+
+
+
+/**********************************************
+*                  Snackbar                   *
+***********************************************/
+
+.jfx-snackbar-content{
+     -fx-background-color: -fx-secondarylabel;
+}
+
+.jfx-snackbar-toast{
+     -fx-text-fill: -fx-secondarytext;
+}
+
+.jfx-snackbar .jfx-button{
+    -fx-font-size: 14;
+}
+
+
+
+/**********************************************
+*               Tab Pane,   ALL THEMES        *
+***********************************************/
+
+.jfx-tab-pane .tab-selected-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+.jfx-tab-pane .tab-header-area .jfx-rippler{
+    -jfx-rippler-fill: -fx-primary;
+}
+
+.jfx-tab-pane .menu-item .label{
+    -fx-text-fill: -fx-secondarytext;
+}
+
+.jfx-tab-pane .control-buttons-tab .tab-down-button{
+    -fx-background-color: -fx-primarylabel;
+}
+
+.jfx-tab-pane .control-buttons-tab .jfx-rippler{
+    -jfx-rippler-fill: -fx-primarylabel;
+}
+
+.jfx-tab-pane .button{
+    -fx-text-fill: -fx-primarytext;
+    -fx-background-color: -fx-secondary;
+    -fx-border-color: none;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+}
+
+.jfx-tab-pane .button .jfx-rippler{
+    -jfx-rippler-fill: red;
+}
+
+.tab{
+    -fx-background-color: -fx-secondary;
+}
+
+.tab-header-background{
+    -fx-background-color: -fx-secondary;
+}
+
+.tab-label{
+    -fx-text-fill: -fx-secondarytext;
+}
+
+
+
+/**********************************************
+*            Tab Pane,   DARK THEME ONLY      *
+***********************************************/
+
+.tabs-pane-dark{
+    -fx-background-color: linear-gradient(to bottom right,
+        derive(-fx-secondary,-30%), derive(-fx-secondary,30%));
+
+    -fx-focus-color: transparent;
+}
+
+.tabs-pane-dark #labelHint{
+    -text-color-anim: -fx-secondarytext;
+    -fx-text-fill: -text-color-anim;
+    -fx-font-weight: bold
+}
+
+.tabs-pane-dark .table-view{
+    /*-fx-table-header-border-color: red;*/
+    -fx-table-cell-border-color: -fx-dialog-prompt-text;
+    -fx-focus-color: #cccccc;
+}
+
+
+/* This is shown when the table has no rows and/or no columns. */
+.tabs-pane-dark .table-view .placeholder{
+    -fx-background-color: linear-gradient(to bottom right,
+        derive(-fx-secondary,-30%), derive(-fx-secondary,30%));
+}
+
+.tabs-pane-dark .table-view .placeholder .label{
+    -fx-text-fill: -fx-secondarytext;
+    -fx-font-weight: bold
+}
+
+.tabs-pane-dark .table-view > .virtual-flow > .corner{
+    -fx-background-color: linear-gradient(to bottom, 
+        derive(-fx-secondary,20%), derive(-fx-secondary,-20%));
+}
+
+.tabs-pane-dark .table-view .column-header,
+.tabs-pane-dark .table-view > .column-header-background > .show-hide-columns-button{
+    -fx-background-color: transparent, linear-gradient(#131313 0%, #424141 100%), linear-gradient(#131313 0%, #424141 100%);
+    -fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
+    -fx-font-weight: bold;
+    -fx-size: 2em;
+    -fx-padding: 0.166667em;
+}
+
+.tabs-pane-dark .table-view .filler{
+    -fx-background-color: transparent, -fx-secondary, -fx-secondary;
+    -fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
+    -fx-size: 2em;
+}
+
+.tabs-pane-dark .table-view .column-header-background .label{
+    -fx-text-fill: white;
+}
+
+.tabs-pane-dark .table-view .table-cell{
+    -fx-text-fill: white;
+}
+
+/* Fixes the visual bug when loading new DataFrame view in dark theme mode.
+   We use the 'unselected' pseudo class here defined by all implementing cells */
+.tabs-pane-dark .table-view .table-cell:focused:unselected{
+    -fx-background-color: -fx-table-cell-border-color, #616161;
+    -fx-background-insets: 0, 0 0 1 0;
+}
+
+.tabs-pane-dark .table-row-cell{
+    -fx-background-color: -fx-table-cell-border-color, #616161;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+.tabs-pane-dark .table-row-cell:odd{
+    -fx-background-color: -fx-table-cell-border-color, derive(#616161, -7%);
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+
+
+/**********************************************
+*              Editor Dialog                  *
+***********************************************/
+
+.editor-dialog{
+    -fx-background-color: -fx-primary;
+    -fx-font-color: -fx-dialog-text;
+    -fx-border-color: -fx-dialog-prompt-text;
+    -fx-border-width: 1;
+}
+
+.editor-dialog .label{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+/********** combo-box **********/
+.editor-dialog .jfx-combo-box{
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+}
+
+.editor-dialog .jfx-combo-box .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.editor-dialog .jfx-combo-box .arrow{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.editor-dialog .jfx-combo-box .list-view{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.editor-dialog .jfx-combo-box .list-cell:selected{
+    -fx-background-color: -fx-primarylabel;
+}
+
+.editor-dialog .jfx-combo-box .list-cell:filled{
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-primarylabel;
+}
+
+.editor-dialog .jfx-combo-box .list-cell:filled:hover{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.editor-dialog .jfx-combo-box .list-cell:filled:selected:hover{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.editor-dialog .jfx-combo-box .list-cell .text{
+    -fx-fill: -fx-dialog-text;
+}
+
+.editor-dialog .jfx-combo-box .input-focused-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+/********** text-field **********/
+.editor-dialog .jfx-text-field{
+    -fx-highlight-fill: -fx-primarylabel;
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.editor-dialog .jfx-text-field .text{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.editor-dialog .jfx-text-field .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.editor-dialog .jfx-text-field .input-focused-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+/********** check-box **********/
+.editor-dialog .jfx-check-box{
+    -fx-text-fill: -fx-dialog-text;
+    -fx-checked-color: -fx-primarylabel;
+    -fx-unchecked-color: -fx-primarylabel;
+}
+
+.editor-dialog .jfx-check-box .jfx-rippler .box-container .box{
+    -fx-background-color: -fx-primarylabel;
+    -fx-border-color: -fx-primarylabel;
+}
+
+.editor-dialog .jfx-check-box .jfx-rippler .box-container .box .indeterminate-mark{
+    -fx-background-color: -fx-primarylabel;
+}
+
+/********** button **********/
+.editor-dialog .jfx-button{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.editor-dialog .jfx-button:hover{
+    -fx-background-color: -fx-secondarylabel;
+    -fx-border-color: derive(-fx-secondarylabel, -20%);
+    -fx-text-fill: white;
+}
+
+
+
+/**********************************************
+*              Standard JFXDialog             *
+***********************************************/
+
+.jfx-layout-heading{
+    -fx-background-color: -fx-secondarylabel;
+}
+
+.jfx-layout-heading .label{
+    -fx-text-fill: -fx-dialog-text;
+    -fx-font-size: 12pt;
+}
+
+.jfx-layout-body, .jfx-layout-actions{
+    -fx-background-color: -fx-primary;
+}
+
+.jfx-layout-body .label{
+    -fx-text-fill: -fx-dialog-text;
+    -fx-padding: 20px 0 0 0;
+}
+
+.dialog-button{
+    -fx-border-color: -fx-secondarylabel;
+    -fx-text-fill: -fx-dialog-text;
+    -fx-border-radius: 1px;
+    -fx-background-radius: 3px;
+}
+
+.dialog-button:hover{
+    -fx-background-color: -fx-secondarylabel;
+    -fx-border-color: derive(-fx-secondarylabel, -20%);
+    -fx-text-fill: -fx-dialog-text;
+}
+
+/********** check-box **********/
+.jfx-layout-body .jfx-check-box{
+    -fx-text-fill: -fx-dialog-text;
+    -fx-checked-color: -fx-primarylabel;
+    -fx-unchecked-color: -fx-primarylabel;
+}
+
+.jfx-layout-body .jfx-check-box .jfx-rippler .box-container .box{
+    -fx-background-color: -fx-primarylabel;
+    -fx-border-color: -fx-primarylabel;
+}
+
+.jfx-layout-body .jfx-check-box .jfx-rippler .box-container .box .indeterminate-mark{
+    -fx-background-color: -fx-primarylabel;
+}
+
+
+
+/**********************************************
+*              Create Dialog                  *
+***********************************************/
+
+.create-dialog{
+    -fx-background-color: -fx-primary;
+    -fx-font-color: -fx-dialog-text;
+    -fx-border-color: -fx-dialog-prompt-text;
+    -fx-border-width: 1;
+}
+
+.create-dialog .label{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.create-dialog .scroll-pane{
+    -fx-padding: 0;
+}
+
+.create-dialog .scroll-pane:focused{
+    -fx-background-insets: 0;
+}
+
+.create-dialog .scroll-pane .viewport{
+    -fx-background-color: -fx-secondary;
+}
+
+.create-dialog .scroll-pane .corner{
+    -fx-background-insets: 0;
+}
+
+/********** combo-box **********/
+.create-dialog .jfx-combo-box{
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+}
+
+.create-dialog .jfx-combo-box .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.create-dialog .jfx-combo-box .arrow{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.create-dialog .jfx-combo-box .list-view{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.create-dialog .jfx-combo-box .list-cell:selected{
+    -fx-background-color: -fx-primarylabel;
+}
+
+.create-dialog .jfx-combo-box .list-cell:filled{
+    -fx-background-color: -fx-secondary;
+    -fx-text-fill: -fx-primarylabel;
+}
+
+.create-dialog .jfx-combo-box .list-cell:filled:hover{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.create-dialog .jfx-combo-box .list-cell:filled:selected:hover{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.create-dialog .jfx-combo-box .list-cell .text{
+    -fx-fill: -fx-dialog-text;
+}
+
+.create-dialog .jfx-combo-box .input-focused-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+/********** text-field **********/
+.create-dialog .jfx-text-field{
+    -fx-highlight-fill: -fx-primarylabel;
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.create-dialog .jfx-text-field .text{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.create-dialog .jfx-text-field .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.create-dialog .jfx-text-field .input-focused-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+/********** check-box **********/
+.create-dialog .jfx-check-box{
+    -fx-text-fill: -fx-dialog-text;
+    -fx-checked-color: -fx-primarylabel;
+    -fx-unchecked-color: -fx-primarylabel;
+}
+
+.create-dialog .jfx-check-box .jfx-rippler .box-container .box{
+    -fx-background-color: -fx-primarylabel;
+    -fx-border-color: -fx-primarylabel;
+}
+
+.create-dialog .jfx-check-box .jfx-rippler .box-container .box .indeterminate-mark{
+    -fx-background-color: -fx-primarylabel;
+}
+
+/********** button **********/
+.create-dialog .jfx-button{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.create-dialog .jfx-button:hover{
+    -fx-background-color: -fx-secondarylabel;
+    -fx-border-color: derive(-fx-secondarylabel, -20%);
+    -fx-text-fill: white;
+}
+
+
+
+/**********************************************
+*              Row Adder Pane                 *
+***********************************************/
+
+.row-adder-pane{
+    -fx-background-color: -fx-secondary;
+}
+
+.row-adder-pane .label{
+    -fx-background-color: -fx-secondary;
+    -fx-text-fill: white;
+}
+
+.row-adder-pane .context-menu .menu-item .label{
+    -fx-background-color:  transparent;
+    -fx-text-fill: -fx-secondarytext;
+}
+
+.row-adder-pane .scroll-pane{
+    -fx-padding: 0;
+}
+
+.row-adder-pane .scroll-pane:focused{
+    -fx-background-insets: 0;
+}
+
+.row-adder-pane .scroll-pane .viewport{
+    -fx-background-color: -fx-secondary;
+}
+
+.row-adder-pane .scroll-pane .corner{
+    -fx-background-insets: 0;
+}
+
+.row-adder-add-button{
+    -fx-border-color: black;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+    -fx-font-size: 12pt;
+}
+
+.row-adder-add-button:hover{
+    -fx-background-color: -fx-secondarylabel;
+    -fx-border-color: derive(-fx-secondarylabel, -20%);
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.row-adder-close-button{
+    -fx-border-color: black;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+    -fx-font-size: 12pt;
+    -fx-text-fill: red;
+}
+
+.row-adder-close-button:hover{
+    -fx-background-color: red;
+    -fx-border-color: derive(black, -20%);
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.row-adder-pane .jfx-text-field{
+    -fx-highlight-fill: -fx-primarylabel;
+    -fx-text-fill: -fx-dialog-text;
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+    -jfx-focus-color: -fx-dialog-prompt-text;
+}
+
+.row-adder-pane .jfx-text-field .text{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.row-adder-pane .jfx-text-field .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.row-adder-pane .jfx-text-field .input-focused-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+.row-adder-pane .jfx-combo-box{
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+}
+
+.row-adder-pane .jfx-combo-box .input-line{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.row-adder-pane .jfx-combo-box .arrow{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.row-adder-pane .jfx-combo-box .list-view{
+    -fx-background-color: -fx-dialog-input-line;
+}
+
+.row-adder-pane .jfx-combo-box .list-cell:selected{
+    -fx-background-color: -fx-primarylabel;
+}
+
+.row-adder-pane .jfx-combo-box .list-cell:filled{
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-primarylabel;
+}
+
+.row-adder-pane .jfx-combo-box .list-cell:filled:hover{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.row-adder-pane .jfx-combo-box .list-cell:filled:selected:hover{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.row-adder-pane .jfx-combo-box .list-cell .text{
+    -fx-fill: -fx-dialog-text;
+}
+
+.row-adder-pane .jfx-combo-box .input-focused-line{
+    -fx-background-color: -fx-primarylabel;
+}
+
+
+
+/**********************************************
+*    Settings View for all Chart Actvities    *
+***********************************************/
+
+.settingsview{
+    -fx-background-color: -fx-primary;
+}
+
+.settingsview .anchor-pane{
+    -fx-background-color: -fx-primary;
+}
+
+.settingsview .anchor-pane .vbox{
+    -fx-background-color: -fx-primary;
+}
+
+.settingsview .label{
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: white;
+    -fx-padding: 5 0 0 0;
+}
+
+.settingsview .text-field{
+    -fx-background-color: -fx-primary;
+    -fx-border-color: #ffffff;
+    -fx-border-radius: 10px;
+    -fx-highlight-fill: -fx-primarylabel;
+    -fx-text-fill: -fx-dialog-text;
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+}
+
+.settingsview .text-field:focused{
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-primarylabel;
+    -fx-highlight-fill: -fx-primarylabel;
+}
+
+.settingsview .hbox .text-field .text{
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.settingsview .jfx-button{
+    -fx-min-width: 29px;
+    -fx-min-height: 29px;
+    -fx-max-width: 29px;
+    -fx-max-height: 29px;
+    -fx-background-color: transparent;
+    -fx-focus-traversable: false;
+    -fx-border-color: transparent;
+    -fx-border-radius: 5em;
+    -fx-font-size: 9pt;
+    -fx-text-fill: red;
+}
+
+.settingsview .jfx-button:hover{
+    -fx-background-color: red;
+    -fx-background-radius: 5em;
+    -fx-border-color: derive(black, -20%);
+    -fx-border-color: transparent;
+    -fx-border-radius: 5em;
+    -fx-text-fill: -fx-dialog-text;
+}
+
+.settingsview .context-menu .menu-item .label{
+    -fx-background-color:  transparent;
+    -fx-text-fill: -fx-secondarytext;
+}
+
+.settingsview .scroll-bar:vertical{
+    -fx-background-color: transparent;
+}
+
+.settingsview .increment-button, 
+.settingsview .decrement-button{
+
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.settingsview .scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+}
+
+.settingsview .scroll-bar:vertical .thumb{
+    -fx-background-color: linear-gradient(to right, 
+        derive(-fx-secondary,20%), derive(-fx-secondary,60%));
+
+    -fx-background-radius: 2em;
+}
+
+.settingsview .scroll-bar:vertical .thumb:hover{
+    -fx-background-color: linear-gradient(to right, 
+        derive(-fx-primarylabel,-20%), derive(-fx-primarylabel,30%));
+}
+
+.settingsview .scroll-bar:vertical .thumb:pressed{
+    -fx-background-color: linear-gradient(to right, 
+        derive(-fx-primarylabel,-40%), derive(-fx-primarylabel,10%));
+}
+
+
+
+/**********************************************
+*                Pie Chart                    *
+***********************************************/
+
+.default-color0.chart-pie { -fx-pie-color: #f3622d; }
+.default-color1.chart-pie { -fx-pie-color: #fba71b; }
+.default-color2.chart-pie { -fx-pie-color: #57b757; }
+.default-color3.chart-pie { -fx-pie-color: #41a9c9; }
+.default-color4.chart-pie { -fx-pie-color: #4258c9; }
+.default-color5.chart-pie { -fx-pie-color: #9a42c8; }
+.default-color6.chart-pie { -fx-pie-color: #c84164; }
+.default-color7.chart-pie { -fx-pie-color: #888888; }
+ 
+.chart-pie-label-line {
+    -fx-stroke: -fx-secondarytext;
+    -fx-fill: -fx-secondarytext;
+}
+
+.chart-pie-label {
+    -fx-fill: -fx-secondarytext;
+    -fx-font-size: 1em;
+}
+
+.chart-legend {
+    -fx-background-color: -fx-secondary;
+}
+
+.chart-legend .chart-legend-item{
+    -fx-text-fill: -fx-secondarytext;
+}
+
+.chart{
+    -fx-background-color: -fx-primary;
+}
+
+.chart .chart-title{
+    -fx-text-fill: -fx-secondarytext;
+}
+
+
+
+/**********************************************
+*             Line and Area Chart             *
+***********************************************/
+
+.axis{  
+    -fx-tick-label-fill: white;
+}
+
+.axis-label{
+   -fx-text-fill: white; 
+}
+
+.chart-plot-background{
+    -fx-background-color: -fx-secondary;
+}
+
+.chart-vertical-grid-lines{
+    -fx-stroke: derive(white, -70%);
+}
+.chart-horizontal-grid-lines{
+    -fx-stroke: derive(white, -70%);
+}
+
+#line-chart-control-scroll-pane{
+    -fx-padding: 0;
+}
+
+
+
+/**********************************************
+*                  Bar Chart                  *
+***********************************************/
+
+#bar-chart-edit-text{
+    -fx-background-color: -fx-primary;
+    -fx-border-color: #ffffff;
+    -fx-border-radius: 10px;
+    -fx-highlight-fill: -fx-primarylabel;
+    -fx-text-fill: -fx-dialog-text;
+    -fx-prompt-text-fill: -fx-dialog-prompt-text;
+}
+
+#bar-chart-edit-text:focused{
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-primarylabel;
+    -fx-highlight-fill: -fx-primarylabel;
+}
+
+
+
+/**********************************************
+*               JFXColorPicker                *
+***********************************************/
+
+.jfx-color-picker{
+    -fx-focus-traversable: false;
+    -fx-color-label-visible: false;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+.jfx-color-picker .color-label{
+    -fx-background-color: transparent;
+    -fx-background-radius: 5em;
+}
+
+.jfx-color-picker .color-box{
+    -fx-background-radius: 5em;
+}
+
+.jfx-color-picker .jfx-rippler .color-box{
+    -fx-min-width: 0px;
+    -fx-min-height: 0px;
+    -fx-max-width: 0px;
+    -fx-max-height: 0px;
+}
+
+/* Disable custom color button in JFXColorPicker dialog
+because entering invalid hex values in the advanced 
+dialog causes the JVM to crash */
+.jfx-color-picker .jfx-button{
+    visibility: false;
+}
+
+/* IDs for JFXColorPickers which will set default color
+values for visible color boxes */
+#color-picker-box-0 .color-box{
+    -fx-background-color: #f3622d; 
+}
+#color-picker-box-1 .color-box{
+    -fx-background-color: #fba71b; 
+}
+#color-picker-box-2 .color-box{ 
+    -fx-background-color: #57b757; 
+}
+#color-picker-box-3 .color-box{
+    -fx-background-color: #41a9c9; 
+}
+#color-picker-box-4 .color-box{
+    -fx-background-color: #4258c9; 
+}
+#color-picker-box-5 .color-box{
+    -fx-background-color: #9a42c8; 
+}
+#color-picker-box-6 .color-box{
+    -fx-background-color: #c84164; 
+}
+#color-picker-box-7 .color-box{
+    -fx-background-color: #888888; 
+}
