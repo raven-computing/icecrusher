@@ -55,8 +55,9 @@ public class ColumnStats {
 	 * saves it in the internal member field
 	 * 
 	 * @param col The <code>Column</code> to compute the sum for
+	 * @return The computed sum of all entries in the specified column, exluding null values
 	 */
-	public void computeSumFor(final Column col){
+	public double computeSumFor(final Column col){
 		if(col.isNullable()){
 			switch(col.typeCode()){
 			case NullableByteColumn.TYPE_CODE:{
@@ -120,22 +121,22 @@ public class ColumnStats {
 			}
 			break;
 			case NullableFloatColumn.TYPE_CODE:{
-				BigDecimal sum = new BigDecimal(0.0);
+				BigDecimal sum = BigDecimal.ZERO;
 				final Float[] array = ((NullableFloatColumn)col).asArray();
 				for(int i=0; i<array.length; ++i){
 					if(array[i] != null){
-						sum = sum.add(new BigDecimal(array[i]));
+						sum = sum.add(new BigDecimal(Float.toString(array[i])));
 					}
 				}
 				this.sum = sum.doubleValue();
 			}
 			break;
 			case NullableDoubleColumn.TYPE_CODE:{
-				BigDecimal sum = new BigDecimal(0.0);
+				BigDecimal sum = BigDecimal.ZERO;
 				final Double[] array = ((NullableDoubleColumn)col).asArray();
 				for(int i=0; i<array.length; ++i){
 					if(array[i] != null){
-						sum = sum.add(new BigDecimal(array[i]));
+						sum = sum.add(new BigDecimal(Double.toString(array[i])));
 					}
 				}
 				this.sum = sum.doubleValue();
@@ -197,25 +198,26 @@ public class ColumnStats {
 			}
 			break;
 			case FloatColumn.TYPE_CODE:{
-				BigDecimal sum = new BigDecimal(0.0);
+				BigDecimal sum = BigDecimal.ZERO;
 				final float[] array = ((FloatColumn)col).asArray();
 				for(int i=0; i<array.length; ++i){
-					sum = sum.add(new BigDecimal(array[i]));
+					sum = sum.add(new BigDecimal(Float.toString(array[i])));
 				}
 				this.sum = sum.doubleValue();
 			}
 			break;
 			case DoubleColumn.TYPE_CODE:{
-				BigDecimal sum = new BigDecimal(0.0);
+				BigDecimal sum = BigDecimal.ZERO;
 				final double[] array = ((DoubleColumn)col).asArray();
 				for(int i=0; i<array.length; ++i){
-					sum = sum.add(new BigDecimal(array[i]));
+					sum = sum.add(new BigDecimal(Double.toString(array[i])));
 				}
 				this.sum = sum.doubleValue();
 			}
 			break;
 			}
 		}
+		return this.sum;
 	}
 	
 	public double getMinimum(){

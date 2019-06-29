@@ -29,6 +29,7 @@ import com.raven.common.struct.FloatColumn;
 import com.raven.common.struct.NullableDataFrame;
 import com.raven.common.struct.NullableDoubleColumn;
 import com.raven.common.struct.NullableFloatColumn;
+import com.raven.common.util.Chronometer;
 import com.raven.icecrusher.Editor;
 import com.raven.icecrusher.application.Controller;
 import com.raven.icecrusher.application.Exposed;
@@ -60,7 +61,6 @@ import com.raven.icecrusher.util.EditorConfiguration;
 import com.raven.icecrusher.util.EditorFile;
 import com.raven.icecrusher.util.ExceptionHandler;
 import com.raven.icecrusher.util.History;
-import com.raven.icecrusher.util.SingleAnimation;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -192,7 +192,6 @@ public class FrameController extends Controller implements ViewListener {
 	protected EditorConfiguration config;
 	
 	private RowAdder adder;
-	private SingleAnimation animation;
 	
 	//keep reference to avoid garbage collection
 	//when updating
@@ -245,9 +244,21 @@ public class FrameController extends Controller implements ViewListener {
 			recoverHistory();
 		}
 		if(Editor.wasUpdated()){
-			showSnackbar(Const.APPLICATION_NAME 
-					+ " has been updated to version " 
-					+ Const.APPLICATION_VERSION);
+			final Chronometer chrono = new Chronometer();
+			chrono.setTimer(java.time.Duration.ofSeconds(2), (elapsed) -> {
+				chrono.stop();
+				Platform.runLater(() -> {
+					OneShotSnackbar.showFor(rootPane,
+							Const.APPLICATION_NAME 
+							+ " has been updated to version " 
+							+ Const.APPLICATION_VERSION,
+							"What's new?",
+							10000, (e) -> {// show for 10 seconds
+								OneShotSnackbar.closeIfVisible();
+								Updater.showReleaseNotes();
+							});
+				});
+			}).start();
 		}
 	}
 	
@@ -621,6 +632,7 @@ public class FrameController extends Controller implements ViewListener {
 		final DataFrame df = view.getDataFrame();
 		if(df.rows() > 1){
 			setSaveButtonsDisabled(false);
+			currentlySelectedTab().setSaved(false);
 			if(df.rows() >= Const.DF_PARALLELISM_THRESHOLD){
 				parallelSortColumn(view, colummn);
 			}else{
@@ -674,17 +686,19 @@ public class FrameController extends Controller implements ViewListener {
 		final String name = event.getColumnName();
 		final ColumnStats stats = new ColumnStats();
 		final Column col = df.getColumn(name);
+		final byte type = col.typeCode();
 		stats.setUsesDecimals(
-				(col instanceof FloatColumn
-				|| col instanceof DoubleColumn
-				|| col instanceof NullableFloatColumn
-				|| col instanceof NullableDoubleColumn));
+				(type == FloatColumn.TYPE_CODE
+				|| type == DoubleColumn.TYPE_CODE
+				|| type == NullableFloatColumn.TYPE_CODE
+				|| type == NullableDoubleColumn.TYPE_CODE));
 		
 		stats.setColumnName(name);
 		stats.setMinimum(df.minimum(name));
 		stats.setMaximum(df.maximum(name));
-		stats.setAverage(df.average(name));
-		stats.computeSumFor(col);
+		final double sum = stats.computeSumFor(col);
+		stats.setAverage(sum/df.rows());
+
 		final StatsDialog dialog = new StatsDialog(rootPane, stats);
 		dialog.setBackgroundEffect(mainBorderPane, Dialogs.getBackgroundBlur());
 		dialog.show();
@@ -836,15 +850,9 @@ public class FrameController extends Controller implements ViewListener {
 			final ImageView img = (ImageView) this.labelHint.getGraphic();
 			if(value && (mainTabsPane.getStyleClass().add("tabs-pane-dark"))){
 				img.setImage(Resources.image(Resources.IC_FOLDER_WHITE));
-				this.animation = new SingleAnimation(labelHint, 
-						"#ffffff", "#878787", Duration.millis(1500));
-				
-				this.animation.start();
 			}else{
 				if(mainTabsPane.getStyleClass().remove("tabs-pane-dark")){
 					img.setImage(Resources.image(Resources.IC_FOLDER_BLACK));
-					this.animation.stop();
-					this.animation = null;
 				}
 			}
 		}catch(Exception ex){

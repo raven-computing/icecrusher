@@ -16,6 +16,7 @@
 
 package com.raven.icecrusher.ui.plot;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.Map;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.raven.common.struct.Column;
+import com.raven.icecrusher.io.DataFrames;
 import com.raven.icecrusher.ui.OneShotSnackbar;
 import com.sun.javafx.charts.Legend;
 import com.sun.javafx.charts.Legend.LegendItem;
@@ -51,7 +53,10 @@ public class PieChartController extends ChartController {
 	private static final int MAX_NUMBER_SLICES_ALLOWED = 25;
 	
 	@FXML
-	private JFXComboBox<String> cbColumn;
+	private JFXComboBox<String> cbColumnKeys;
+	
+	@FXML
+	private JFXComboBox<String> cbColumnValues;
 	
 	@FXML
 	private JFXCheckBox checkShowAbs;
@@ -67,8 +72,12 @@ public class PieChartController extends ChartController {
 	
 	private boolean showAbs;
 	private boolean showPerc;
+	private boolean multiColumn;
+	private boolean plotDataChanged;
+	private boolean keyChanged;
 	
 	private int totalNulls;
+	private double totalSum;
 
 	public PieChartController(){
 		super();
@@ -81,13 +90,17 @@ public class PieChartController extends ChartController {
 		//CheckBoxes
 		this.checkShowAbs.selectedProperty().addListener((ov, oldValue, newValue) -> {
 			this.showAbs = newValue;
-			reloadSliceLabels();
-			updateAllLegendColors();
+			if(!plotDataChanged){
+				reloadSliceLabels();
+				updateAllLegendColors();
+			}
 		});
 		this.checkShowPerc.selectedProperty().addListener((ov, oldValue, newValue) -> {
 			this.showPerc = newValue;
-			reloadSliceLabels();
-			updateAllLegendColors();
+			if(!plotDataChanged){
+				reloadSliceLabels();
+				updateAllLegendColors();
+			}
 		});
 		this.showAbs = true;
 		this.showPerc = true;
@@ -106,25 +119,26 @@ public class PieChartController extends ChartController {
 	@Override
 	public void onStart(ArgumentBundle bundle){
 		super.onStart(bundle);
+		final String[] names = df.getColumnNames();
 		//ComboBoxes
-		this.cbColumn.getItems().addAll(df.getColumnNames());
-		this.cbColumn.getSelectionModel().selectedItemProperty().addListener(
+		this.cbColumnKeys.getItems().addAll(names);
+		this.cbColumnValues.getItems().addAll(names);
+		this.cbColumnKeys.getSelectionModel().selectedItemProperty().addListener(
 				(ov, oldValue, newValue) -> {
 					
-			this.btnPlotExport.setDisable(false);
-			settingsList.resetSettingsList();
-			if(plotIsShown){
-				this.btnPlotExport.setText("Plot");
-				this.plotIsShown = false;
-			}
-			prepareChart(df.getColumn(newValue));
+			keySelectionChanged(newValue);
+		});
+		this.cbColumnValues.getSelectionModel().selectedItemProperty().addListener(
+				(ov, oldValue, newValue) -> {
+					
+			valueSelectionChanged(newValue);
 		});
 	}
 	
 	@FXML
 	@Override
 	public void onPlot(ActionEvent event){
-		if(plotIsShown){
+		if(plotIsShown && !plotDataChanged){
 			exportSnapshot();
 		}else{
 			this.chart.setData(data);
@@ -133,7 +147,9 @@ public class PieChartController extends ChartController {
 				e.getValue().getNode().setStyle("-fx-pie-color: " + e.getKey().getColor());
 			}
 			this.plotIsShown = true;
+			this.plotDataChanged = false;
 			this.btnPlotExport.setText("Export as PNG");
+			reloadSliceLabels();
 			updateAllLegendColors();
 		}
 	}
@@ -143,10 +159,40 @@ public class PieChartController extends ChartController {
 		super.onClose(event);
 	}
 	
-	private void prepareChart(final Column col){
-		this.viewDataMap = new HashMap<>();
-		Map<String, Integer> map = prepareData(col);
-		//perform various checks
+	private void keySelectionChanged(final String newKey){
+		this.btnPlotExport.setDisable(false);
+		settingsList.resetSettingsList();
+		this.keyChanged = true;
+		final String value = this.cbColumnValues.getSelectionModel().getSelectedItem();
+		if((value != null) && (!value.isEmpty())){
+			prepareChart(df.getColumn(newKey), df.getColumn(value));
+		}else{
+			prepareChart(df.getColumn(newKey), null);
+		}
+	}
+	
+	private void valueSelectionChanged(final String newValue){
+		final String key = this.cbColumnKeys.getSelectionModel().getSelectedItem();
+		if((key != null) && (!key.isEmpty())){
+			this.btnPlotExport.setDisable(false);
+			prepareChart(df.getColumn(key), df.getColumn(newValue));
+		}
+	}
+	
+	private void prepareChart(final Column keys, final Column values){
+		final boolean hasValues = (values != null);
+		if(hasValues && DataFrames.columnUsesNaNs(values)){
+			showInfo("Values must be numeric");
+			return;
+		}
+		Map<String, Number> map = null;
+		try{
+			map = (hasValues ? prepareData(keys, values) : prepareData(keys));
+		}catch(RuntimeException ex){
+			showInfo(ex.getMessage());
+			return;
+		}
+		// perform various checks
 		if(totalNulls == df.rows()){
 			showInfo("This column only contains null values");
 			return;
@@ -155,46 +201,77 @@ public class PieChartController extends ChartController {
 			showInfo("This column produces too many slices");
 			return;
 		}
+		if(map.size() != settingsList.getChildren().size()){
+			settingsList.resetSettingsList();
+			this.keyChanged = true;
+		}
 		//set up members
+		this.viewDataMap = new HashMap<>();
+		this.multiColumn = hasValues;
 		final List<PieChart.Data> list = new ArrayList<>();
 		final List<SettingsView> views = new ArrayList<>();
-		int i = 0;
-		for(final Map.Entry<String, Integer> e : map.entrySet()){
-			final PieChart.Data slice = new PieChart.Data(labelForSlice(e.getKey(), e.getValue()),
-					e.getValue());
+		int index = 0;
+		for(final Map.Entry<String, Number> e : map.entrySet()){
+			final PieChart.Data slice = new PieChart.Data(labelForSlice(e.getKey(), 
+					e.getValue().doubleValue()),
+					e.getValue().doubleValue());
 			
 			list.add(slice);
-			final SettingsView ssv = new SliceSettingsView(i++, e.getKey());
-			ssv.setViewListener(new ViewListenerAdapter(){
-				@Override
-				public void onRelabel(SettingsView view, String newLabel){
-					viewDataMap.get(view).setName(labelForSlice(newLabel, e.getValue()));
+			final SettingsView ssv = initSettingsView(index, e, !keyChanged);
+			viewDataMap.put(ssv, slice);
+			views.add(ssv);
+			++index;
+		}
+		this.data = FXCollections.observableArrayList(list);
+		//only add and animate the SettingsListView the first time that key is used
+		if(keyChanged){
+			addAllSettingsViewsToList(views);
+		}
+		this.keyChanged = false;
+		this.btnPlotExport.setText("Plot");
+		this.plotDataChanged = true;
+	}
+	
+	private SettingsView initSettingsView(final int index,
+			final Map.Entry<String, Number> entry, final boolean recycle){
+
+		if(recycle){
+			//reuse the current set SettingsView
+			return this.settingsList.getSettingsViewAt(index);
+		}
+		final SettingsView ssv = new SliceSettingsView(index, entry.getKey());
+		ssv.setViewListener(new ViewListenerAdapter(){
+			@Override
+			public void onRelabel(SettingsView view, String newLabel){
+				if(!plotDataChanged){
+					final PieChart.Data slice = viewDataMap.get(view);
+					viewDataMap.get(view).setName(labelForSlice(newLabel, slice.getPieValue()));
 					updateAllLegendColors();
 				}
-				@Override
-				public void onColorChanged(SettingsView view, String newColor){
+			}
+
+			@Override
+			public void onColorChanged(SettingsView view, String newColor){
+				if(!plotDataChanged){
 					final Node node = viewDataMap.get(view).getNode();
-					if(node != null){//only set color if plot is rendered on screen
+					if(node != null){// only set color if plot is rendered on screen
 						node.setStyle("-fx-pie-color: " + newColor);
 						updateLegendColor(view, newColor);
 					}
 				}
-			});
-			viewDataMap.put(ssv, slice);
-			views.add(ssv);
-		}
-		this.data = FXCollections.observableArrayList(list);
-		addAllSettingsViewsToList(views);
+			}
+		});
+		return ssv;
 	}
 
-	private Map<String, Integer> prepareData(final Column col){
+	private Map<String, Number> prepareData(final Column keys){
 		this.totalNulls = 0;
-		final Map<String, Integer> map = new HashMap<>();
+		final Map<String, Number> map = new HashMap<>();
 		for(int i=0; i<df.rows(); ++i){
-			final Object value = col.getValueAt(i);
+			final Object value = keys.getValueAt(i);
 			if(value != null){
-				final String s = String.valueOf(value);
-				final Integer count = map.get(s);
+				final String s = value.toString();
+				final Integer count = (Integer)map.get(s);
 				if(count != null){
 					map.put(s, count+1);
 				}else{
@@ -207,16 +284,48 @@ public class PieChartController extends ChartController {
 		return map;
 	}
 	
-	private String labelForSlice(final String label, final int value){
+	private Map<String, Number> prepareData(final Column keys, final Column values){
+		BigDecimal bdSum = BigDecimal.ZERO;
+		final Map<String, Number> map = new HashMap<>();
+		for(int i=0; i<df.rows(); ++i){
+			final Object key = keys.getValueAt(i);
+			final Number value = (Number)values.getValueAt(i);
+			if((key != null) && (value != null)){
+				final double dValue = value.doubleValue();
+				if(dValue < 0){
+					throw new RuntimeException("Values contain negative numbers "
+							+ "(At index " + String.valueOf(i) + ")");
+					
+				}
+				final String s = key.toString();
+				final Number sum = (Number)map.get(s);
+				if(sum != null){
+					map.put(s, new BigDecimal(Double.toString(sum.doubleValue()))
+							.add(new BigDecimal(Double.toString(dValue))));
+					
+				}else{
+					map.put(s, value);
+				}
+				bdSum = bdSum.add(new BigDecimal(Double.toString(value.doubleValue())));
+			}
+		}
+		this.totalSum = bdSum.doubleValue();
+		return map;
+	}
+	
+	private String labelForSlice(final String label, final double value){
 		final StringBuilder sb = new StringBuilder();
+		final DecimalFormat form = new DecimalFormat("##.##");
 		sb.append(label);
 		if(showAbs){
 			sb.append(" ");
-			sb.append(value);
+			sb.append(form.format(value));
 		}
 		if(showPerc){
-			final DecimalFormat form = new DecimalFormat("##.##");
-			final double perc = ((double)value / (double)(df.rows()-totalNulls));
+			final double perc = (multiColumn
+					? (value / totalSum)
+					: (value / (double)(df.rows()-totalNulls)));
+			
 			sb.append(showAbs ? " (" : " ");
 			sb.append(form.format(perc*100));
 			sb.append(showAbs ? "%)" : "%");
@@ -228,7 +337,9 @@ public class PieChartController extends ChartController {
 		if(viewDataMap != null){
 			for(final Map.Entry<SettingsView, PieChart.Data> e : viewDataMap.entrySet()){
 				final PieChart.Data slice = e.getValue();
-				slice.setName(labelForSlice(e.getKey().getEditText(), (int) slice.getPieValue()));
+				slice.setName(labelForSlice(e.getKey().getEditText(),
+						slice.getPieValue()));
+				
 			}
 		}
 	}
@@ -249,7 +360,9 @@ public class PieChartController extends ChartController {
 	
 	private void showInfo(final String message){
 		OneShotSnackbar.showFor(getRootNode(), message);
-		this.btnPlotExport.setDisable(true);
+		if(!plotIsShown || plotDataChanged){
+			this.btnPlotExport.setDisable(true);
+		}
 	}
 	
 }

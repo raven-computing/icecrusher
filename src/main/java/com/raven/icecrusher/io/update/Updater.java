@@ -63,6 +63,10 @@ public class Updater implements UpdateRoutine {
 		void onResolve(Version version);
 	}
 	
+	private static final String DIALOG_STATE_CLOSE = "Close";
+	private static final String DIALOG_STATE_CANCEL = "Cancel";
+	private static final String DIALOG_STATE_RESTART = "Restart";
+	
 	private static boolean isExecuting = false;
 	
 	private UpdateExecutor updateExecutor;
@@ -200,20 +204,28 @@ public class Updater implements UpdateRoutine {
 		return isExecuting;
 	}
 	
+	public static void showInBrowser(){
+		browse(ResourceLocator.UPDATE_SHOW_IN_BROWSER);
+	}
+	
+	public static void showReleaseNotes(){
+		browse(ResourceLocator.RELEASE_NOTES);
+	}
+	
 	private void doUpdate(final StackPane rootPane, final Parent activityRootPane){
 		this.dialog = new UpdateDialog(rootPane, null, DialogTransition.TOP);
 		this.dialog.setBackgroundEffect(activityRootPane, Dialogs.getBackgroundBlur());
 		this.dialog.setMessage("Please wait while " + Const.APPLICATION_NAME + " is updating.");
 		this.dialog.setProgressMessage("Preparing...");
-		this.dialog.setActionButtonText("Cancel");
+		this.dialog.setActionButtonText(DIALOG_STATE_CANCEL);
 		this.dialog.getProgressBar().setProgress(0.0);
 		this.dialog.setDialogListener((action) -> {
-			if(action.getText().equals("Cancel")){
+			if(action.getText().equals(DIALOG_STATE_CANCEL)){
 				updateExecutor.cancel();
 				OneShotSnackbar.showFor(rootPane, "Update has been cancelled");
-			}else if(action.getText().equals("Close")){
+			}else if(action.getText().equals(DIALOG_STATE_CLOSE)){
 				//no action required
-			}else if(action.getText().equals("Restart")){
+			}else if(action.getText().equals(DIALOG_STATE_RESTART)){
 				updateExecutor.doUpdate();
 			}
 			dialog.close();
@@ -230,13 +242,13 @@ public class Updater implements UpdateRoutine {
 		this.updateExecutor.downloadPackage(dialog.getProgressBar(), dialog.getProgressValueLabel());
 	}
 	
-	public static void showInBrowser(){
+	private static void browse(final ResourceLocator resource){
 		//using swing utilities instead of javafx.application.HostServices here
 		//because latter has had some issues
 		SwingUtilities.invokeLater(() -> {
 			try{
 				if(Desktop.isDesktopSupported()){
-					Desktop.getDesktop().browse(new URI(ResourceLocator.UPDATE_SHOW_IN_BROWSER.getUrl()));
+					Desktop.getDesktop().browse(new URI(resource.getUrl()));
 				}
 			}catch(IOException | URISyntaxException ex){
 				ExceptionHandler.showDialog(ex);
@@ -249,13 +261,18 @@ public class Updater implements UpdateRoutine {
 			Platform.runLater(() -> handler.onResolve(version));
 		}
 	}
-
+	
+	
+	//********************************************//
+	//            UpdateRoutine impl              //
+	//********************************************//
+	
 	@Override
 	public void onPackageDownloaded(boolean success){
 		if(!success){
 			this.dialog.setMessage(Const.APPLICATION_NAME + " is unable to download the update package");
 			this.dialog.setProgressMessage("Disconnected");
-			this.dialog.setActionButtonText("Close");
+			this.dialog.setActionButtonText(DIALOG_STATE_CANCEL);
 			return;
 		}
 		this.dialog.setProgressMessage("Verifying download...");
@@ -268,7 +285,7 @@ public class Updater implements UpdateRoutine {
 		if(!isValid){
 			this.dialog.setMessage(Const.APPLICATION_NAME + " is unable to verify the update package");
 			this.dialog.setProgressMessage("Verification failed");
-			this.dialog.setActionButtonText("Close");
+			this.dialog.setActionButtonText(DIALOG_STATE_CLOSE);
 			this.dialog.setActionButtonDisabled(false);
 			return;
 		}
@@ -281,7 +298,7 @@ public class Updater implements UpdateRoutine {
 		if(!success){
 			this.dialog.setMessage(Const.APPLICATION_NAME + " is unable to extract the update package");
 			this.dialog.setProgressMessage("Extraction failed");
-			this.dialog.setActionButtonText("Close");
+			this.dialog.setActionButtonText(DIALOG_STATE_CLOSE);
 			this.dialog.setActionButtonDisabled(false);
 			return;
 		}
@@ -294,7 +311,7 @@ public class Updater implements UpdateRoutine {
 		if(!success){
 			this.dialog.setMessage(Const.APPLICATION_NAME + " is unable to find update instructions");
 			this.dialog.setProgressMessage("Update failed");
-			this.dialog.setActionButtonText("Close");
+			this.dialog.setActionButtonText(DIALOG_STATE_CLOSE);
 			this.dialog.setActionButtonDisabled(false);
 			return;
 		}
@@ -302,7 +319,7 @@ public class Updater implements UpdateRoutine {
 				+ " This may take several seconds.");
 		
 		this.dialog.setProgressMessage("Finished");
-		this.dialog.setActionButtonText("Restart");
+		this.dialog.setActionButtonText(DIALOG_STATE_RESTART);
 		this.dialog.setActionButtonDisabled(false);
 	}
 	

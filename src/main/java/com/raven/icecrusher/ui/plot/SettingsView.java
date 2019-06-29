@@ -145,10 +145,10 @@ public class SettingsView extends HBox {
 	 */
 	public void addColorPickerToSettings(){
 		this.cp = new JFXColorPicker(Color.valueOf(colors[index%colors.length]));
-		cp.setId("color-picker-box-" + String.valueOf((index)%colors.length));
-		cp.setTooltip(TIP_COLORPICKER);
+		this.cp.setId("color-picker-box-" + String.valueOf((index)%colors.length));
+		this.cp.setTooltip(TIP_COLORPICKER);
 		HBox.setMargin(cp, new Insets(3.0, 0.0, 0.0, 0.0));
-		cp.setOnAction((e) -> {
+		this.cp.setOnAction((e) -> {
 			final String newColor = getColor();
 			cp.lookupAll(".color-box").stream().forEach((node) -> {
 				node.setStyle("-fx-background-color: " + newColor + ";");

@@ -119,7 +119,7 @@ public class EditorConfiguration {
 	 * 
 	 * @param SECTION The <code>Section</code> of the configuration to access
 	 * @param CONFIGURATION The key of the configuration to access
-	 * @return The value of the configuration with the specified key, or null if the specified 
+	 * @return The value of the configuration with the specified key, or null if the specified
 	 *         section does not hold a configuration with the specified key
 	 */
 	public String valueOf(final Section SECTION, final String CONFIGURATION){
@@ -127,7 +127,7 @@ public class EditorConfiguration {
 	}
 	
 	/**
-	 * Returns the value of the configuration in the specified Section with the specified key 
+	 * Returns the value of the configuration in the specified Section with the specified value
 	 * directly converted to a boolean
 	 * 
 	 * @param SECTION The <code>Section</code> of the configuration to access
@@ -140,12 +140,12 @@ public class EditorConfiguration {
 	}
 	
 	/**
-	 * Returns the value of the configuration in the specified Section with the specified key 
+	 * Returns the value of the configuration in the specified Section with the specified value
 	 * directly converted to a double
 	 * 
 	 * @param SECTION The <code>Section</code> of the configuration to access
 	 * @param CONFIGURATION The key of the configuration to access
-	 * @return The value of the configuration with the specified key. Might return 0 (zero) 
+	 * @return The value of the configuration with the specified key. Might return 0 (zero)
 	 *         if the configuration accessed is not a double or was not found
 	 */
 	public double doubleOf(final Section SECTION, final String CONFIGURATION){

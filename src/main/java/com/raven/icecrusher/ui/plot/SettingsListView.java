@@ -69,6 +69,17 @@ public class SettingsListView extends VBox {
 	}
 	
 	/**
+	 * Sets this SettingsListView to the specified SettingsViews without animations
+	 * 
+	 * @param views The List of <code>SettingsViews</code> to set
+	 */
+	public void setAllSettingsViews(final List<SettingsView> views){
+		//prevent animations in layoutChildren() method
+		this.isAdding = false;
+		getChildren().setAll(views);
+	}
+	
+	/**
 	 * Removes the specified SettingsView from this list
 	 * 
 	 * @param view The <code>SettingsView</code> to remove
@@ -141,6 +152,16 @@ public class SettingsListView extends VBox {
 	}
 	
 	/**
+	 * Indicates whether this SettingsListView has any SettingsViews set
+	 * 
+	 * @return True if this <code>SettingsListView</code> has no <code>SettingsView</code>
+	 *         elements in its list, false otherwise
+	 */
+	public boolean isEmpty(){
+		return this.getChildren().isEmpty();
+	}
+	
+	/**
 	 * Sets whether to animate all SettingsViews when <code>resetSettingsList()</code>
 	 * is being called.<br> Default is false
 	 * 
@@ -148,6 +169,16 @@ public class SettingsListView extends VBox {
 	 */
 	public void setAnimateResetAction(final boolean animateResetAction){
 		this.animateResetAction = animateResetAction;
+	}
+	
+	/**
+	 * Gets the <code>SettingsView</code> at the specified index
+	 * 
+	 * @param index The index of the SettingsView to get
+	 * @return The <code>SettingsView</code> at the specified index
+	 */
+	public SettingsView getSettingsViewAt(final int index){
+		return (SettingsView) getChildren().get(index);
 	}
 	
 	@Override

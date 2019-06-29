@@ -1,7 +1,7 @@
 # Icecrusher
 #### An editor and analysis tool for DataFrame files
 
-[![Release](https://img.shields.io/badge/release-2.0.0-blue.svg)](https://raven-computing.com/products/icecrusher) [![DownloadExe](https://img.shields.io/badge/Download_for_Windows-.exe-blue.svg)](https://raven-computing.com/products/icecrusher/releases/icecrusher-2.0.0.exe) [![DownloadDeb](https://img.shields.io/badge/Download_for_Linux-.deb-orange.svg)](https://raven-computing.com/products/icecrusher/releases/icecrusher-2.0.0.deb)
+[![Release](https://img.shields.io/badge/release-2.1.0-blue.svg)](https://raven-computing.com/products/icecrusher) [![DownloadExe](https://img.shields.io/badge/Download_for_Windows-.exe-blue.svg)](https://raven-computing.com/products/icecrusher/releases/icecrusher-2.1.0.exe) [![DownloadDeb](https://img.shields.io/badge/Download_for_Linux-.deb-orange.svg)](https://raven-computing.com/products/icecrusher/releases/icecrusher-2.1.0.deb)
 
 Icecrusher is an editor and analysis tool for DataFrame files (.df) with a modern-looking user interface. It is an open-source application and entirely implemented in JavaFX. It can read, edit, filter and create *.df* files. Additionally, it also suppports the capability to import and export CSV files. More information can be found on our [website](https://raven-computing.com/products/icecrusher/).
 
@@ -32,6 +32,6 @@ Alternatively, you may send us an e-mail: info@raven-computing.com
 ## License
 
 Icecrusher is licensed under the Apache License Version 2 - see the [LICENSE](LICENSE) for details.
-The JRE which is part of each native installer is subject to its own license. Please inform yourself about such if you plan to build, extend, distribute either this application or any Oracle products.
-Disclaimer: Raven Computing does not own, maintain or sell any software product as part of the JDK or JRE.
+The JRE which is part of each native installer is subject to its own license. Please inform yourself about such if you plan to build, extend, distribute either this application or any products as part of the openJDK.
+Disclaimer: Raven Computing does not own, maintain or sell any software product as part of the openJDK or JRE.
 

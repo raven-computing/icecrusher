@@ -63,13 +63,15 @@ public class ImportDialog extends EditorDialog {
 		final JFXDialogLayout layout = new JFXDialogLayout();
 		final VBox vbox = new VBox();
 		final JFXCheckBox checkBox = new JFXCheckBox("Treat first line as a header");
-		checkBox.setCheckedColor(Paint.valueOf("#1822ba"));//fixes visual bug
+		checkBox.setCheckedColor(Paint.valueOf("#1668ff"));//fixes visual bug
 		checkBox.setSelected(true);
 		final VBox sepBox =  new VBox();
 		final Label label = new Label("Use separator:");
 		final TextField txtField = new TextField(",");
+		txtField.setId("import-field-separator");
 		txtField.setTextFormatter(new TextFormatter<Object>(Converters.charConverter(), ",", Filters.charFilter(true)));
 		txtField.setMaxWidth(40.0);
+		sepBox.setSpacing(10.0);
 		sepBox.getChildren().addAll(label, txtField);
 		vbox.setSpacing(20.0);
 		vbox.getChildren().addAll(checkBox, sepBox);

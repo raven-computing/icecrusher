@@ -618,6 +618,13 @@
     -fx-background-color: -fx-primarylabel;
 }
 
+#import-field-separator{
+    -fx-background-color: -fx-primary;
+    -fx-border-color: #ffffff;
+    -fx-highlight-fill: -fx-primarylabel;
+    -fx-text-fill: -fx-dialog-text;
+}
+
 
 
 /**********************************************

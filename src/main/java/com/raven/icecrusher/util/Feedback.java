@@ -31,17 +31,17 @@ import com.raven.common.struct.RowItem;
 public class Feedback implements Row {
 	
     @RowItem("Content")
-	private String content;
+    private String content;
     
     @RowItem("E-Mail")
-	private String email;
+    private String email;
     
     @RowItem("App-Version")
-	private String appVersion;
+    private String appVersion;
 	
-	public Feedback(){ }
+    public Feedback(){ }
 
-	public Feedback(final String content, final String email){
+    public Feedback(final String content, final String email){
 		this.content = content;
 		this.email = email;
 	}

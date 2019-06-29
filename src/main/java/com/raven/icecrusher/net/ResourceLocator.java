@@ -30,6 +30,7 @@ public enum ResourceLocator {
 	UPDATE_PACKAGE_WINDOWS_FULL("GET", "https://www.raven-computing.com/products/icecrusher/releases/update_windows_full.zip"),
 	UPDATE_INSTRUCT_LINUX("GET", "https://www.raven-computing.com/products/icecrusher/releases/update.sh"),
 	UPDATE_INSTRUCT_WINDOWS("GET", "https://www.raven-computing.com/products/icecrusher/releases/update.bat"),
+	RELEASE_NOTES("GET", "https://www.raven-computing.com/products/icecrusher/release-notes.html"),
 	UPDATE_SHOW_IN_BROWSER("GET", "https://github.com/raven-computing/icecrusher");
 	
 	ResourceLocator(final String method, final String url){

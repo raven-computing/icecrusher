@@ -341,6 +341,15 @@ public abstract class ChartController extends Controller {
 	}
 	
 	/**
+	 * Sets the <code>SettingsListView</code> control to all specified SettingsViews
+	 * 
+	 * @param views The List of <code>SettingsViews</code> to set
+	 */
+	protected void setAllSettingsViewsInList(final List<SettingsView> views){
+		this.settingsList.setAllSettingsViews(views);
+	}
+	
+	/**
 	 * Removes the specified SettingsView from the <code>SettingsListView</code> control
 	 * 
 	 * @param view The <code>SettingsView</code> to remove
