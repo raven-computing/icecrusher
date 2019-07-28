@@ -23,38 +23,38 @@ package com.raven.icecrusher.io.update;
  *
  */
 public interface UpdateRoutine {
-	
-	/**
-	 * Called when the underlying UpdateExecutor has finished with the update 
-	 * package download
-	 * 
-	 * @param success Indicates whether the update package download step was successful
-	 */
-	public void onPackageDownloaded(boolean success);
-	
-	/**
-	 * Called when the underlying UpdateExecutor has verified the downloaded update 
-	 * package
-	 * 
-	 * @param isValid Indicates whether the downloaded update package is valid and its 
-	 *                integrity could be confirmed
-	 */
-	public void onDownloadVerified(boolean isValid);
-	
-	/**
-	 * Called when the underlying UpdateExecutor has extracted the downloaded update 
-	 * package to the temporary update location
-	 * 
-	 * @param success Indicates whether the update package extraction was successful
-	 */
-	public void onExtracted(boolean success);
-	
-	/**
-	 * Called when the underlying UpdateExecutor has finished with the update 
-	 * instruction setup
-	 * 
-	 * @param success Indicates whether the update instruction was successfully set up
-	 */
-	public void onInstructionsProvided(boolean success);
+
+    /**
+     * Called when the underlying UpdateExecutor has finished with the update 
+     * package download
+     * 
+     * @param success Indicates whether the update package download step was successful
+     */
+    public void onPackageDownloaded(boolean success);
+
+    /**
+     * Called when the underlying UpdateExecutor has verified the downloaded update 
+     * package
+     * 
+     * @param isValid Indicates whether the downloaded update package is valid and its 
+     *                integrity could be confirmed
+     */
+    public void onDownloadVerified(boolean isValid);
+
+    /**
+     * Called when the underlying UpdateExecutor has extracted the downloaded update 
+     * package to the temporary update location
+     * 
+     * @param success Indicates whether the update package extraction was successful
+     */
+    public void onExtracted(boolean success);
+
+    /**
+     * Called when the underlying UpdateExecutor has finished with the update 
+     * instruction setup
+     * 
+     * @param success Indicates whether the update instruction was successfully set up
+     */
+    public void onInstructionsProvided(boolean success);
 
 }

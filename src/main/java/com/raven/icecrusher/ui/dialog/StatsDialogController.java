@@ -29,68 +29,68 @@ import javafx.scene.control.Label;
  *
  */
 public class StatsDialogController {
-	
-	/**
-	 * Listener interface for the <code>StatsDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user presses the close button
-		 * 
-		 */
-		void onClose();
-	}
-	
-	@FXML
-	private Label mainLabel;
-	
-	@FXML
-	private Label labelMin;
-	
-	@FXML
-	private Label labelMax;
-	
-	@FXML
-	private Label labelAvg;
-	
-	@FXML
-	private Label labelSum;
-	
-	private DialogListener delegate;
-	
-	public void setCloseListener(DialogListener delegate){
-		this.delegate = delegate;
-	}
-	
-	public void setColumnStats(final ColumnStats stats){
-		mainLabel.setText("Stats for " + stats.getColumnName());
-		final boolean b = stats.usesDecimals();
-		final DecimalFormat form = new DecimalFormat("##.####");
-		if(b){
-			labelMin.setText(form.format(stats.getMinimum()));
-			labelMax.setText(form.format(stats.getMaximum()));
-			labelSum.setText(form.format(stats.getSum()));
-		}else{
-			labelMin.setText(String.valueOf(stats.getMinimumNoDecimals()));
-			labelMax.setText(String.valueOf(stats.getMaximumNoDecimals()));
-			labelSum.setText(String.valueOf(stats.getSumNoDecimals()));
-		}
-		labelAvg.setText(form.format(stats.getAverage()));
-		if(stats.isSumOverflow()){
-			labelSum.setText(labelSum.getText() + "  (Overflow)");
-		}
-	}
-	
-	@FXML
-	private void initialize(){ }
-	
-	@FXML
-	private void onClose(ActionEvent event){
-		if(delegate != null){
-			delegate.onClose();
-		}
-	}
+
+    /**
+     * Listener interface for the <code>StatsDialog</code>.
+     *
+     */
+    public interface DialogListener {
+
+        /**
+         * Called when the user presses the close button
+         * 
+         */
+        void onClose();
+    }
+
+    @FXML
+    private Label mainLabel;
+
+    @FXML
+    private Label labelMin;
+
+    @FXML
+    private Label labelMax;
+
+    @FXML
+    private Label labelAvg;
+
+    @FXML
+    private Label labelSum;
+
+    private DialogListener delegate;
+
+    public void setCloseListener(DialogListener delegate){
+        this.delegate = delegate;
+    }
+
+    public void setColumnStats(final ColumnStats stats){
+        mainLabel.setText("Stats for " + stats.getColumnName());
+        final boolean b = stats.usesDecimals();
+        final DecimalFormat form = new DecimalFormat("##.####");
+        if(b){
+            labelMin.setText(form.format(stats.getMinimum()));
+            labelMax.setText(form.format(stats.getMaximum()));
+            labelSum.setText(form.format(stats.getSum()));
+        }else{
+            labelMin.setText(String.valueOf(stats.getMinimumNoDecimals()));
+            labelMax.setText(String.valueOf(stats.getMaximumNoDecimals()));
+            labelSum.setText(String.valueOf(stats.getSumNoDecimals()));
+        }
+        labelAvg.setText(form.format(stats.getAverage()));
+        if(stats.isSumOverflow()){
+            labelSum.setText(labelSum.getText() + "  (Overflow)");
+        }
+    }
+
+    @FXML
+    private void initialize(){ }
+
+    @FXML
+    private void onClose(ActionEvent event){
+        if(delegate != null){
+            delegate.onClose();
+        }
+    }
 
 }

@@ -22,14 +22,14 @@ package com.raven.icecrusher.net;
  *
  */
 public interface ResultHandler {
-	
-	/**
-	 * Called when a network connection attempt has successfully finished
-	 * passing the response in the form of a {@link NetworkResult} object to
-	 * this method
-	 * 
-	 * @param result The <code>NetworkResult</code> of the underlying connection
-	 */
-	public void onResult(NetworkResult result);
+
+    /**
+     * Called when a network connection attempt has successfully finished
+     * passing the response in the form of a {@link NetworkResult} object to
+     * this method
+     * 
+     * @param result The <code>NetworkResult</code> of the underlying connection
+     */
+    public void onResult(NetworkResult result);
 
 }

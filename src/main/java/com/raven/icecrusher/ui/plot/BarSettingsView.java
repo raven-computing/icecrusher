@@ -22,19 +22,19 @@ package com.raven.icecrusher.ui.plot;
  */
 public class BarSettingsView extends SettingsView {
 
-	public BarSettingsView(int index){
-		super(index);
-		addRemoveButtonToSettings();
-		addTextFieldToSettings();
-		addColorPickerToSettings();
-	}
+    public BarSettingsView(int index){
+        super(index);
+        addRemoveButtonToSettings();
+        addTextFieldToSettings();
+        addColorPickerToSettings();
+    }
 
-	public BarSettingsView(int index, String text){
-		super(index);
-		addRemoveButtonToSettings();
-		addTextFieldToSettings();
-		addColorPickerToSettings();
-		setEditText(text);
-	}
+    public BarSettingsView(int index, String text){
+        super(index);
+        addRemoveButtonToSettings();
+        addTextFieldToSettings();
+        addColorPickerToSettings();
+        setEditText(text);
+    }
 
 }

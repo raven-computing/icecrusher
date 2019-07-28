@@ -31,23 +31,23 @@ import javafx.scene.layout.StackPane;
  */
 public class SortDialog extends EditorDialog {
 
-	private SortDialogController controller;
+    private SortDialogController controller;
 
-	public SortDialog(StackPane root){
-		super(root, null);
+    public SortDialog(StackPane root){
+        super(root, null);
         final Layout layout = Layout.of(Dialog.SORT);
         final Parent parent = layout.load();
         controller = layout.getController();
         controller.setRootContainer(root);
-		setContent((Region)parent);
-	}
-	
-	public void setOnSort(DialogListener listener){
-		controller.setSortListener(listener);
-	}
-	
-	public void setColumns(final String[] columns){
-		controller.setColumns(columns);
-	}
-	
+        setContent((Region)parent);
+    }
+
+    public void setOnSort(DialogListener listener){
+        controller.setSortListener(listener);
+    }
+
+    public void setColumns(final String[] columns){
+        controller.setColumns(columns);
+    }
+
 }

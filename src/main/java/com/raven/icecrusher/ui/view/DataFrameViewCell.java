@@ -24,18 +24,18 @@ import javafx.scene.control.TableCell;
  * 
  */
 public class DataFrameViewCell<S, T> extends TableCell<S, T> {
-	
-	/** Negates the pseudo class 'selected' **/
-	private static final PseudoClass PSEUDO_CLASS_UNSELECTED =
+
+    /** Negates the pseudo class 'selected' **/
+    private static final PseudoClass PSEUDO_CLASS_UNSELECTED =
             PseudoClass.getPseudoClass("unselected");
 
-	public DataFrameViewCell(){
-		super();
-		//initial state is always unselected
-		pseudoClassStateChanged(PSEUDO_CLASS_UNSELECTED, true);
-		selectedProperty().addListener((ov, oldVal, isSelected) -> {
-			pseudoClassStateChanged(PSEUDO_CLASS_UNSELECTED, !isSelected);
-		});
-	}
-	
+    public DataFrameViewCell(){
+        super();
+        //initial state is always unselected
+        pseudoClassStateChanged(PSEUDO_CLASS_UNSELECTED, true);
+        selectedProperty().addListener((ov, oldVal, isSelected) -> {
+            pseudoClassStateChanged(PSEUDO_CLASS_UNSELECTED, !isSelected);
+        });
+    }
+
 }

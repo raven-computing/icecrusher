@@ -21,20 +21,20 @@ package com.raven.icecrusher.base;
  *
  */
 public enum Activity {
-	
-	MAIN("Frame.fxml"),
-	PREFERENCES("Preferences.fxml"),
-	ABOUT("About.fxml"),
-	FEEDBACK("Feedback.fxml"),
-	PIE_CHART("PlotPieChart.fxml"),
-	LINE_CHART("PlotLineChart.fxml"),
-	AREA_CHART("PlotAreaChart.fxml"),
-	BAR_CHART("PlotBarChart.fxml");
-	
-	public String fxml;
-	
-	Activity(final String fxml){
-		this.fxml = fxml;
-	}
+
+    MAIN("Frame.fxml"),
+    PREFERENCES("Preferences.fxml"),
+    ABOUT("About.fxml"),
+    FEEDBACK("Feedback.fxml"),
+    PIE_CHART("PlotPieChart.fxml"),
+    LINE_CHART("PlotLineChart.fxml"),
+    AREA_CHART("PlotAreaChart.fxml"),
+    BAR_CHART("PlotBarChart.fxml");
+
+    public String fxml;
+
+    Activity(final String fxml){
+        this.fxml = fxml;
+    }
 
 }

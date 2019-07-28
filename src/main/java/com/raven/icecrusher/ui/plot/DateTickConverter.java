@@ -34,7 +34,7 @@ public class DateTickConverter extends StringConverter<Number> {
 
 	@Override
 	public String toString(Number object){
-		return "  "+tZero.plusDays(((int)((double)object))).format(XYChartController.DATE_FORMATTER_TICKS)+"  ";
+	    return "  "+tZero.plusDays(((int)((double)object))).format(XYChartController.DATE_FORMATTER_TICKS)+"  ";
 	}
 
 	@Override

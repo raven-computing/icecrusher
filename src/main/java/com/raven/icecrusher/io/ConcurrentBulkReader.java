@@ -28,12 +28,12 @@ import com.raven.common.struct.DataFrame;
  */
 public interface ConcurrentBulkReader {
 
-	/**
-	 * Called when a concurrent reading operation has finished, 
-	 * passing the result in form of a List of DataFrames as an 
-	 * argument to this method
-	 * 
-	 * @param dataFrames The List holding all DataFrames read
-	 */
-	void onRead(List<DataFrame> dataFrames);
+    /**
+     * Called when a concurrent reading operation has finished, 
+     * passing the result in form of a List of DataFrames as an 
+     * argument to this method
+     * 
+     * @param dataFrames The List holding all DataFrames read
+     */
+    void onRead(List<DataFrame> dataFrames);
 }

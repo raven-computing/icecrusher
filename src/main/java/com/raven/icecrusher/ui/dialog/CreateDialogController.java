@@ -64,154 +64,156 @@ import javafx.scene.layout.Pane;
  *
  */
 public class CreateDialogController {
-	
-	/**
-	 * Listener interface for the <code>CreateDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user confirms a DataFrame creation
-		 * 
-		 * @param df The <code>DataFrame</code> as specified by the user
-		 */
-		void onCreate(DataFrame df);
-	}
-	
-	public static String[] options = new String[]{"Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean"};
-	
-	@FXML
-	private ScrollPane scrollPane;
-	
-	@FXML
-	private JFXCheckBox cbIsNullable;
-	
-	@FXML
-	private JFXButton btnCreate;
-	
-	@FXML
-	private HBox hboxColumns;
-	
-	@FXML
-	private JFXComboBox<String> cBoxColType;
-	
-	@FXML
-	private JFXTextField txtColName;
-	
-	private Pane rootPane;
-	
-	private DialogListener delegate;
-	
-	private List<ColumnItemController> items;
-	private List<Column> columns;
-	private List<String> names;;
 
-	@FXML
-	public void initialize(){
-		items = new LinkedList<>();
-		cBoxColType.getItems().removeAll(cBoxColType.getItems());
-		cBoxColType.getItems().addAll(options);
-	}
-	
-	public void setRootContainer(final Pane pane){
-		this.rootPane = pane;
-	}
-	
-	public void setCreateListener(DialogListener listener){
-		this.delegate = listener;
-	}
-	
-	private Column constructColumn(final String type){
-		if(type != null){
-			final boolean useNull = cbIsNullable.isSelected();
-			switch(type){
-			case "Byte":
-				return (useNull ? new NullableByteColumn() : new ByteColumn());
-			case "Short":
-				return (useNull ? new NullableShortColumn() : new ShortColumn());
-			case "Int":
-				return (useNull ? new NullableIntColumn() : new IntColumn());
-			case "Long":
-				return (useNull ? new NullableLongColumn() : new LongColumn());
-			case "String":
-				return (useNull ? new NullableStringColumn() : new StringColumn());
-			case "Float":
-				return (useNull ? new NullableFloatColumn() : new FloatColumn());
-			case "Double":
-				return (useNull ? new NullableDoubleColumn() : new DoubleColumn());
-			case "Char":
-				return (useNull ? new NullableCharColumn() : new CharColumn());
-			case "Boolean":
-				return (useNull ? new NullableBooleanColumn() : new BooleanColumn());
-			}
-		}
-		return null;
-	}
-	
-	private void showWarnMsg(final String msg){
-		OneShotSnackbar.showFor(rootPane, msg);
-	}
-	
-	@FXML
-	private void onCreate(ActionEvent event){
-		final Column col = constructColumn(cBoxColType.getValue());
-		final String name = txtColName.getText();
-		if(col == null){
-			showWarnMsg("Please specify all column types");
-			return;
-		}
-		this.columns = new ArrayList<>();
-		this.names = new ArrayList<>();
-		int i = 0;
-		columns.add(col);
-		names.add(((name == null || name.isEmpty()) ? String.valueOf(i) : name));
-		++i;
-		for(ColumnItemController item : items){
-			final Column col2 = constructColumn(item.getSelectedType());
-			final String name2 = item.getColumnName();;
-			if(col2 == null){
-				showWarnMsg("Please specify all column types");
-				return;
-			}
-			columns.add(col2);
-			names.add(((name2 == null || name2.isEmpty()) ? String.valueOf(i) : name2));
-			++i;
-		}
-		if(hasDuplicate(names)){
-			showWarnMsg("Duplicate column name");
-			return;
-		}
-		DataFrame df = (cbIsNullable.isSelected() ? new NullableDataFrame() : new DefaultDataFrame());
-		for(int j=0; j<i; ++j){
-			df.addColumn(names.get(j), columns.get(j));
-		}
-		if(delegate != null){
-			delegate.onCreate(df);
-		}
-	}
-	
-	@FXML
-	private void onAddColumn(ActionEvent event){
-		final Layout layout = Layout.of(Dialog.CREATE_DIALOG_COLUMN_ITEM);
+    /**
+     * Listener interface for the <code>CreateDialog</code>.
+     *
+     */
+    public interface DialogListener {
+
+        /**
+         * Called when the user confirms a DataFrame creation
+         * 
+         * @param df The <code>DataFrame</code> as specified by the user
+         */
+        void onCreate(DataFrame df);
+    }
+
+    public static String[] options = new String[]{
+            "Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean"};
+
+
+    @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
+    private JFXCheckBox cbIsNullable;
+
+    @FXML
+    private JFXButton btnCreate;
+
+    @FXML
+    private HBox hboxColumns;
+
+    @FXML
+    private JFXComboBox<String> cBoxColType;
+
+    @FXML
+    private JFXTextField txtColName;
+
+    private Pane rootPane;
+
+    private DialogListener delegate;
+
+    private List<ColumnItemController> items;
+    private List<Column> columns;
+    private List<String> names;;
+
+    @FXML
+    public void initialize(){
+        items = new LinkedList<>();
+        cBoxColType.getItems().removeAll(cBoxColType.getItems());
+        cBoxColType.getItems().addAll(options);
+    }
+
+    public void setRootContainer(final Pane pane){
+        this.rootPane = pane;
+    }
+
+    public void setCreateListener(DialogListener listener){
+        this.delegate = listener;
+    }
+
+    private Column constructColumn(final String type){
+        if(type != null){
+            final boolean useNull = cbIsNullable.isSelected();
+            switch(type){
+            case "Byte":
+                return (useNull ? new NullableByteColumn() : new ByteColumn());
+            case "Short":
+                return (useNull ? new NullableShortColumn() : new ShortColumn());
+            case "Int":
+                return (useNull ? new NullableIntColumn() : new IntColumn());
+            case "Long":
+                return (useNull ? new NullableLongColumn() : new LongColumn());
+            case "String":
+                return (useNull ? new NullableStringColumn() : new StringColumn());
+            case "Float":
+                return (useNull ? new NullableFloatColumn() : new FloatColumn());
+            case "Double":
+                return (useNull ? new NullableDoubleColumn() : new DoubleColumn());
+            case "Char":
+                return (useNull ? new NullableCharColumn() : new CharColumn());
+            case "Boolean":
+                return (useNull ? new NullableBooleanColumn() : new BooleanColumn());
+            }
+        }
+        return null;
+    }
+
+    private void showWarnMsg(final String msg){
+        OneShotSnackbar.showFor(rootPane, msg);
+    }
+
+    @FXML
+    private void onCreate(ActionEvent event){
+        final Column col = constructColumn(cBoxColType.getValue());
+        final String name = txtColName.getText();
+        if(col == null){
+            showWarnMsg("Please specify all column types");
+            return;
+        }
+        this.columns = new ArrayList<>();
+        this.names = new ArrayList<>();
+        int i = 0;
+        columns.add(col);
+        names.add(((name == null || name.isEmpty()) ? String.valueOf(i) : name));
+        ++i;
+        for(ColumnItemController item : items){
+            final Column col2 = constructColumn(item.getSelectedType());
+            final String name2 = item.getColumnName();;
+            if(col2 == null){
+                showWarnMsg("Please specify all column types");
+                return;
+            }
+            columns.add(col2);
+            names.add(((name2 == null || name2.isEmpty()) ? String.valueOf(i) : name2));
+            ++i;
+        }
+        if(hasDuplicate(names)){
+            showWarnMsg("Duplicate column name");
+            return;
+        }
+        DataFrame df = (cbIsNullable.isSelected() ? new NullableDataFrame() : new DefaultDataFrame());
+        for(int j=0; j<i; ++j){
+            df.addColumn(names.get(j), columns.get(j));
+        }
+        if(delegate != null){
+            delegate.onCreate(df);
+        }
+    }
+
+    @FXML
+    private void onAddColumn(ActionEvent event){
+        final Layout layout = Layout.of(Dialog.CREATE_DIALOG_COLUMN_ITEM);
         final Parent parent = layout.load();
-		final ColumnItemController item = layout.getController();
+        final ColumnItemController item = layout.getController();
         items.add(item);
-		hboxColumns.getChildren().add(parent);
-		scrollPane.setContent(hboxColumns);
-	}
-	
-	private boolean hasDuplicate(final List<String> names){
-		final Set<String> set = new HashSet<>();
-		set.add(names.get(0));
-		if(names.size() >= 2){
-			for(int i=1; i<names.size(); ++i){
-				if(set.contains(names.get(i))){
-					return true;
-				}
-				set.add(names.get(i));
-			}
-		}
-		return false;
-	}
+        hboxColumns.getChildren().add(parent);
+        scrollPane.setContent(hboxColumns);
+    }
+
+    private boolean hasDuplicate(final List<String> names){
+        final Set<String> set = new HashSet<>();
+        set.add(names.get(0));
+        if(names.size() >= 2){
+            for(int i=1; i<names.size(); ++i){
+                if(set.contains(names.get(i))){
+                    return true;
+                }
+                set.add(names.get(i));
+            }
+        }
+        return false;
+    }
 }

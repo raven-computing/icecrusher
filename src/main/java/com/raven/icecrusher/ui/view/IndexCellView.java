@@ -24,18 +24,18 @@ import javafx.beans.binding.Bindings;
  */
 public class IndexCellView extends DataFrameViewCell<Integer, Void> {
 
-	/**
-	 * Constructs a new <code>IndexCellView</code>
-	 */
-	public IndexCellView(){
-		super();
-		textProperty().bind(Bindings.createStringBinding(() -> {
-			if(isEmpty()){
-				return null;
-			}else{
-				return Integer.toString(getIndex());
-			}
-		}, emptyProperty(), indexProperty()));
-	}
-	
+    /**
+     * Constructs a new <code>IndexCellView</code>
+     */
+    public IndexCellView(){
+        super();
+        textProperty().bind(Bindings.createStringBinding(() -> {
+            if(isEmpty()){
+                return null;
+            }else{
+                return Integer.toString(getIndex());
+            }
+        }, emptyProperty(), indexProperty()));
+    }
+
 }

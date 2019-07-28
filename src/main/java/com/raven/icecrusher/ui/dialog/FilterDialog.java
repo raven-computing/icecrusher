@@ -29,24 +29,24 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class FilterDialog extends EditorDialog {
-	
-	private FilterDialogController controller;
 
-	public FilterDialog(StackPane root){
-		super(root, null);
+    private FilterDialogController controller;
+
+    public FilterDialog(StackPane root){
+        super(root, null);
         final Layout layout = Layout.of(Dialog.FILTER);
         final Parent parent = layout.load();
         controller = layout.getController();
         controller.setRootContainer(root);
-		setContent((Region)parent);
-	}
-	
-	public void setOnFilter(DialogListener listener){
-		controller.setFilterListener(listener);
-	}
-	
-	public void setColumns(final String[] columns){
-		controller.setColumns(columns);
-	}
+        setContent((Region)parent);
+    }
+
+    public void setOnFilter(DialogListener listener){
+        controller.setFilterListener(listener);
+    }
+
+    public void setColumns(final String[] columns){
+        controller.setColumns(columns);
+    }
 
 }

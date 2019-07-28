@@ -30,21 +30,21 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class AddColumnDialog extends EditorDialog {
-	
-	private AddColumnDialogController controller;
 
-	public AddColumnDialog(StackPane root, DataFrame df){
-		super(root, null);
+    private AddColumnDialogController controller;
+
+    public AddColumnDialog(StackPane root, DataFrame df){
+        super(root, null);
         final Layout layout = Layout.of(Dialog.ADD_COLUMN);
         final Parent parent = layout.load();
         controller = layout.getController();
         controller.setRootContainer(root);
         controller.useDataFrame(df);
-		setContent((Region)parent);
-	}
-	
-	public void setAddListener(DialogListener listener){
-		controller.setAddListener(listener);
-	}
+        setContent((Region)parent);
+    }
+
+    public void setAddListener(DialogListener listener){
+        controller.setAddListener(listener);
+    }
 
 }

@@ -30,82 +30,82 @@ import javafx.scene.layout.Pane;
  *
  */
 public class RenameColumnDialogController {
-	
-	/**
-	 * Listener interface for the <code>RenameColumnDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user confirms a column rename action
-		 * 
-		 * @param newName The new name of the column
-		 */
-		void onRename(String newName);
-	}
-	
-	@FXML
-	private JFXTextField txtColName;
-	
-	private Pane rootPane;
-	private DialogListener delegate;
-	private DataFrame df;
-	private String name;
-	
-	public void setRenameListener(DialogListener delegate){
-		this.delegate = delegate;
-	}
-	
-	public void setRootContainer(Pane pane) {
-		this.rootPane = pane;
-	}
-	
-	public void setCurrent(final DataFrame df, final String name){
-		this.df = df;
-		this.name = name;
-//		txtColName.requestFocus();  //is not working. BUG: JDK-8087950
-		txtColName.setText(name);
-		txtColName.focusedProperty().addListener((ov, t, t1) -> {
-			Platform.runLater(() -> {
-				if(txtColName.isFocused() && !txtColName.getText().isEmpty()){
-					txtColName.selectAll();
-				}
-			});
-		});
-	}
 
-	@FXML
-	private void initialize(){ }
-	
-	@FXML
-	private void onRename(ActionEvent event){
-		final String newName = txtColName.getText();
-		if(newName == null || newName.isEmpty()){
-			showWarnMsg("Column name cannot be empty");
-			return;
-		}
-		if(nameIsDuplicate(newName)){
-			showWarnMsg("Duplicate column name");
-			return;
-		}
-		if(delegate != null){
-			delegate.onRename(newName);
-		}
-	}
-	
-	private void showWarnMsg(final String msg){
-		OneShotSnackbar.showFor(rootPane, msg);
-	}
-	
-	private boolean nameIsDuplicate(final String newName){
-		if(this.name.equals(newName)){ return false; }
-		for(final String s : df.getColumnNames()){
-			if(newName.equals(s)){
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Listener interface for the <code>RenameColumnDialog</code>.
+     *
+     */
+    public interface DialogListener {
+
+        /**
+         * Called when the user confirms a column rename action
+         * 
+         * @param newName The new name of the column
+         */
+        void onRename(String newName);
+    }
+
+    @FXML
+    private JFXTextField txtColName;
+
+    private Pane rootPane;
+    private DialogListener delegate;
+    private DataFrame df;
+    private String name;
+
+    public void setRenameListener(DialogListener delegate){
+        this.delegate = delegate;
+    }
+
+    public void setRootContainer(Pane pane) {
+        this.rootPane = pane;
+    }
+
+    public void setCurrent(final DataFrame df, final String name){
+        this.df = df;
+        this.name = name;
+//		txtColName.requestFocus();  //is not working. BUG: JDK-8087950
+        txtColName.setText(name);
+        txtColName.focusedProperty().addListener((ov, t, t1) -> {
+            Platform.runLater(() -> {
+                if(txtColName.isFocused() && !txtColName.getText().isEmpty()){
+                    txtColName.selectAll();
+                }
+            });
+        });
+    }
+
+    @FXML
+    private void initialize(){ }
+
+    @FXML
+    private void onRename(ActionEvent event){
+        final String newName = txtColName.getText();
+        if(newName == null || newName.isEmpty()){
+            showWarnMsg("Column name cannot be empty");
+            return;
+        }
+        if(nameIsDuplicate(newName)){
+            showWarnMsg("Duplicate column name");
+            return;
+        }
+        if(delegate != null){
+            delegate.onRename(newName);
+        }
+    }
+
+    private void showWarnMsg(final String msg){
+        OneShotSnackbar.showFor(rootPane, msg);
+    }
+
+    private boolean nameIsDuplicate(final String newName){
+        if(this.name.equals(newName)){ return false; }
+        for(final String s : df.getColumnNames()){
+            if(newName.equals(s)){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

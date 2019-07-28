@@ -26,25 +26,25 @@ import javafx.fxml.FXML;
  *
  */
 public class ColumnItemController {
-	
-	@FXML
-	private JFXComboBox<String> cBoxColType;
-	
-	@FXML
-	private JFXTextField txtColName;
 
-	@FXML
-	public void initialize(){
-		cBoxColType.getItems().removeAll(cBoxColType.getItems());
-		cBoxColType.getItems().addAll(CreateDialogController.options);
-	}
-	
-	public String getSelectedType(){
-		return cBoxColType.getValue();
-	}
-	
-	public String getColumnName(){
-		return txtColName.getText();
-	}
+    @FXML
+    private JFXComboBox<String> cBoxColType;
+
+    @FXML
+    private JFXTextField txtColName;
+
+    @FXML
+    public void initialize(){
+        cBoxColType.getItems().removeAll(cBoxColType.getItems());
+        cBoxColType.getItems().addAll(CreateDialogController.options);
+    }
+
+    public String getSelectedType(){
+        return cBoxColType.getValue();
+    }
+
+    public String getColumnName(){
+        return txtColName.getText();
+    }
 
 }

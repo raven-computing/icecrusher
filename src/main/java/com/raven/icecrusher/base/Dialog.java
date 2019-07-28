@@ -21,21 +21,21 @@ package com.raven.icecrusher.base;
  *
  */
 public enum Dialog {
-	
-	CREATE("CreateDialog.fxml"),
-	CREATE_DIALOG_COLUMN_ITEM("ColumnItem.fxml"),
-	FILTER("FilterDialog.fxml"),
-	SAVE("SaveDialog.fxml"),
-	ADD_COLUMN("AddColumnDialog.fxml"),
-	RENAME_COLUMN("RenameColumnDialog.fxml"),
-	SORT("SortDialog.fxml"),
-	STATS("StatsDialog.fxml"),
-	UPDATE("UpdateDialog.fxml");
-	
-	public String fxml;
-	
-	Dialog(final String fxml){
-		this.fxml = fxml;
-	}
+
+    CREATE("CreateDialog.fxml"),
+    CREATE_DIALOG_COLUMN_ITEM("ColumnItem.fxml"),
+    FILTER("FilterDialog.fxml"),
+    SAVE("SaveDialog.fxml"),
+    ADD_COLUMN("AddColumnDialog.fxml"),
+    RENAME_COLUMN("RenameColumnDialog.fxml"),
+    SORT("SortDialog.fxml"),
+    STATS("StatsDialog.fxml"),
+    UPDATE("UpdateDialog.fxml");
+
+    public String fxml;
+
+    Dialog(final String fxml){
+        this.fxml = fxml;
+    }
 
 }

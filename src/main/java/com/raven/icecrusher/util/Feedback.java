@@ -29,60 +29,60 @@ import com.raven.common.struct.RowItem;
  *
  */
 public class Feedback implements Row {
-	
+
     @RowItem("Content")
     private String content;
-    
+
     @RowItem("E-Mail")
     private String email;
-    
+
     @RowItem("App-Version")
     private String appVersion;
-	
+
     public Feedback(){ }
 
     public Feedback(final String content, final String email){
-		this.content = content;
-		this.email = email;
-	}
+        this.content = content;
+        this.email = email;
+    }
 
-	public String getContent(){
-		return this.content;
-	}
+    public String getContent(){
+        return this.content;
+    }
 
-	public void setContent(final String content){
-		this.content = content;
-	}
+    public void setContent(final String content){
+        this.content = content;
+    }
 
-	public String getEmail(){
-		return this.email;
-	}
+    public String getEmail(){
+        return this.email;
+    }
 
-	public void setEmail(final String email){
-		this.email = email;
-	}
-	
-	public String getAppVersion(){
-		return this.appVersion;
-	}
+    public void setEmail(final String email){
+        this.email = email;
+    }
 
-	public void setAppVersion(final String appVersion){
-		this.appVersion = appVersion;
-	}
-	
-	public static String serialize(final Feedback feedback){
-		final DataFrame df = new DefaultDataFrame(Feedback.class);
-		df.addRow(feedback);
-		try{
-			return DataFrameSerializer.toBase64(df);
-		}catch(IOException ex){
-			ExceptionHandler.handle(ex);
-			return "n/a";
-		}
-	}
-	
-	public static String contentType(){
-		return "application/df; charset=utf-8";
-	}
-	
+    public String getAppVersion(){
+        return this.appVersion;
+    }
+
+    public void setAppVersion(final String appVersion){
+        this.appVersion = appVersion;
+    }
+
+    public static String serialize(final Feedback feedback){
+        final DataFrame df = new DefaultDataFrame(Feedback.class);
+        df.addRow(feedback);
+        try{
+            return DataFrameSerializer.toBase64(df);
+        }catch(IOException ex){
+            ExceptionHandler.handle(ex);
+            return "n/a";
+        }
+    }
+
+    public static String contentType(){
+        return "application/df; charset=utf-8";
+    }
+
 }

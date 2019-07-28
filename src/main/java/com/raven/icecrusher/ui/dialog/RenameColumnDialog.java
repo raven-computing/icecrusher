@@ -30,24 +30,24 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class RenameColumnDialog extends EditorDialog {
-	
-	private RenameColumnDialogController controller;
 
-	public RenameColumnDialog(StackPane root){
-		super(root, null);
+    private RenameColumnDialogController controller;
+
+    public RenameColumnDialog(StackPane root){
+        super(root, null);
         final Layout layout = Layout.of(Dialog.RENAME_COLUMN);
         final Parent parent = layout.load();
         controller = layout.getController();
         controller.setRootContainer(root);
-		setContent((Region)parent);
-	}
-	
-	public void setCurrent(final DataFrame df, final String name){
-		this.controller.setCurrent(df, name);
-	}
-	
-	public void setOnRename(DialogListener listener){
-		controller.setRenameListener(listener);
-	}
+        setContent((Region)parent);
+    }
+
+    public void setCurrent(final DataFrame df, final String name){
+        this.controller.setCurrent(df, name);
+    }
+
+    public void setOnRename(DialogListener listener){
+        controller.setRenameListener(listener);
+    }
 
 }

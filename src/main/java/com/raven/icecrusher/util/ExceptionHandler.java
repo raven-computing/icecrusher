@@ -31,28 +31,32 @@ import com.raven.icecrusher.ui.dialog.Dialogs;
  */
 public final class ExceptionHandler {
 
-	private ExceptionHandler(){ }
-	
-	/**
-	 * Handles the provided Exception in the default way
-	 * 
-	 * @param throwable The throwable Exception to handle
-	 */
-	public static void handle(final Throwable throwable){
-		if(Const.DEBUG){
-			System.err.println("----- ["+ExceptionHandler.class.getSimpleName()+"] "+"catched Exception: -----");
-			throwable.printStackTrace();
-			System.err.println("----- ["+ExceptionHandler.class.getSimpleName()+"] "+"end stack trace -----");
-		}
-	}
-	
-	/**
-	 * Shows an error dialog to the user on the application's main Stage
-	 * 
-	 * @param throwable The throwable Exception to handle and show
-	 */
-	public static void showDialog(final Throwable throwable){
-		Dialogs.showExceptionDialog(StackedApplication.getMainStage(), throwable);
-	}
-	
+    private ExceptionHandler(){ }
+
+    /**
+     * Handles the provided Exception in the default way
+     * 
+     * @param throwable The throwable Exception to handle
+     */
+    public static void handle(final Throwable throwable){
+        if(Const.DEBUG){
+            System.err.println("----- [" + ExceptionHandler.class.getSimpleName()
+                    + "] "+"catched Exception: -----");
+            
+            throwable.printStackTrace();
+            System.err.println("----- [" + ExceptionHandler.class.getSimpleName()
+                    + "] "+"end stack trace -----");
+            
+        }
+    }
+
+    /**
+     * Shows an error dialog to the user on the application's main Stage
+     * 
+     * @param throwable The throwable Exception to handle and show
+     */
+    public static void showDialog(final Throwable throwable){
+        Dialogs.showExceptionDialog(StackedApplication.getMainStage(), throwable);
+    }
+
 }

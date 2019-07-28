@@ -27,22 +27,22 @@ import javafx.scene.control.ContextMenu;
  *
  */
 public interface MenuFactory {
-	
-	/**
-	 * Factory method which is being called by a <code>DataFrameView</code> during 
-	 * initialization and reloading to add a specific <code>ContextMenu</code> to
-	 * each <code>DataFrameColumnView</code>. Implementations have the responsibility 
-	 * to construct and return an appropriate ContextMenu, which then will be added
-	 * to the DataFrameColumnView to be accessible to user interactions.
-	 * 
-	 * <p>Do not set the ContextMenu to the provided column view directly as this will
-	 * be handled by the underlying DataFrameView
-	 * 
-	 * @param columnView The <code>DataFrameColumnView</code> to create a 
-	 *                   <code>ContextMenu</code> for
-	 * @return A fully created and initialized <code>ContextMenu</code> object to be 
-	 *         used by the provided DataFrameColumnView
-	 */
-	public ContextMenu createContextMenu(DataFrameColumnView columnView);
+
+    /**
+     * Factory method which is being called by a <code>DataFrameView</code> during 
+     * initialization and reloading to add a specific <code>ContextMenu</code> to
+     * each <code>DataFrameColumnView</code>. Implementations have the responsibility 
+     * to construct and return an appropriate ContextMenu, which then will be added
+     * to the DataFrameColumnView to be accessible to user interactions.
+     * 
+     * <p>Do not set the ContextMenu to the provided column view directly as this will
+     * be handled by the underlying DataFrameView
+     * 
+     * @param columnView The <code>DataFrameColumnView</code> to create a 
+     *                   <code>ContextMenu</code> for
+     * @return A fully created and initialized <code>ContextMenu</code> object to be 
+     *         used by the provided DataFrameColumnView
+     */
+    public ContextMenu createContextMenu(DataFrameColumnView columnView);
 
 }

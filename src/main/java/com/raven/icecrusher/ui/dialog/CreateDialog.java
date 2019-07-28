@@ -29,20 +29,20 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class CreateDialog extends EditorDialog {
-	
-	private CreateDialogController controller;
 
-	public CreateDialog(StackPane root){
-		super(root, null);
+    private CreateDialogController controller;
+
+    public CreateDialog(StackPane root){
+        super(root, null);
         final Layout layout = Layout.of(Dialog.CREATE);
         final Parent parent = layout.load();
         controller = layout.getController();
         controller.setRootContainer(root);
-		setContent((Region)parent);
-	}
-	
-	public void setOnCreate(DialogListener listener){
-		controller.setCreateListener(listener);
-	}
+        setContent((Region)parent);
+    }
+
+    public void setOnCreate(DialogListener listener){
+        controller.setCreateListener(listener);
+    }
 
 }

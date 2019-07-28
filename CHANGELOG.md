@@ -1,3 +1,7 @@
+#### 2.1.1
+* Changed ExportDialog class to match optics of the ImportDialog
+* Changed file formatting. Improved structure and tabs removed
+
 #### 2.1.0
 * Added proportional values computation to the pie chart controller. Taking numerical values of a second column into consideration is optional and can be omitted. If so, then the original behaviour of computing the proportional occurrences of all keys in the first column is executed
 * Added *setAllSettingsViews()* method in *SettingsListView* and *setAllSettingsViewsInList()* method in *ChartController* to allow for complete replacement of all SettingsViews without any animations

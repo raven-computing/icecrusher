@@ -41,63 +41,65 @@ import javafx.scene.paint.Paint;
  */
 public class ImportDialog extends EditorDialog {
 
-	/**
-	 * Listener interface for the <code>ImportDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user confirms the intended action
-		 * 
-		 * @param hasHeader Indicating whether the CSV file has a header
-		 * @param separator The separator to use when importing the CSV file
-		 */
-		void onImport(boolean hasHeader, char separator);
-	}
-	
-	private DialogListener delegate;
+    /**
+     * Listener interface for the <code>ImportDialog</code>.
+     *
+     */
+    public interface DialogListener {
 
-	public ImportDialog(StackPane root){
-		super(root, null);
-		final JFXDialogLayout layout = new JFXDialogLayout();
-		final VBox vbox = new VBox();
-		final JFXCheckBox checkBox = new JFXCheckBox("Treat first line as a header");
-		checkBox.setCheckedColor(Paint.valueOf("#1668ff"));//fixes visual bug
-		checkBox.setSelected(true);
-		final VBox sepBox =  new VBox();
-		final Label label = new Label("Use separator:");
-		final TextField txtField = new TextField(",");
-		txtField.setId("import-field-separator");
-		txtField.setTextFormatter(new TextFormatter<Object>(Converters.charConverter(), ",", Filters.charFilter(true)));
-		txtField.setMaxWidth(40.0);
-		sepBox.setSpacing(10.0);
-		sepBox.getChildren().addAll(label, txtField);
-		vbox.setSpacing(20.0);
-		vbox.getChildren().addAll(checkBox, sepBox);
-		final JFXButton button = new JFXButton("Import");
-		button.getStyleClass().add("dialog-button");
-		button.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
-			final String separator = txtField.getText();
-			if((separator == null) || (separator.isEmpty())){
-				showWarning("Please specify the separator to use");
-				return;
-			}
-			if(delegate != null){ 
-				delegate.onImport(checkBox.isSelected(), separator.charAt(0));
-			}
-		});
-		final List<JFXButton> actions = new LinkedList<>();
-		actions.add(button);
-		layout.setHeading(new Label("Import CSV file"));
-		layout.setBody(vbox);
-		VBox.setMargin(checkBox, new Insets(20.0, 0.0, 0.0, 0.0));
-		layout.setActions(actions);
-		setContent(layout);
-	}
-	
-	public void setOnImport(final DialogListener delegate){
-		this.delegate = delegate;
-	}
+        /**
+         * Called when the user confirms the intended action
+         * 
+         * @param hasHeader Indicating whether the CSV file has a header
+         * @param separator The separator to use when importing the CSV file
+         */
+        void onImport(boolean hasHeader, char separator);
+    }
+
+    private DialogListener delegate;
+
+    public ImportDialog(StackPane root){
+        super(root, null);
+        final JFXDialogLayout layout = new JFXDialogLayout();
+        final VBox vbox = new VBox();
+        final JFXCheckBox checkBox = new JFXCheckBox("Treat first line as a header");
+        checkBox.setCheckedColor(Paint.valueOf("#1668ff"));//fixes visual bug
+        checkBox.setSelected(true);
+        final VBox sepBox =  new VBox();
+        final Label label = new Label("Use separator:");
+        final TextField txtField = new TextField(",");
+        txtField.setId("import-field-separator");
+        txtField.setTextFormatter(new TextFormatter<Object>(Converters.charConverter(),
+                ",", Filters.charFilter(true)));
+        
+        txtField.setMaxWidth(40.0);
+        sepBox.setSpacing(10.0);
+        sepBox.getChildren().addAll(label, txtField);
+        vbox.setSpacing(20.0);
+        vbox.getChildren().addAll(checkBox, sepBox);
+        final JFXButton button = new JFXButton("Import");
+        button.getStyleClass().add("dialog-button");
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
+            final String separator = txtField.getText();
+            if((separator == null) || (separator.isEmpty())){
+                showWarning("Please specify the separator to use");
+                return;
+            }
+            if(delegate != null){ 
+                delegate.onImport(checkBox.isSelected(), separator.charAt(0));
+            }
+        });
+        final List<JFXButton> actions = new LinkedList<>();
+        actions.add(button);
+        layout.setHeading(new Label("Import CSV file"));
+        layout.setBody(vbox);
+        VBox.setMargin(checkBox, new Insets(20.0, 0.0, 0.0, 0.0));
+        layout.setActions(actions);
+        setContent(layout);
+    }
+
+    public void setOnImport(final DialogListener delegate){
+        this.delegate = delegate;
+    }
 
 }

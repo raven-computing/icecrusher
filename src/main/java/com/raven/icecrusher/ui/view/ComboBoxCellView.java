@@ -29,18 +29,18 @@ import javafx.scene.control.cell.ComboBoxTableCell;
  *
  */
 public class ComboBoxCellView extends ComboBoxTableCell<Integer, Object> {
-	
-	/** Negates the pseudo class 'selected' **/
-	private static final PseudoClass PSEUDO_CLASS_UNSELECTED =
+
+    /** Negates the pseudo class 'selected' **/
+    private static final PseudoClass PSEUDO_CLASS_UNSELECTED =
             PseudoClass.getPseudoClass("unselected");
-	
-	public ComboBoxCellView(final Converter converter, final ObservableList<Object> items){
-		super(converter, items);
-		//initial state is always unselected
-		pseudoClassStateChanged(PSEUDO_CLASS_UNSELECTED, true);
-		selectedProperty().addListener((ov, oldVal, isSelected) -> {
-			pseudoClassStateChanged(PSEUDO_CLASS_UNSELECTED, !isSelected);
-		});
-	}
+
+    public ComboBoxCellView(final Converter converter, final ObservableList<Object> items){
+        super(converter, items);
+        //initial state is always unselected
+        pseudoClassStateChanged(PSEUDO_CLASS_UNSELECTED, true);
+        selectedProperty().addListener((ov, oldVal, isSelected) -> {
+            pseudoClassStateChanged(PSEUDO_CLASS_UNSELECTED, !isSelected);
+        });
+    }
 
 }

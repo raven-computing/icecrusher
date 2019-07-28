@@ -23,18 +23,18 @@ package com.raven.icecrusher.io;
  */
 public class ConversionException extends Exception {
 
-	private static final long serialVersionUID = 1L;
-	
-	private String offendingValue;
-	private int rowIndex;
+    private static final long serialVersionUID = 1L;
+
+    private String offendingValue;
+    private int rowIndex;
 
     /**
      * Constructs a new <code>ConversionException</code> with null as the detail message.
      * The cause is not initialized
      */
-	public ConversionException(){
-		super();
-	}
+    public ConversionException(){
+        super();
+    }
 
     /**
      * Constructs a new <code>ConversionException</code> with the specified detail message.
@@ -42,9 +42,9 @@ public class ConversionException extends Exception {
      *
      * @param message The detail message of the new exception
      */
-	public ConversionException(String message){
-		super(message);
-	}
+    public ConversionException(String message){
+        super(message);
+    }
 
     /**
      * Constructs a new <code>ConversionException</code> with the specified cause and a 
@@ -56,9 +56,9 @@ public class ConversionException extends Exception {
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown)
      */
-	public ConversionException(Throwable cause){
-		super(cause);
-	}
+    public ConversionException(Throwable cause){
+        super(cause);
+    }
 
     /**
      * Constructs a new <code>ConversionException</code> with the specified detail
@@ -72,9 +72,9 @@ public class ConversionException extends Exception {
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown)
      */
-	public ConversionException(String message, Throwable cause){
-		super(message, cause);
-	}
+    public ConversionException(String message, Throwable cause){
+        super(message, cause);
+    }
 
     /**
      * Constructs a new <code>ConversionException</code> with the specified detail 
@@ -89,42 +89,46 @@ public class ConversionException extends Exception {
      * @param writableStackTrace Whether or not the stack trace should
      *                           be writable
      */
-	public ConversionException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace){
-		
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-	
-	private ConversionException(String message, String offendingValue, int rowIndex){
-		super(message);
-		this.offendingValue = offendingValue;
-		this.rowIndex = rowIndex;
-	}
-	
-	public String getOffendingValue(){
-		return this.offendingValue;
-	}
-	
-	public String getFormattedOffendingValue(){
-		if((offendingValue != null) && (offendingValue.length() > 10)){
-			return this.offendingValue.substring(0, 7) + "...";
-		}
-		return this.offendingValue;
-	}
+    public ConversionException(String message, Throwable cause,
+            boolean enableSuppression, boolean writableStackTrace){
 
-	public int getRowIndex(){
-		return this.rowIndex;
-	}
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 
-	public static ConversionException with(String message, String offendingValue, int rowIndex){
-		return new ConversionException(message, offendingValue, rowIndex);
-	}
-	
-	public static ConversionException with(String message, Object offendingValue, int rowIndex){
-		return new ConversionException(message, 
-				((offendingValue != null) 
-				? offendingValue.toString() 
-				: null), rowIndex);
-	}
+    private ConversionException(String message, String offendingValue, int rowIndex){
+        super(message);
+        this.offendingValue = offendingValue;
+        this.rowIndex = rowIndex;
+    }
+
+    public String getOffendingValue(){
+        return this.offendingValue;
+    }
+
+    public String getFormattedOffendingValue(){
+        if((offendingValue != null) && (offendingValue.length() > 10)){
+            return this.offendingValue.substring(0, 7) + "...";
+        }
+        return this.offendingValue;
+    }
+
+    public int getRowIndex(){
+        return this.rowIndex;
+    }
+
+    public static ConversionException with(String message,
+            String offendingValue, int rowIndex){
+        
+        return new ConversionException(message, offendingValue, rowIndex);
+    }
+
+    public static ConversionException with(String message,
+            Object offendingValue, int rowIndex){
+        
+        return new ConversionException(message, 
+                ((offendingValue != null) 
+                        ? offendingValue.toString() 
+                                : null), rowIndex);
+    }
 
 }

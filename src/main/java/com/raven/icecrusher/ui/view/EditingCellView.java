@@ -32,93 +32,93 @@ import javafx.scene.input.KeyEvent;
  */
 public class EditingCellView extends DataFrameViewCell<Integer, Object> {
 
-	private TextField textField;
-	private TextFormatter<Object> textFormatter;
+    private TextField textField;
+    private TextFormatter<Object> textFormatter;
 
-	/**
-	 * Constructs a new <code>EditingCellView</code> using the filter and string converter
-	 * of the specified ConversionPack.<br>
-	 * The filter of the ConversionPack is used to filter editing input passed to this cell.
-	 * The converter is used to convert the string input to an object and vice versa
-	 * 
-	 * @param conversion The <code>ConversionPack</code> holding a filter and converter for
-	 *                   this table cell. Must not be null
-	 */
-	public EditingCellView(final ConversionPack conversion){
-		this(conversion, null);
-	}
-	
-	/**
-	 * Constructs a new <code>EditingCellView</code> using the filter and
-	 * string converter of the specified ConversionPack and adding the specified tooltip.<br>
-	 * The filter of the ConversionPack is used to filter editing input passed to this cell.
-	 * The converter is used to convert the string input to an object and vice versa
-	 * 
-	 * @param conversion The <code>ConversionPack</code> holding a filter and converter for
-	 *                   this table cell. Must not be null
-	 * @param tooltip The tooltip to add to the cell. May be null
-	 */
-	public EditingCellView(final ConversionPack conversion, final Tooltip tooltip){
-		super();
-		final Converter converter = conversion.getConverter();
-		textField = new TextField();
-		textFormatter = new TextFormatter<Object>(converter, "DEFAULT", conversion.getFilter());
-		textField.setTextFormatter(textFormatter);
+    /**
+     * Constructs a new <code>EditingCellView</code> using the filter and string converter
+     * of the specified ConversionPack.<br>
+     * The filter of the ConversionPack is used to filter editing input passed to this cell.
+     * The converter is used to convert the string input to an object and vice versa
+     * 
+     * @param conversion The <code>ConversionPack</code> holding a filter and converter for
+     *                   this table cell. Must not be null
+     */
+    public EditingCellView(final ConversionPack conversion){
+        this(conversion, null);
+    }
 
-		textField.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-			if (e.getCode() == KeyCode.ESCAPE) {
-				cancelEdit();
-			}
-		});
+    /**
+     * Constructs a new <code>EditingCellView</code> using the filter and
+     * string converter of the specified ConversionPack and adding the specified tooltip.<br>
+     * The filter of the ConversionPack is used to filter editing input passed to this cell.
+     * The converter is used to convert the string input to an object and vice versa
+     * 
+     * @param conversion The <code>ConversionPack</code> holding a filter and converter for
+     *                   this table cell. Must not be null
+     * @param tooltip The tooltip to add to the cell. May be null
+     */
+    public EditingCellView(final ConversionPack conversion, final Tooltip tooltip){
+        super();
+        final Converter converter = conversion.getConverter();
+        textField = new TextField();
+        textFormatter = new TextFormatter<Object>(converter, "DEFAULT", conversion.getFilter());
+        textField.setTextFormatter(textFormatter);
 
-		textField.setOnAction(e -> {
-			commitEdit(converter.fromString(textField.getText()));
-		});
+        textField.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                cancelEdit();
+            }
+        });
 
-		textProperty().bind(Bindings
-				.when(emptyProperty())
-				.then((String)null)
-				.otherwise(itemProperty().asString()));
+        textField.setOnAction(e -> {
+            commitEdit(converter.fromString(textField.getText()));
+        });
 
-		setGraphic(textField);
-		setContentDisplay(ContentDisplay.TEXT_ONLY);
-		if(tooltip != null){
-			setTooltip(tooltip);
-		}
-	}
+        textProperty().bind(Bindings
+                .when(emptyProperty())
+                .then((String)null)
+                .otherwise(itemProperty().asString()));
 
-	@Override
-	protected void updateItem(Object value, boolean empty){
-		super.updateItem(value, empty);
-		if(isEditing()){
-			textField.requestFocus();
-			textField.selectAll();
-			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-		}else{
-			setContentDisplay(ContentDisplay.TEXT_ONLY);
-		}
-	}
+        setGraphic(textField);
+        setContentDisplay(ContentDisplay.TEXT_ONLY);
+        if(tooltip != null){
+            setTooltip(tooltip);
+        }
+    }
 
-	@Override
-	public void startEdit(){
-		super.startEdit();
-		final Object value = getItem();
-		textFormatter.setValue((value != null) ? value.toString() : "");
-		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-		textField.requestFocus();
-		textField.selectAll();
-	}
+    @Override
+    protected void updateItem(Object value, boolean empty){
+        super.updateItem(value, empty);
+        if(isEditing()){
+            textField.requestFocus();
+            textField.selectAll();
+            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        }else{
+            setContentDisplay(ContentDisplay.TEXT_ONLY);
+        }
+    }
 
-	@Override
-	public void commitEdit(Object newValue){
-		super.commitEdit(newValue);
-		setContentDisplay(ContentDisplay.TEXT_ONLY);
-	}
+    @Override
+    public void startEdit(){
+        super.startEdit();
+        final Object value = getItem();
+        textFormatter.setValue((value != null) ? value.toString() : "");
+        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        textField.requestFocus();
+        textField.selectAll();
+    }
 
-	@Override
-	public void cancelEdit(){
-		super.cancelEdit();
-		setContentDisplay(ContentDisplay.TEXT_ONLY);
-	}
+    @Override
+    public void commitEdit(Object newValue){
+        super.commitEdit(newValue);
+        setContentDisplay(ContentDisplay.TEXT_ONLY);
+    }
+
+    @Override
+    public void cancelEdit(){
+        super.cancelEdit();
+        setContentDisplay(ContentDisplay.TEXT_ONLY);
+    }
 
 }

@@ -22,19 +22,19 @@ package com.raven.icecrusher.ui.plot;
  */
 public class LineSettingsView extends SettingsView {
 
-	public LineSettingsView(int index){
-		super(index);
-		addRemoveButtonToSettings();
-		addTextFieldToSettings();
-		addColorPickerToSettings();
-	}
-	
-	public LineSettingsView(int index, String text){
-		super(index);
-		addRemoveButtonToSettings();
-		addTextFieldToSettings();
-		addColorPickerToSettings();
-		setEditText(text);
-	}
+    public LineSettingsView(int index){
+        super(index);
+        addRemoveButtonToSettings();
+        addTextFieldToSettings();
+        addColorPickerToSettings();
+    }
+
+    public LineSettingsView(int index, String text){
+        super(index);
+        addRemoveButtonToSettings();
+        addTextFieldToSettings();
+        addColorPickerToSettings();
+        setEditText(text);
+    }
 
 }

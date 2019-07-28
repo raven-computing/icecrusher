@@ -49,124 +49,125 @@ import javafx.scene.layout.Pane;
  *
  */
 public class AddColumnDialogController {
-	
-	/**
-	 * Listener interface for the <code>AddColumnDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user confirms a column creation
-		 * 
-		 * @param name The name of the <code>Column</code> to add
-		 * @param col The <code>Column</code> to add to the DataFrame
-		 */
-		void onCreate(String name, Column col);
-	}
-	
-	public static String[] options = new String[]{"Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean"};
-	
-	@FXML
-	private JFXComboBox<String> cBoxColType;
-	
-	@FXML
-	private JFXTextField txtColName;
-	
-	private Pane rootPane;
-	private DialogListener delegate;
-	private DataFrame df;
-	private boolean useNullable;
-	private int size;
-	
-	@FXML
-	public void initialize(){
-		cBoxColType.getItems().removeAll(cBoxColType.getItems());
-		cBoxColType.getItems().addAll(options);
-	}
 
-	public void setRootContainer(Pane pane){
-		this.rootPane = pane;
-	}
-	
-	public void useDataFrame(final DataFrame df){
-		this.df = df;
-		this.useNullable = df.isNullable();
-		this.size = df.rows();
-	}
-	
-	public void setAddListener(DialogListener listener){
-		this.delegate = listener;
-	}
-	
-	@FXML
-	private void onAdd(ActionEvent event){
-		final Column col = constructColumn(cBoxColType.getValue());
-		if(col == null){
-			showWarnMsg("Please specify the column type");
-			return;
-		}
-		final String name = txtColName.getText();
-		if(name == null || name.isEmpty()){
-			showWarnMsg("Please specify a valid column name");
-			return;
-		}
-		if(nameIsDuplicate(name)){
-			showWarnMsg("Duplicate column name");
-			return;
-		}
-		if(delegate != null){
-			delegate.onCreate(name, col);
-		}
-	}
-	
-	private Column constructColumn(final String type){
-		if(type != null){
-			switch(type){
-			case "Byte":
-				return (useNullable ? new NullableByteColumn(new Byte[size]) : new ByteColumn(new byte[size]));
-			case "Short":
-				return (useNullable ? new NullableShortColumn(new Short[size]) : new ShortColumn(new short[size]));
-			case "Int":
-				return (useNullable ? new NullableIntColumn(new Integer[size]) : new IntColumn(new int[size]));
-			case "Long":
-				return (useNullable ? new NullableLongColumn(new Long[size]) : new LongColumn(new long[size]));
-			case "String":
-				return (useNullable ? new NullableStringColumn(new String[size]) : new StringColumn(new String[size]));
-			case "Float":
-				return (useNullable ? new NullableFloatColumn(new Float[size]) : new FloatColumn(new float[size]));
-			case "Double":
-				return (useNullable ? new NullableDoubleColumn(new Double[size]) : new DoubleColumn(new double[size]));
-			case "Char":
-				Column col = null;
-				if(useNullable){
-					col = new NullableCharColumn(new Character[size]);
-				}else{
-					final char[] chars = new char[size];
-					for(int i=0; i<chars.length; ++i){
-						chars[i] = '-';
-					}
-					col = new CharColumn(chars);
-				}
-				return col;
-			case "Boolean":
-				return (useNullable ? new NullableBooleanColumn(new Boolean[size]) : new BooleanColumn(new boolean[size]));
-			}
-		}
-		return null;
-	}
-	
-	private void showWarnMsg(final String msg){
-		OneShotSnackbar.showFor(rootPane, msg);
-	}
-	
-	private boolean nameIsDuplicate(final String name){
-		final String[] names = this.df.getColumnNames();
-		if(names != null){
-			for(int i=0; i<names.length; ++i){
-				if(names[i].equals(name)){ return true; }
-			}
-		}
-		return false;
-	}
+    /**
+     * Listener interface for the <code>AddColumnDialog</code>.
+     *
+     */
+    public interface DialogListener {
+
+        /**
+         * Called when the user confirms a column creation
+         * 
+         * @param name The name of the <code>Column</code> to add
+         * @param col The <code>Column</code> to add to the DataFrame
+         */
+        void onCreate(String name, Column col);
+    }
+
+    public static String[] options = new String[]{
+            "Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean"};
+
+    @FXML
+    private JFXComboBox<String> cBoxColType;
+
+    @FXML
+    private JFXTextField txtColName;
+
+    private Pane rootPane;
+    private DialogListener delegate;
+    private DataFrame df;
+    private boolean useNullable;
+    private int size;
+
+    @FXML
+    public void initialize(){
+        cBoxColType.getItems().removeAll(cBoxColType.getItems());
+        cBoxColType.getItems().addAll(options);
+    }
+
+    public void setRootContainer(Pane pane){
+        this.rootPane = pane;
+    }
+
+    public void useDataFrame(final DataFrame df){
+        this.df = df;
+        this.useNullable = df.isNullable();
+        this.size = df.rows();
+    }
+
+    public void setAddListener(DialogListener listener){
+        this.delegate = listener;
+    }
+
+    @FXML
+    private void onAdd(ActionEvent event){
+        final Column col = constructColumn(cBoxColType.getValue());
+        if(col == null){
+            showWarnMsg("Please specify the column type");
+            return;
+        }
+        final String name = txtColName.getText();
+        if(name == null || name.isEmpty()){
+            showWarnMsg("Please specify a valid column name");
+            return;
+        }
+        if(nameIsDuplicate(name)){
+            showWarnMsg("Duplicate column name");
+            return;
+        }
+        if(delegate != null){
+            delegate.onCreate(name, col);
+        }
+    }
+
+    private Column constructColumn(final String type){
+        if(type != null){
+            switch(type){
+            case "Byte":
+                return (useNullable ? new NullableByteColumn(new Byte[size]) : new ByteColumn(new byte[size]));
+            case "Short":
+                return (useNullable ? new NullableShortColumn(new Short[size]) : new ShortColumn(new short[size]));
+            case "Int":
+                return (useNullable ? new NullableIntColumn(new Integer[size]) : new IntColumn(new int[size]));
+            case "Long":
+                return (useNullable ? new NullableLongColumn(new Long[size]) : new LongColumn(new long[size]));
+            case "String":
+                return (useNullable ? new NullableStringColumn(new String[size]) : new StringColumn(new String[size]));
+            case "Float":
+                return (useNullable ? new NullableFloatColumn(new Float[size]) : new FloatColumn(new float[size]));
+            case "Double":
+                return (useNullable ? new NullableDoubleColumn(new Double[size]) : new DoubleColumn(new double[size]));
+            case "Char":
+                Column col = null;
+                if(useNullable){
+                    col = new NullableCharColumn(new Character[size]);
+                }else{
+                    final char[] chars = new char[size];
+                    for(int i=0; i<chars.length; ++i){
+                        chars[i] = '-';
+                    }
+                    col = new CharColumn(chars);
+                }
+                return col;
+            case "Boolean":
+                return (useNullable ? new NullableBooleanColumn(new Boolean[size]) : new BooleanColumn(new boolean[size]));
+            }
+        }
+        return null;
+    }
+
+    private void showWarnMsg(final String msg){
+        OneShotSnackbar.showFor(rootPane, msg);
+    }
+
+    private boolean nameIsDuplicate(final String name){
+        final String[] names = this.df.getColumnNames();
+        if(names != null){
+            for(int i=0; i<names.length; ++i){
+                if(names[i].equals(name)){ return true; }
+            }
+        }
+        return false;
+    }
 }

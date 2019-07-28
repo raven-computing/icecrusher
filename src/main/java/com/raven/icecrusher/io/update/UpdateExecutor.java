@@ -27,46 +27,46 @@ import javafx.scene.control.ProgressIndicator;
  *
  */
 public interface UpdateExecutor {
-	
-	/**
-	 * Downloads the update package for this application
-	 * 
-	 * @param indicator The progress indicator which gets refreshed during the 
-	 *                  download process for visual feedback to the user
-	 * @param label The label for relative progress messages which gets refreshed 
-	 *              during the download process for visual feedback to the user
-	 */
-	public void downloadPackage(ProgressIndicator indicator, Label label);
-	
-	/**
-	 * Verifies the downloaded package integrity by computing a checksum of the data 
-	 * downloaded and comparing it to the checksum distributed by the UpdateInfo object
-	 * in use
-	 */
-	public void verifyDownload();
-	
-	/**
-	 * Extracts the downloaded update package to the platform specific temporary 
-	 * update location
-	 */
-	public void extractPackage();
-	
-	/**
-	 * Sets up the platform specific update instruction script and copies it to the 
-	 * temporary update location. If the update instructions shipped with this application
-	 * are out of date, polls an updated version over the network and copies that instead
-	 */
-	public void setupInstructions();
-	
-	/**
-	 * Performs final update tasks and executes the platform specific update instructions 
-	 * in a seperate process. The entire application will shut itself down when this method 
-	 * is called
-	 */
-	public void doUpdate();
-	
-	/**
-	 * Cancels the current update process, if applicable
-	 */
-	public void cancel();
+
+    /**
+     * Downloads the update package for this application
+     * 
+     * @param indicator The progress indicator which gets refreshed during the 
+     *                  download process for visual feedback to the user
+     * @param label The label for relative progress messages which gets refreshed 
+     *              during the download process for visual feedback to the user
+     */
+    public void downloadPackage(ProgressIndicator indicator, Label label);
+
+    /**
+     * Verifies the downloaded package integrity by computing a checksum of the data 
+     * downloaded and comparing it to the checksum distributed by the UpdateInfo object
+     * in use
+     */
+    public void verifyDownload();
+
+    /**
+     * Extracts the downloaded update package to the platform specific temporary 
+     * update location
+     */
+    public void extractPackage();
+
+    /**
+     * Sets up the platform specific update instruction script and copies it to the 
+     * temporary update location. If the update instructions shipped with this application
+     * are out of date, polls an updated version over the network and copies that instead
+     */
+    public void setupInstructions();
+
+    /**
+     * Performs final update tasks and executes the platform specific update instructions 
+     * in a seperate process. The entire application will shut itself down when this method 
+     * is called
+     */
+    public void doUpdate();
+
+    /**
+     * Cancels the current update process, if applicable
+     */
+    public void cancel();
 }

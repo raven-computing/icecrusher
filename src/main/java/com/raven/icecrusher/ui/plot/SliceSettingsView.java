@@ -21,11 +21,11 @@ package com.raven.icecrusher.ui.plot;
  *
  */
 public class SliceSettingsView extends SettingsView {
-	
-	public SliceSettingsView(final int index, final String sliceName){
-		super(index, sliceName);
-		addTextFieldToSettings();
-		addColorPickerToSettings();
-	}
-	
+
+    public SliceSettingsView(final int index, final String sliceName){
+        super(index, sliceName);
+        addTextFieldToSettings();
+        addColorPickerToSettings();
+    }
+
 }

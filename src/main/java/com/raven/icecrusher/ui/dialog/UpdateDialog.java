@@ -31,79 +31,79 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class UpdateDialog extends EditorDialog {
-	
-	private UpdateDialogController controller;
-	
-	public UpdateDialog(StackPane root){
-		super(root, null);
-		loadContent();
-	}
 
-	public UpdateDialog(StackPane dialogContainer, Region content,
-			DialogTransition transitionType){
-		
-		super(dialogContainer, content, transitionType);
-		loadContent();
-	}
-	
-	public String getTitle(){
-		return this.controller.getTitle();
-	}
-	
-	public void setTitle(final String title){
-		this.controller.setTitle(title);
-	}
+    private UpdateDialogController controller;
 
-	public String getMessage(){
-		return this.controller.getMessage();
-	}
-	
-	public void setMessage(final String message){
-		this.controller.setMessage(message);
-	}
+    public UpdateDialog(StackPane root){
+        super(root, null);
+        loadContent();
+    }
 
-	public String getProgressMessage(){
-		return this.controller.getProgressMessage();
-	}
-	
-	public void setProgressMessage(final String message){
-		this.controller.setProgressMessage(message);
-	}
+    public UpdateDialog(StackPane dialogContainer, Region content,
+            DialogTransition transitionType){
 
-	public String getProgressValue(){
-		return this.controller.getProgressValue();
-	}
-	
-	public void setProgressValue(final String value){
-		this.controller.setProgressValue(value);
-	}
-	
-	public JFXProgressBar getProgressBar(){
-		return this.controller.getProgressBar();
-	}
-	
-	public Label getProgressValueLabel(){
-		return this.controller.getProgressValueLabel();
-	}
-	
-	public void setDialogListener(DialogListener delegate){
-		this.controller.setDialogListener(delegate);
-	}
-	
-	public void setActionButtonText(final String text){
-		this.controller.setActionButtonText(text);
-	}
-	
-	public void setActionButtonDisabled(final boolean value){
-		this.controller.setActionButtonDisabled(value);
-	}
-	
-	private void loadContent(){
+        super(dialogContainer, content, transitionType);
+        loadContent();
+    }
+
+    public String getTitle(){
+        return this.controller.getTitle();
+    }
+
+    public void setTitle(final String title){
+        this.controller.setTitle(title);
+    }
+
+    public String getMessage(){
+        return this.controller.getMessage();
+    }
+
+    public void setMessage(final String message){
+        this.controller.setMessage(message);
+    }
+
+    public String getProgressMessage(){
+        return this.controller.getProgressMessage();
+    }
+
+    public void setProgressMessage(final String message){
+        this.controller.setProgressMessage(message);
+    }
+
+    public String getProgressValue(){
+        return this.controller.getProgressValue();
+    }
+
+    public void setProgressValue(final String value){
+        this.controller.setProgressValue(value);
+    }
+
+    public JFXProgressBar getProgressBar(){
+        return this.controller.getProgressBar();
+    }
+
+    public Label getProgressValueLabel(){
+        return this.controller.getProgressValueLabel();
+    }
+
+    public void setDialogListener(DialogListener delegate){
+        this.controller.setDialogListener(delegate);
+    }
+
+    public void setActionButtonText(final String text){
+        this.controller.setActionButtonText(text);
+    }
+
+    public void setActionButtonDisabled(final boolean value){
+        this.controller.setActionButtonDisabled(value);
+    }
+
+    private void loadContent(){
         final Layout layout = Layout.of(Dialog.UPDATE);
         final Parent parent = layout.load();
         controller = layout.getController();
-		setContent((Region)parent);
-		setOverlayClose(false);
-	}
+        setContent((Region)parent);
+        setOverlayClose(false);
+    }
 
 }

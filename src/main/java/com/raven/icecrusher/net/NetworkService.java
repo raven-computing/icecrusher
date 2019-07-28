@@ -33,81 +33,81 @@ import javafx.scene.control.ProgressIndicator;
  *
  */
 public interface NetworkService {
-	
-	/**
-	 * Performs an asynchronous connection attempt to the network endpoint of this 
-	 * network service. In order to get notified of the result, you must set a 
-	 * <code>ResultHandler</code> by calling 
-	 * {@link NetworkService#setOnResult(ResultHandler)}.<br>
-	 * It is recommended to specify a handler before calling <code>connect()</code>.<br>
-	 * This method should only be called on the FX application thread
-	 */
-	public void connect();
-	
-	/**
-	 * Cancels a currently running connection, if applicable, and restarts this Service.<br>
-	 * This method should only be called on the FX application thread
-	 */
-	public void retry();
-	
-	/**
-	 * Cancels this connection if it is currently connected or trying to connect to the 
-	 * network endpoint of this service
-	 */
-	public void abort();
-	
-	/**
-	 * Specifies a {@link ResultHandler} which gets called when the background connection 
-	 * finishes passing the result to the handler's <code>onResult()</code> method
-	 * 
-	 * @param resultHandler The <code>ResultHandler</code> for handling the 
-	 *                      asynchronous response
-	 */
-	public void setOnResult(ResultHandler resultHandler);
-	
-	/**
-	 * Binds the progress property of the specified <code>ProgressIndicator</code> to the 
-	 * progress property of the underlying network task
-	 * 
-	 * @param indicator The <code>ProgressIndicator</code> to bind
-	 */
-	public void bindIndicator(ProgressIndicator indicator);
-	
-	/**
-	 * Binds the progress property of the specified <code>ProgressIndicator</code> to the 
-	 * progress property of the underlying network task and the relatve progress value 
-	 * message to the String property of the specified <code>Label</code>
-	 * 
-	 * @param indicator The <code>ProgressIndicator</code> to bind
-	 * @param label The <code>Label</code> to bind
-	 */
-	public void bindIndicator(ProgressIndicator indicator, Label label);
-	
-	/**
-	 * Returns a network service for connecting to the network resource specified by the URL 
-	 * of the <code>ResourceLocator</code> passed to this method
-	 * 
-	 * @param locator The <code>ResourceLocator</code> of the resource to connect to
-	 * @return A <code>NetworkService</code> for the specified resource. When calling 
-	 *         <code>connect()</code> on the returned network service, it will make a 
-	 *         connection attempt to that resource
-	 */
-	public static NetworkService getService(ResourceLocator locator){
-		return getService(locator, null);
-	}
-	
-	/**
-	 * Returns a network service for connecting to the network resource specified by the URL 
-	 * of the <code>ResourceLocator</code> passed to this method. The provided 
-	 * <code>Parcel</code> will be sent to the network endpoint
-	 * 
-	 * @param locator The <code>ResourceLocator</code> of the resource to connect to
-	 * @param parcel The <code>Parcel</code> data to send to the endpoint
-	 * @return A <code>NetworkService</code> for the specified resource. When calling 
-	 *         <code>connect()</code> on the returned network service, it will make a 
-	 *         connection attempt to that resource
-	 */
-	public static NetworkService getService(ResourceLocator locator, Parcel parcel){
-		return new HttpNetworkService(locator, parcel);
-	}
+
+    /**
+     * Performs an asynchronous connection attempt to the network endpoint of this 
+     * network service. In order to get notified of the result, you must set a 
+     * <code>ResultHandler</code> by calling 
+     * {@link NetworkService#setOnResult(ResultHandler)}.<br>
+     * It is recommended to specify a handler before calling <code>connect()</code>.<br>
+     * This method should only be called on the FX application thread
+     */
+    public void connect();
+
+    /**
+     * Cancels a currently running connection, if applicable, and restarts this Service.<br>
+     * This method should only be called on the FX application thread
+     */
+    public void retry();
+
+    /**
+     * Cancels this connection if it is currently connected or trying to connect to the 
+     * network endpoint of this service
+     */
+    public void abort();
+
+    /**
+     * Specifies a {@link ResultHandler} which gets called when the background connection 
+     * finishes passing the result to the handler's <code>onResult()</code> method
+     * 
+     * @param resultHandler The <code>ResultHandler</code> for handling the 
+     *                      asynchronous response
+     */
+    public void setOnResult(ResultHandler resultHandler);
+
+    /**
+     * Binds the progress property of the specified <code>ProgressIndicator</code> to the 
+     * progress property of the underlying network task
+     * 
+     * @param indicator The <code>ProgressIndicator</code> to bind
+     */
+    public void bindIndicator(ProgressIndicator indicator);
+
+    /**
+     * Binds the progress property of the specified <code>ProgressIndicator</code> to the 
+     * progress property of the underlying network task and the relatve progress value 
+     * message to the String property of the specified <code>Label</code>
+     * 
+     * @param indicator The <code>ProgressIndicator</code> to bind
+     * @param label The <code>Label</code> to bind
+     */
+    public void bindIndicator(ProgressIndicator indicator, Label label);
+
+    /**
+     * Returns a network service for connecting to the network resource specified by the URL 
+     * of the <code>ResourceLocator</code> passed to this method
+     * 
+     * @param locator The <code>ResourceLocator</code> of the resource to connect to
+     * @return A <code>NetworkService</code> for the specified resource. When calling 
+     *         <code>connect()</code> on the returned network service, it will make a 
+     *         connection attempt to that resource
+     */
+    public static NetworkService getService(ResourceLocator locator){
+        return getService(locator, null);
+    }
+
+    /**
+     * Returns a network service for connecting to the network resource specified by the URL 
+     * of the <code>ResourceLocator</code> passed to this method. The provided 
+     * <code>Parcel</code> will be sent to the network endpoint
+     * 
+     * @param locator The <code>ResourceLocator</code> of the resource to connect to
+     * @param parcel The <code>Parcel</code> data to send to the endpoint
+     * @return A <code>NetworkService</code> for the specified resource. When calling 
+     *         <code>connect()</code> on the returned network service, it will make a 
+     *         connection attempt to that resource
+     */
+    public static NetworkService getService(ResourceLocator locator, Parcel parcel){
+        return new HttpNetworkService(locator, parcel);
+    }
 }

@@ -69,305 +69,305 @@ import javafx.scene.layout.AnchorPane;
  */
 @SuppressWarnings("restriction")
 public abstract class ChartController extends Controller {
-	
-	protected static final double CHART_PANE_HEIGHT_OFFSET = 250.0;
-	
-	//computation is index based. Do not change order of items
-	protected static ObservableList<String> optionsTitle = FXCollections.observableArrayList(
-			"Top", "Bottom", "Left", "Right", "Disabled");
-	
-	//computation is index based. Do not change order of items
-	protected static ObservableList<String> optionsLegend = FXCollections.observableArrayList(
-			"Top", "Bottom", "Left", "Right", "Disabled");
-	
-	@FXML
-	protected JFXTextField txtChartTitle;
-	
-	@FXML
-	protected JFXComboBox<String> cbTitlePosition;
-	
-	@FXML
-	protected JFXComboBox<String> cbLegendPosition;
-	
-	@FXML
-	protected JFXButton btnPlotExport;
-	
-	@FXML
-	protected SettingsListView settingsList;
-	
-	@FXML
-	protected AnchorPane chartPane;
-	
-	protected DataFrame df;
-	
-	protected boolean plotIsShown;
-	protected boolean titleDisabled;
-	
-	private Chart chart;
 
-	public ChartController(){
-		super();
-	}
-	
-	/**
-	 * Called when the user fires the "plot" button. Implementations of this method
-	 * should do whatever it takes to actually show the plot to the user
-	 * 
-	 * @param event The <code>ActionEvent</code> object of the event fired
-	 */
-	public abstract void onPlot(ActionEvent event);
-	
-	/**
-	 * Concrete implementations have to implement this method and call the super-method
-	 * and pass the concrete <code>Chart</code> instance to it
-	 */
-	public abstract void initialize();
-	
-	/**
-	 * Initialization method for the <code>ChartController</code> class
-	 * 
-	 * @param chart The <code>Chart</code> instance used by the concrete chart implementation
-	 */
-	public void initialize(final Chart chart){
-		this.chart = chart;
-		//ComboBoxes
-		this.cbTitlePosition.setItems(optionsTitle);
-		this.cbTitlePosition.getSelectionModel().selectFirst();//default is Top
-		this.cbTitlePosition.getSelectionModel().selectedIndexProperty().addListener(
-				(ov, oldValue, newValue) -> {
-					
-			changeTitlePosition(newValue);
-		});
-		this.cbLegendPosition.setItems(optionsLegend);
-		this.cbLegendPosition.getSelectionModel().select(1);//default is Buttom
-		this.cbLegendPosition.getSelectionModel().selectedIndexProperty().addListener(
-				(ov, oldValue, newValue) -> {
-					
-			changeLegendPosition(newValue);
-		});
-	}
-	
-	@Override
-	public void onStart(ArgumentBundle bundle){
-		this.df = (DataFrame) bundle.getArgument(Const.BUNDLE_KEY_DATAFRAME);
-		final EditorFile file = (EditorFile)bundle.getArgument(Const.BUNDLE_KEY_EDITORFILE);
-		final String fileName = (file != null ? file.getName() : Files.DEFAULT_NEW_FILENAME);
-		this.txtChartTitle.setText(fileName);
-		this.txtChartTitle.textProperty().addListener((observable, oldValue, newValue) -> {
-			if(!titleDisabled){
-				chart.setTitle(newValue);
-			}
-		});
-		this.chart.setTitle(fileName);
-		chartPane.setPrefHeight(getStage().getHeight()-CHART_PANE_HEIGHT_OFFSET);
-	}
-	
-	@Override
-	public boolean onExitRequested(){
-		final ArgumentBundle bundle = new ArgumentBundle();
-		bundle.addArgument(Const.BUNDLE_KEY_EXIT_REQUESTED, true);
-		finishActivity(bundle);
-		return false;
-	}
-	
-	@Override
-	public void onWindowResized(double width, double height){
-		chartPane.setPrefHeight(height-CHART_PANE_HEIGHT_OFFSET);
-	}
-	
-	/**
-	 * Called when the user wishes to close the activity. This implementation
-	 * simply finishes the current activity. Concrete classes may override this method
-	 * to add custom close behaviour
-	 * 
-	 * @param event The <code>ActionEvent</code> object of the event fired
-	 */
-	protected void onClose(ActionEvent event){
-		super.finishActivity();
-	}
-	
-	/**
-	 * Opens a standard file dialog to prompt the user to export and save a snapshot of the
-	 * current chart to a PNG-file. The writing of the file will be performed on a 
-	 * background thread
-	 */
-	protected void exportSnapshot(){
-		File file = Dialogs.showPlotExportDialog(getStage());
-		if(file != null){
-			//use default parameters
-			final WritableImage img = chart.snapshot(null, null);
-			if(!file.getName().toLowerCase().endsWith(".png")){
-				file = addPNGFileExtension(file);
-			}
-			final File f = file;
-			new Thread(() -> {
-				try{
-					ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", f);
-				}catch(IOException ex){
-					Platform.runLater(() -> {
-						ExceptionHandler.showDialog(ex);
-					});
-				}
-			}).start();
-		}
-	}
-	
-	/**
-	 * Changes the position of the chart legend to the position mapped to the given index
-	 * 
-	 * @param index The index of the selected item in the combo box
-	 */
-	protected void changeLegendPosition(final Number index){
-		final int i = (int) index;
-		switch(i){
-		case 0://TOP
-			this.chart.setLegendSide(Side.TOP);
-			this.chart.setLegendVisible(true);
-			break;
-		case 1://BOTTOM
-			this.chart.setLegendSide(Side.BOTTOM);
-			this.chart.setLegendVisible(true);
-			break;
-		case 2://LEFT
-			this.chart.setLegendSide(Side.LEFT);
-			this.chart.setLegendVisible(true);
-			break;
-		case 3://RIGHT
-			this.chart.setLegendSide(Side.RIGHT);
-			this.chart.setLegendVisible(true);
-			break;
-		case 4://NO LEGEND
-			this.chart.setLegendVisible(false);
-			break;
-		}
-	}
+    protected static final double CHART_PANE_HEIGHT_OFFSET = 250.0;
 
-	/**
-	 * Changes the position of the chart title to the position mapped to the given index
-	 * 
-	 * @param index The index of the selected item in the combo box
-	 */
-	protected void changeTitlePosition(final Number index){
-		final int i = (int) index;
-		switch(i){
-		case 0://TOP
-			this.chart.setTitleSide(Side.TOP);
-			this.chart.setTitle(txtChartTitle.getText());
-			this.titleDisabled = false;
-			break;
-		case 1://BOTTOM
-			this.chart.setTitleSide(Side.BOTTOM);
-			this.chart.setTitle(txtChartTitle.getText());
-			this.titleDisabled = false;
-			break;
-		case 2://LEFT
-			this.chart.setTitleSide(Side.LEFT);
-			this.chart.setTitle(txtChartTitle.getText());
-			this.titleDisabled = false;
-			break;
-		case 3://RIGHT
-			this.chart.setTitleSide(Side.RIGHT);
-			this.chart.setTitle(txtChartTitle.getText());
-			this.titleDisabled = false;
-			break;
-		case 4://NO TITLE
-			this.chart.setTitle(null);
-			this.titleDisabled = true;
-			break;
-		}
-	}
-	
-	/**
-	 * Updates the symbol color of the legend that corresponds to the given SettingsView instance
-	 * 
-	 * @param view The <code>SettingsView</code> instance that maps to the legend to adjust
-	 * @param color The color to apply to the chart legend symbol
-	 */
-	protected void updateLegendColor(final SettingsView view, final String color){
-		final ObservableList<LegendItem> items = getChartLegend().getItems();
-		if(view.getIndex() < items.size()){
-			items.get(view.getIndex()).getSymbol().setStyle("-fx-background-color: " + color);
-		}
-	}
-	
-	/**
-	 * Updates the color of all chart legend symbols according to the current color set in 
-	 * the corresponding SettingsView object
-	 */
-	protected void updateAllLegendColors(){
-		if(!plotIsShown){
-			return;
-		}
-		final ObservableList<LegendItem> items = getChartLegend().getItems();
-		final ObservableList<Node> views = settingsList.getChildren();
-		if(items.size() == views.size()){
-			for(int i=0; i<items.size(); ++i){
-				items.get(i).getSymbol().setStyle("-fx-background-color: " 
-						+ ((SettingsView)views.get(i)).getColor());
-			}
-		}
-	}
-	
-	/**
-	 * Gets the chart legend of this chart
-	 * 
-	 * @return The <code>Legend</code> instance of this chart
-	 */
-	protected Legend getChartLegend(){
-		for(final Node node : chart.getChildrenUnmodifiable()){
-			if(node instanceof Legend){
-				return (Legend)node;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Adds the specified SettingsView to the <code>SettingsListView</code> control
-	 * 
-	 * @param view The <code>SettingsView</code> to add
-	 */
-	protected void addSettingsViewToList(final SettingsView view){
-		this.settingsList.addSettingsView(view);
-	}
-	
-	/**
-	 * Adds all specified SettingsViews to the <code>SettingsListView</code> control
-	 * 
-	 * @param views The List of <code>SettingsViews</code> to add
-	 */
-	protected void addAllSettingsViewsToList(final List<SettingsView> views){
-		this.settingsList.addAllSettingsViews(views);
-	}
-	
-	/**
-	 * Sets the <code>SettingsListView</code> control to all specified SettingsViews
-	 * 
-	 * @param views The List of <code>SettingsViews</code> to set
-	 */
-	protected void setAllSettingsViewsInList(final List<SettingsView> views){
-		this.settingsList.setAllSettingsViews(views);
-	}
-	
-	/**
-	 * Removes the specified SettingsView from the <code>SettingsListView</code> control
-	 * 
-	 * @param view The <code>SettingsView</code> to remove
-	 */
-	protected void removeSettingsViewFromList(final SettingsView view){
-		this.settingsList.removeSettingsView(view);
-	}
-	
-	/**
-	 * Resets the button for plot and export functionalities back to its default state
-	 */
-	protected void resetPlotButton(){
-		this.btnPlotExport.setText("Plot");
-		this.btnPlotExport.setDisable(true);
-	}
-	
-	private File addPNGFileExtension(final File file){
-		return new File(file.getAbsolutePath() + ".png");
-	}
+    //computation is index based. Do not change order of items
+    protected static ObservableList<String> optionsTitle = FXCollections.observableArrayList(
+            "Top", "Bottom", "Left", "Right", "Disabled");
+
+    //computation is index based. Do not change order of items
+    protected static ObservableList<String> optionsLegend = FXCollections.observableArrayList(
+            "Top", "Bottom", "Left", "Right", "Disabled");
+
+    @FXML
+    protected JFXTextField txtChartTitle;
+
+    @FXML
+    protected JFXComboBox<String> cbTitlePosition;
+
+    @FXML
+    protected JFXComboBox<String> cbLegendPosition;
+
+    @FXML
+    protected JFXButton btnPlotExport;
+
+    @FXML
+    protected SettingsListView settingsList;
+
+    @FXML
+    protected AnchorPane chartPane;
+
+    protected DataFrame df;
+
+    protected boolean plotIsShown;
+    protected boolean titleDisabled;
+
+    private Chart chart;
+
+    public ChartController(){
+        super();
+    }
+
+    /**
+     * Called when the user fires the "plot" button. Implementations of this method
+     * should do whatever it takes to actually show the plot to the user
+     * 
+     * @param event The <code>ActionEvent</code> object of the event fired
+     */
+    public abstract void onPlot(ActionEvent event);
+
+    /**
+     * Concrete implementations have to implement this method and call the super-method
+     * and pass the concrete <code>Chart</code> instance to it
+     */
+    public abstract void initialize();
+
+    /**
+     * Initialization method for the <code>ChartController</code> class
+     * 
+     * @param chart The <code>Chart</code> instance used by the concrete chart implementation
+     */
+    public void initialize(final Chart chart){
+        this.chart = chart;
+        //ComboBoxes
+        this.cbTitlePosition.setItems(optionsTitle);
+        this.cbTitlePosition.getSelectionModel().selectFirst();//default is Top
+        this.cbTitlePosition.getSelectionModel().selectedIndexProperty().addListener(
+                (ov, oldValue, newValue) -> {
+
+                    changeTitlePosition(newValue);
+                });
+        this.cbLegendPosition.setItems(optionsLegend);
+        this.cbLegendPosition.getSelectionModel().select(1);//default is Buttom
+        this.cbLegendPosition.getSelectionModel().selectedIndexProperty().addListener(
+                (ov, oldValue, newValue) -> {
+
+                    changeLegendPosition(newValue);
+                });
+    }
+
+    @Override
+    public void onStart(ArgumentBundle bundle){
+        this.df = (DataFrame) bundle.getArgument(Const.BUNDLE_KEY_DATAFRAME);
+        final EditorFile file = (EditorFile)bundle.getArgument(Const.BUNDLE_KEY_EDITORFILE);
+        final String fileName = (file != null ? file.getName() : Files.DEFAULT_NEW_FILENAME);
+        this.txtChartTitle.setText(fileName);
+        this.txtChartTitle.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!titleDisabled){
+                chart.setTitle(newValue);
+            }
+        });
+        this.chart.setTitle(fileName);
+        chartPane.setPrefHeight(getStage().getHeight()-CHART_PANE_HEIGHT_OFFSET);
+    }
+
+    @Override
+    public boolean onExitRequested(){
+        final ArgumentBundle bundle = new ArgumentBundle();
+        bundle.addArgument(Const.BUNDLE_KEY_EXIT_REQUESTED, true);
+        finishActivity(bundle);
+        return false;
+    }
+
+    @Override
+    public void onWindowResized(double width, double height){
+        chartPane.setPrefHeight(height-CHART_PANE_HEIGHT_OFFSET);
+    }
+
+    /**
+     * Called when the user wishes to close the activity. This implementation
+     * simply finishes the current activity. Concrete classes may override this method
+     * to add custom close behaviour
+     * 
+     * @param event The <code>ActionEvent</code> object of the event fired
+     */
+    protected void onClose(ActionEvent event){
+        super.finishActivity();
+    }
+
+    /**
+     * Opens a standard file dialog to prompt the user to export and save a snapshot of the
+     * current chart to a PNG-file. The writing of the file will be performed on a 
+     * background thread
+     */
+    protected void exportSnapshot(){
+        File file = Dialogs.showPlotExportDialog(getStage());
+        if(file != null){
+            //use default parameters
+            final WritableImage img = chart.snapshot(null, null);
+            if(!file.getName().toLowerCase().endsWith(".png")){
+                file = addPNGFileExtension(file);
+            }
+            final File f = file;
+            new Thread(() -> {
+                try{
+                    ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", f);
+                }catch(IOException ex){
+                    Platform.runLater(() -> {
+                        ExceptionHandler.showDialog(ex);
+                    });
+                }
+            }).start();
+        }
+    }
+
+    /**
+     * Changes the position of the chart legend to the position mapped to the given index
+     * 
+     * @param index The index of the selected item in the combo box
+     */
+    protected void changeLegendPosition(final Number index){
+        final int i = (int) index;
+        switch(i){
+        case 0://TOP
+            this.chart.setLegendSide(Side.TOP);
+            this.chart.setLegendVisible(true);
+            break;
+        case 1://BOTTOM
+            this.chart.setLegendSide(Side.BOTTOM);
+            this.chart.setLegendVisible(true);
+            break;
+        case 2://LEFT
+            this.chart.setLegendSide(Side.LEFT);
+            this.chart.setLegendVisible(true);
+            break;
+        case 3://RIGHT
+            this.chart.setLegendSide(Side.RIGHT);
+            this.chart.setLegendVisible(true);
+            break;
+        case 4://NO LEGEND
+            this.chart.setLegendVisible(false);
+            break;
+        }
+    }
+
+    /**
+     * Changes the position of the chart title to the position mapped to the given index
+     * 
+     * @param index The index of the selected item in the combo box
+     */
+    protected void changeTitlePosition(final Number index){
+        final int i = (int) index;
+        switch(i){
+        case 0://TOP
+            this.chart.setTitleSide(Side.TOP);
+            this.chart.setTitle(txtChartTitle.getText());
+            this.titleDisabled = false;
+            break;
+        case 1://BOTTOM
+            this.chart.setTitleSide(Side.BOTTOM);
+            this.chart.setTitle(txtChartTitle.getText());
+            this.titleDisabled = false;
+            break;
+        case 2://LEFT
+            this.chart.setTitleSide(Side.LEFT);
+            this.chart.setTitle(txtChartTitle.getText());
+            this.titleDisabled = false;
+            break;
+        case 3://RIGHT
+            this.chart.setTitleSide(Side.RIGHT);
+            this.chart.setTitle(txtChartTitle.getText());
+            this.titleDisabled = false;
+            break;
+        case 4://NO TITLE
+            this.chart.setTitle(null);
+            this.titleDisabled = true;
+            break;
+        }
+    }
+
+    /**
+     * Updates the symbol color of the legend that corresponds to the given SettingsView instance
+     * 
+     * @param view The <code>SettingsView</code> instance that maps to the legend to adjust
+     * @param color The color to apply to the chart legend symbol
+     */
+    protected void updateLegendColor(final SettingsView view, final String color){
+        final ObservableList<LegendItem> items = getChartLegend().getItems();
+        if(view.getIndex() < items.size()){
+            items.get(view.getIndex()).getSymbol().setStyle("-fx-background-color: " + color);
+        }
+    }
+
+    /**
+     * Updates the color of all chart legend symbols according to the current color set in 
+     * the corresponding SettingsView object
+     */
+    protected void updateAllLegendColors(){
+        if(!plotIsShown){
+            return;
+        }
+        final ObservableList<LegendItem> items = getChartLegend().getItems();
+        final ObservableList<Node> views = settingsList.getChildren();
+        if(items.size() == views.size()){
+            for(int i=0; i<items.size(); ++i){
+                items.get(i).getSymbol().setStyle("-fx-background-color: " 
+                        + ((SettingsView)views.get(i)).getColor());
+            }
+        }
+    }
+
+    /**
+     * Gets the chart legend of this chart
+     * 
+     * @return The <code>Legend</code> instance of this chart
+     */
+    protected Legend getChartLegend(){
+        for(final Node node : chart.getChildrenUnmodifiable()){
+            if(node instanceof Legend){
+                return (Legend)node;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Adds the specified SettingsView to the <code>SettingsListView</code> control
+     * 
+     * @param view The <code>SettingsView</code> to add
+     */
+    protected void addSettingsViewToList(final SettingsView view){
+        this.settingsList.addSettingsView(view);
+    }
+
+    /**
+     * Adds all specified SettingsViews to the <code>SettingsListView</code> control
+     * 
+     * @param views The List of <code>SettingsViews</code> to add
+     */
+    protected void addAllSettingsViewsToList(final List<SettingsView> views){
+        this.settingsList.addAllSettingsViews(views);
+    }
+
+    /**
+     * Sets the <code>SettingsListView</code> control to all specified SettingsViews
+     * 
+     * @param views The List of <code>SettingsViews</code> to set
+     */
+    protected void setAllSettingsViewsInList(final List<SettingsView> views){
+        this.settingsList.setAllSettingsViews(views);
+    }
+
+    /**
+     * Removes the specified SettingsView from the <code>SettingsListView</code> control
+     * 
+     * @param view The <code>SettingsView</code> to remove
+     */
+    protected void removeSettingsViewFromList(final SettingsView view){
+        this.settingsList.removeSettingsView(view);
+    }
+
+    /**
+     * Resets the button for plot and export functionalities back to its default state
+     */
+    protected void resetPlotButton(){
+        this.btnPlotExport.setText("Plot");
+        this.btnPlotExport.setDisable(true);
+    }
+
+    private File addPNGFileExtension(final File file){
+        return new File(file.getAbsolutePath() + ".png");
+    }
 
 }

@@ -26,42 +26,42 @@ import javafx.scene.control.Tooltip;
  *
  */
 public class BooleanCellView extends ComboBoxCellView {
-	
-	public static ObservableList<Object> optionsDefault = FXCollections
-			.observableArrayList(Boolean.TRUE, Boolean.FALSE);
-	
-	public static ObservableList<Object> optionsNullable = FXCollections
-			.observableArrayList(Boolean.TRUE, Boolean.FALSE, "null");
-	
-	/**
-	 * Constructs a new <code>BooleanCellView</code>
-	 */
-	public BooleanCellView(final boolean nullable){
-		super(Converters.booleanConverter(), allOptions(nullable));
-	}
-	
-	public BooleanCellView(final boolean nullable, final Tooltip tooltip){
-		super(Converters.booleanConverter(), allOptions(nullable));
-		setTooltip(tooltip);
-	}
 
-	public BooleanCellView(ObservableList<Object> items){
-		super(Converters.booleanConverter(), items);
-	}
-	
-	@Override
-	public void startEdit(){
-		//prevents the ComboBox from showing an empty selection when the user
-		//has cancelled a modification once. This has only an effect with null
-		//values in NullableBooleanColumns
-		final Object value = getItem();
-		if(value == null){
-			setItem("null");
-		}
-		super.startEdit();
-	}
-	
-	public static ObservableList<Object> allOptions(final boolean nullable){
-		return (nullable ? optionsNullable : optionsDefault);
-	}
+    public static ObservableList<Object> optionsDefault = FXCollections
+            .observableArrayList(Boolean.TRUE, Boolean.FALSE);
+
+    public static ObservableList<Object> optionsNullable = FXCollections
+            .observableArrayList(Boolean.TRUE, Boolean.FALSE, "null");
+
+    /**
+     * Constructs a new <code>BooleanCellView</code>
+     */
+    public BooleanCellView(final boolean nullable){
+        super(Converters.booleanConverter(), allOptions(nullable));
+    }
+
+    public BooleanCellView(final boolean nullable, final Tooltip tooltip){
+        super(Converters.booleanConverter(), allOptions(nullable));
+        setTooltip(tooltip);
+    }
+
+    public BooleanCellView(ObservableList<Object> items){
+        super(Converters.booleanConverter(), items);
+    }
+
+    @Override
+    public void startEdit(){
+        //prevents the ComboBox from showing an empty selection when the user
+        //has cancelled a modification once. This has only an effect with null
+        //values in NullableBooleanColumns
+        final Object value = getItem();
+        if(value == null){
+            setItem("null");
+        }
+        super.startEdit();
+    }
+
+    public static ObservableList<Object> allOptions(final boolean nullable){
+        return (nullable ? optionsNullable : optionsDefault);
+    }
 }

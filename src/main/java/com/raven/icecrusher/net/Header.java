@@ -29,93 +29,93 @@ import javafx.util.Pair;
  *
  */
 public class Header implements Iterable<HeaderField> {
-	
-	private Map<String, String> fields;
-	
-	/**
-	 * Constructs a new <code>Header</code> with no fields set
-	 */
-	public Header(){
-		this.fields = new HashMap<>();
-	}
-	
-	/**
-	 * Adds and possibly replaces a header field with the specified key and value
-	 * to this header
-	 * 
-	 * @param key The key of the header field to add
-	 * @param value The value of the header field to add
-	 */
-	public void add(final String key, final String value){
-		this.fields.put(key, value);
-	}
-	
-	/**
-	 * Returns the value of the header field with the specified key
-	 * 
-	 * @param key The key of the header field to get
-	 * @return The value of the header field with the specified key. May be null
-	 */
-	public String valueOf(final String key){
-		return this.fields.get(key);
-	}
-	
-	/**
-	 * Gets the header field with the specified key
-	 * 
-	 * @param key The key of the header field to get
-	 * @return The header field with the specified key. May be null
-	 */
-	public HeaderField getField(final String key){
-		final String value = this.fields.get(key);
-		return ((value != null) ? HeaderField.of(key, value) : null);
-	}
-	
-	@Override
-	public Iterator<HeaderField> iterator(){
-		return new HeaderIterator(fields.entrySet());
-	}
-	
-	@Override
-	public String toString(){
-		final StringBuilder sb = new StringBuilder();
-		final String nl = System.lineSeparator();
-		for(final HeaderField field : this){
-			sb.append("[");
-			sb.append(field.getKey());
-			sb.append(": ");
-			sb.append(field.getValue());
-			sb.append("]");
-			sb.append(nl);
-		}
-		return sb.toString();
-	}
-	
-	/**
-	 * Iterator for <code>Header</code>.
-	 *
-	 */
-	public static class HeaderIterator implements Iterator<HeaderField> {
-		
-		private Iterator<Map.Entry<String, String>> iter;
-		
-		protected HeaderIterator(final Set<Map.Entry<String, String>> set){
-			this.iter = set.iterator();
-		}
 
-		@Override
-		public boolean hasNext(){
-			return this.iter.hasNext();
-		}
+    private Map<String, String> fields;
 
-		@Override
-		public HeaderField next(){
-			final Map.Entry<String, String> e = this.iter.next();
-			return HeaderField.of(e.getKey(), e.getValue());
-		}
-		
-	}
-	
+    /**
+     * Constructs a new <code>Header</code> with no fields set
+     */
+    public Header(){
+        this.fields = new HashMap<>();
+    }
+
+    /**
+     * Adds and possibly replaces a header field with the specified key and value
+     * to this header
+     * 
+     * @param key The key of the header field to add
+     * @param value The value of the header field to add
+     */
+    public void add(final String key, final String value){
+        this.fields.put(key, value);
+    }
+
+    /**
+     * Returns the value of the header field with the specified key
+     * 
+     * @param key The key of the header field to get
+     * @return The value of the header field with the specified key. May be null
+     */
+    public String valueOf(final String key){
+        return this.fields.get(key);
+    }
+
+    /**
+     * Gets the header field with the specified key
+     * 
+     * @param key The key of the header field to get
+     * @return The header field with the specified key. May be null
+     */
+    public HeaderField getField(final String key){
+        final String value = this.fields.get(key);
+        return ((value != null) ? HeaderField.of(key, value) : null);
+    }
+
+    @Override
+    public Iterator<HeaderField> iterator(){
+        return new HeaderIterator(fields.entrySet());
+    }
+
+    @Override
+    public String toString(){
+        final StringBuilder sb = new StringBuilder();
+        final String nl = System.lineSeparator();
+        for(final HeaderField field : this){
+            sb.append("[");
+            sb.append(field.getKey());
+            sb.append(": ");
+            sb.append(field.getValue());
+            sb.append("]");
+            sb.append(nl);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Iterator for <code>Header</code>.
+     *
+     */
+    public static class HeaderIterator implements Iterator<HeaderField> {
+
+        private Iterator<Map.Entry<String, String>> iter;
+
+        protected HeaderIterator(final Set<Map.Entry<String, String>> set){
+            this.iter = set.iterator();
+        }
+
+        @Override
+        public boolean hasNext(){
+            return this.iter.hasNext();
+        }
+
+        @Override
+        public HeaderField next(){
+            final Map.Entry<String, String> e = this.iter.next();
+            return HeaderField.of(e.getKey(), e.getValue());
+        }
+
+    }
+
 }
 
 /**
@@ -125,18 +125,18 @@ public class Header implements Iterable<HeaderField> {
  */
 class HeaderField extends Pair<String, String> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructs a new <code>HeaderField</code> with the specified key and value
-	 * 
-	 * @param key The key of the header field
-	 * @param value The value of the header field
-	 */
-	public HeaderField(String key, String value){
-		super(key, value);
-	}
-	
+    /**
+     * Constructs a new <code>HeaderField</code> with the specified key and value
+     * 
+     * @param key The key of the header field
+     * @param value The value of the header field
+     */
+    public HeaderField(String key, String value){
+        super(key, value);
+    }
+
     /**
      * Tests this <code>HeaderField</code> for equality with another
      * <code>Object</code>.
@@ -152,36 +152,36 @@ class HeaderField extends Pair<String, String> {
      * @return True if the given <code>Object</code> is equal to this 
      *         <code>HeaderField</code>, false otherwise
      */
-	@Override
-	public boolean equals(Object o){
-		if(o == null){
-			return false;
-		}
-		if(this == o){
-			return true;
-		}
-		if(o instanceof Pair){
-			final HeaderField pair = (HeaderField) o;
-			if(((getKey() != null) && getKey().equals(pair.getKey()))){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public String toString(){
-		return getKey() + ": " + getValue();
-	}
-	
-	/**
-	 * Constructs a new <code>HeaderField</code> with the specified key and value
-	 * 
-	 * @param key The key of the header field
-	 * @param value The value of the header field
-	 * @return A <code>HeaderField</code> with the specified key and value set
-	 */
-	public static HeaderField of(final String key, final String value){
-		return new HeaderField(key, value);
-	}
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        if(this == o){
+            return true;
+        }
+        if(o instanceof Pair){
+            final HeaderField pair = (HeaderField) o;
+            if(((getKey() != null) && getKey().equals(pair.getKey()))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString(){
+        return getKey() + ": " + getValue();
+    }
+
+    /**
+     * Constructs a new <code>HeaderField</code> with the specified key and value
+     * 
+     * @param key The key of the header field
+     * @param value The value of the header field
+     * @return A <code>HeaderField</code> with the specified key and value set
+     */
+    public static HeaderField of(final String key, final String value){
+        return new HeaderField(key, value);
+    }
 }

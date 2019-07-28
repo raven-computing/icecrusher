@@ -32,69 +32,69 @@ import javafx.stage.Stage;
  *
  */
 public class DefaultProxyController implements ProxyController {
-	
-	private Class<? extends Controller> type;
 
-	protected DefaultProxyController(final Class<? extends Controller> type){
-		this.type = type;
-	}
+    private Class<? extends Controller> type;
 
-	@Override
-	public Object call(String key) throws Exception{
-		return callController(key, new Object[]{});
-	}
-	
-	@Override
-	public Object call(String key, Object... args) throws Exception{
-		return callController(key, args);
-	}
-	
-	private Object callController(String key, Object... args) throws Exception{
-		final Method method = findExposedMethodFor(key);
-		if(method == null){
-			throw new IllegalArgumentException("No exposed method found in " 
-		                               + type.getName() + " for key: " + key);
-			
-		}
-		return method.invoke(StackedApplication.getControllerByClass(type), args);
-	}
-	
-	@Override
-	public Stage getStage() throws ControllerNotFoundException{
-		return StackedApplication.getControllerByClass(type).getStage();
-	}
+    protected DefaultProxyController(final Class<? extends Controller> type){
+        this.type = type;
+    }
 
-	@Override
-	public Pane getRootNode() throws ControllerNotFoundException{
-		return StackedApplication.getControllerByClass(type).getRootNode();
-	}
+    @Override
+    public Object call(String key) throws Exception{
+        return callController(key, new Object[]{});
+    }
 
-	@Override
-	public Parent getLocalRootNode() throws ControllerNotFoundException{
-		return StackedApplication.getControllerByClass(type).getLocalRootNode();
-	}
-	
-	private Method findExposedMethodFor(final String key){
-		Method method = null;
-		for(final Method m : type.getMethods()){
-			final Exposed annotation = m.getAnnotation(Exposed.class);
-			if(annotation == null){
-				continue;
-			}
-			final String value = annotation.value();
-			if((value == null) || (value.isEmpty())){
-				if(m.getName().equals(key)){
-					method = m;
-					break;
-				}
-			}else{
-				if(value.equals(key)){
-					method = m;
-					break;
-				}
-			}
-		}
-		return method;
-	}
+    @Override
+    public Object call(String key, Object... args) throws Exception{
+        return callController(key, args);
+    }
+
+    private Object callController(String key, Object... args) throws Exception{
+        final Method method = findExposedMethodFor(key);
+        if(method == null){
+            throw new IllegalArgumentException("No exposed method found in " 
+                    + type.getName() + " for key: " + key);
+
+        }
+        return method.invoke(StackedApplication.getControllerByClass(type), args);
+    }
+
+    @Override
+    public Stage getStage() throws ControllerNotFoundException{
+        return StackedApplication.getControllerByClass(type).getStage();
+    }
+
+    @Override
+    public Pane getRootNode() throws ControllerNotFoundException{
+        return StackedApplication.getControllerByClass(type).getRootNode();
+    }
+
+    @Override
+    public Parent getLocalRootNode() throws ControllerNotFoundException{
+        return StackedApplication.getControllerByClass(type).getLocalRootNode();
+    }
+
+    private Method findExposedMethodFor(final String key){
+        Method method = null;
+        for(final Method m : type.getMethods()){
+            final Exposed annotation = m.getAnnotation(Exposed.class);
+            if(annotation == null){
+                continue;
+            }
+            final String value = annotation.value();
+            if((value == null) || (value.isEmpty())){
+                if(m.getName().equals(key)){
+                    method = m;
+                    break;
+                }
+            }else{
+                if(value.equals(key)){
+                    method = m;
+                    break;
+                }
+            }
+        }
+        return method;
+    }
 
 }

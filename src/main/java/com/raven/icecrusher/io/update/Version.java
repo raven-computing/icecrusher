@@ -28,59 +28,59 @@ import com.raven.icecrusher.util.Const;
  */
 public class Version implements Comparable<Version> {
 
-	private int major;
-	private int minor;
-	private int patch;
-	
-	public Version(final String version){
-		final String[] v = version.split("\\.", 3);
-		if(v.length >= 3){
-			this.major = Integer.valueOf(v[0]);
-			this.minor = Integer.valueOf(v[1]);
-			this.patch = Integer.valueOf(v[2].replaceAll("[^\\d.]", ""));
-		}
-	}
+    private int major;
+    private int minor;
+    private int patch;
 
-	public Version(final int major, final int minor, final int patch){
-		this.major = major;
-		this.minor = minor;
-		this.patch = patch;
-	}
+    public Version(final String version){
+        final String[] v = version.split("\\.", 3);
+        if(v.length >= 3){
+            this.major = Integer.valueOf(v[0]);
+            this.minor = Integer.valueOf(v[1]);
+            this.patch = Integer.valueOf(v[2].replaceAll("[^\\d.]", ""));
+        }
+    }
 
-	public int getMajor(){
-		return this.major;
-	}
+    public Version(final int major, final int minor, final int patch){
+        this.major = major;
+        this.minor = minor;
+        this.patch = patch;
+    }
 
-	public int getMinor(){
-		return this.minor;
-	}
+    public int getMajor(){
+        return this.major;
+    }
 
-	public int getPatch(){
-		return this.patch;
-	}
+    public int getMinor(){
+        return this.minor;
+    }
 
-	@Override
-	public int compareTo(final Version o) {
-		if(this.major != o.getMajor()){
-			return (this.major - o.getMajor());
-		}
-		if(this.minor != o.getMinor()){
-			return (this.minor - o.getMinor());
-		}
-		if(this.patch != o.getPatch()){
-			return (this.patch - o.getPatch());
-		}
-		return 0;
-	}
-	
-	@Override
-	public String toString(){
-		return String.valueOf(this.major) + "." 
-	                  + String.valueOf(this.minor) + "."
-				      + String.valueOf(this.patch);
-	}
-	
-	public static Version current(){
-		return new Version(Const.APPLICATION_VERSION);
-	}
+    public int getPatch(){
+        return this.patch;
+    }
+
+    @Override
+    public int compareTo(final Version o) {
+        if(this.major != o.getMajor()){
+            return (this.major - o.getMajor());
+        }
+        if(this.minor != o.getMinor()){
+            return (this.minor - o.getMinor());
+        }
+        if(this.patch != o.getPatch()){
+            return (this.patch - o.getPatch());
+        }
+        return 0;
+    }
+
+    @Override
+    public String toString(){
+        return String.valueOf(this.major) + "." 
+                + String.valueOf(this.minor) + "."
+                + String.valueOf(this.patch);
+    }
+
+    public static Version current(){
+        return new Version(Const.APPLICATION_VERSION);
+    }
 }

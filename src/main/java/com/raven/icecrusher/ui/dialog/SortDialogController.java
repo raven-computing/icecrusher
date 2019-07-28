@@ -29,55 +29,55 @@ import javafx.scene.layout.Pane;
  */
 public class SortDialogController {
 
-	/**
-	 * Listener interface for the <code>SortDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user confirms the sort action
-		 * 
-		 * @param column The name of the column to sort
-		 */
-		void onSort(String column);
-	}
-	
-	@FXML
-	private JFXComboBox<String> cBoxColumns;
-	
-	private Pane rootPane;
-	private DialogListener delegate;
-	
-	public void setSortListener(DialogListener delegate){
-		this.delegate = delegate;
-	}
-	
-	public void setRootContainer(Pane pane) {
-		this.rootPane = pane;
-	}
-	
-	public void setColumns(final String[] columns){
-		cBoxColumns.getItems().removeAll(cBoxColumns.getItems());
-		cBoxColumns.getItems().addAll(columns);
-	}
-	
-	@FXML
-	private void initialize(){ }
-	
-	@FXML
-	private void onSort(ActionEvent event){
-		final String column = cBoxColumns.getValue();
-		if((column == null) || (column.isEmpty())){
-			showWarnMsg("Please specify a column");
-			return;
-		}
-		if(delegate != null){
-			delegate.onSort(column);
-		}
-	}
-	
-	private void showWarnMsg(final String msg){
-		OneShotSnackbar.showFor(rootPane, msg);
-	}
+    /**
+     * Listener interface for the <code>SortDialog</code>.
+     *
+     */
+    public interface DialogListener {
+
+        /**
+         * Called when the user confirms the sort action
+         * 
+         * @param column The name of the column to sort
+         */
+        void onSort(String column);
+    }
+
+    @FXML
+    private JFXComboBox<String> cBoxColumns;
+
+    private Pane rootPane;
+    private DialogListener delegate;
+
+    public void setSortListener(DialogListener delegate){
+        this.delegate = delegate;
+    }
+
+    public void setRootContainer(Pane pane) {
+        this.rootPane = pane;
+    }
+
+    public void setColumns(final String[] columns){
+        cBoxColumns.getItems().removeAll(cBoxColumns.getItems());
+        cBoxColumns.getItems().addAll(columns);
+    }
+
+    @FXML
+    private void initialize(){ }
+
+    @FXML
+    private void onSort(ActionEvent event){
+        final String column = cBoxColumns.getValue();
+        if((column == null) || (column.isEmpty())){
+            showWarnMsg("Please specify a column");
+            return;
+        }
+        if(delegate != null){
+            delegate.onSort(column);
+        }
+    }
+
+    private void showWarnMsg(final String msg){
+        OneShotSnackbar.showFor(rootPane, msg);
+    }
 }

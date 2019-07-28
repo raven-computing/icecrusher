@@ -28,99 +28,99 @@ import javafx.scene.control.Label;
  *
  */
 public class UpdateDialogController {
-	
-	/**
-	 * Listener interface for the <code>UpdateDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user presses the action button
-		 * 
-		 */
-		void onAction(JFXButton actionButton);
-	}
 
-	@FXML
-	private Label labelTitle;
-	
-	@FXML
-	private Label labelMessage;
-	
-	@FXML
-	private Label labelProgressMsg;
-	
-	@FXML
-	private Label labelProgressValue;
-	
-	@FXML
-	private JFXProgressBar progressBar;
-	
-	@FXML
-	private JFXButton btnAction;
-	
-	private DialogListener delegate;
-	
-	public String getTitle(){
-		return this.labelTitle.getText();
-	}
-	
-	public void setTitle(final String title){
-		this.labelTitle.setText(title);
-	}
+    /**
+     * Listener interface for the <code>UpdateDialog</code>.
+     *
+     */
+    public interface DialogListener {
 
-	public String getMessage(){
-		return this.labelMessage.getText();
-	}
-	
-	public void setMessage(final String message){
-		this.labelMessage.setText(message);
-	}
+        /**
+         * Called when the user presses the action button
+         * 
+         */
+        void onAction(JFXButton actionButton);
+    }
 
-	public String getProgressMessage(){
-		return this.labelProgressMsg.getText();
-	}
-	
-	public void setProgressMessage(final String message){
-		this.labelProgressMsg.setText(message);
-	}
+    @FXML
+    private Label labelTitle;
 
-	public String getProgressValue(){
-		return this.labelProgressValue.getText();
-	}
-	
-	public void setProgressValue(final String value){
-		this.labelProgressValue.setText(value);
-	}
+    @FXML
+    private Label labelMessage;
 
-	public JFXProgressBar getProgressBar(){
-		return this.progressBar;
-	}
-	
-	public Label getProgressValueLabel(){
-		return this.labelProgressValue;
-	}
-	
-	public void setDialogListener(DialogListener delegate){
-		this.delegate = delegate;
-	}
-	
-	public void setActionButtonText(final String text){
-		this.btnAction.setText(text);
-	}
-	
-	public void setActionButtonDisabled(final boolean value){
-		this.btnAction.setDisable(value);
-	}
-	
-	@FXML
-	private void initialize(){ }
-	
-	@FXML
-	private void onAction(ActionEvent event){
-		if(delegate != null){
-			delegate.onAction(btnAction);
-		}
-	}
+    @FXML
+    private Label labelProgressMsg;
+
+    @FXML
+    private Label labelProgressValue;
+
+    @FXML
+    private JFXProgressBar progressBar;
+
+    @FXML
+    private JFXButton btnAction;
+
+    private DialogListener delegate;
+
+    public String getTitle(){
+        return this.labelTitle.getText();
+    }
+
+    public void setTitle(final String title){
+        this.labelTitle.setText(title);
+    }
+
+    public String getMessage(){
+        return this.labelMessage.getText();
+    }
+
+    public void setMessage(final String message){
+        this.labelMessage.setText(message);
+    }
+
+    public String getProgressMessage(){
+        return this.labelProgressMsg.getText();
+    }
+
+    public void setProgressMessage(final String message){
+        this.labelProgressMsg.setText(message);
+    }
+
+    public String getProgressValue(){
+        return this.labelProgressValue.getText();
+    }
+
+    public void setProgressValue(final String value){
+        this.labelProgressValue.setText(value);
+    }
+
+    public JFXProgressBar getProgressBar(){
+        return this.progressBar;
+    }
+
+    public Label getProgressValueLabel(){
+        return this.labelProgressValue;
+    }
+
+    public void setDialogListener(DialogListener delegate){
+        this.delegate = delegate;
+    }
+
+    public void setActionButtonText(final String text){
+        this.btnAction.setText(text);
+    }
+
+    public void setActionButtonDisabled(final boolean value){
+        this.btnAction.setDisable(value);
+    }
+
+    @FXML
+    private void initialize(){ }
+
+    @FXML
+    private void onAction(ActionEvent event){
+        if(delegate != null){
+            delegate.onAction(btnAction);
+        }
+    }
 }

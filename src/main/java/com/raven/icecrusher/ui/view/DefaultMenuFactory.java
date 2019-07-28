@@ -52,318 +52,318 @@ import javafx.scene.control.MenuItem;
  *
  */
 public class DefaultMenuFactory implements MenuFactory {
-	
-	public static final String MENU_TITLE_RENAME        = "Rename";
-	public static final String MENU_TITLE_SORT          = "Sort";
-	public static final String MENU_TITLE_DELETE        = "Delete";
-	public static final String MENU_TITLE_STATS         = "Show stats";
-	public static final String MENU_TITLE_CONVERT       = "Convert to";
-	
-	public static final String MENU_ITEM_TITLE_BYTES    = "bytes";
-	public static final String MENU_ITEM_TITLE_SHORTS   = "shorts";
-	public static final String MENU_ITEM_TITLE_INTS     = "ints";
-	public static final String MENU_ITEM_TITLE_LONGS    = "longs";
-	public static final String MENU_ITEM_TITLE_STRINGS  = "strings";
-	public static final String MENU_ITEM_TITLE_FLOATS   = "floats";
-	public static final String MENU_ITEM_TITLE_DOUBLES  = "doubles";
-	public static final String MENU_ITEM_TITLE_CHARS    = "chars";
-	public static final String MENU_ITEM_TITLE_BOOLEANS = "booleans";
 
-	public DefaultMenuFactory(){ }
+    public static final String MENU_TITLE_RENAME        = "Rename";
+    public static final String MENU_TITLE_SORT          = "Sort";
+    public static final String MENU_TITLE_DELETE        = "Delete";
+    public static final String MENU_TITLE_STATS         = "Show stats";
+    public static final String MENU_TITLE_CONVERT       = "Convert to";
 
-	@Override
-	public ContextMenu createContextMenu(final DataFrameColumnView columnView){
-		final Column column = columnView.getColumn();
-		final boolean showStats = !columnUsesNaNs(column);
-		
-		final MenuItem item1 = new MenuItem(MENU_TITLE_RENAME);
-		item1.setOnAction((event) -> {
-			columnView.getDataFrameView().action(ContextMenuEvent.Action.RENAME, 
-					columnView.getText(), null);
-		});
-		final MenuItem item2 = new MenuItem(MENU_TITLE_SORT);
-		item2.setOnAction((event) -> {
-			columnView.getDataFrameView().action(ContextMenuEvent.Action.SORT, 
-					columnView.getText(), null);
-		});
-		MenuItem item3 = null;
-		if(showStats){
-			item3 = new MenuItem(MENU_TITLE_STATS);
-			item3.setOnAction((event) -> {
-				columnView.getDataFrameView().action(ContextMenuEvent.Action.STATS, 
-						columnView.getText(), null);
-			});
-		}
-		final MenuItem item4 = new MenuItem(MENU_TITLE_DELETE);
-		item4.setOnAction((event) -> {
-			columnView.getDataFrameView().action(ContextMenuEvent.Action.DELETE, 
-					columnView.getText(), null);
-		});
-		final Menu menuConvert = createConvertSubmenu(columnView, column);
-		final ContextMenu menu = (showStats 
-				? new ContextMenu(item1, item2, item3, menuConvert, item4)
-				: new ContextMenu(item1, item2, menuConvert, item4));
-		
-		return menu;
-	}
-	
-	private Menu createConvertSubmenu(final DataFrameColumnView columnView, final Column column){
-		final Menu menu = new Menu(MENU_TITLE_CONVERT);
-		//bisect lookup
-		if(column.isNullable()){	
-			switch(column.typeCode()){
-			case NullableByteColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForBytes(columnView));
-				break;
-			case NullableShortColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForShorts(columnView));
-				break;
-			case NullableIntColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForInts(columnView));
-				break;
-			case NullableLongColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForLongs(columnView));
-				break;
-			case NullableStringColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForStrings(columnView));
-				break;
-			case NullableFloatColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForFloats(columnView));
-				break;
-			case NullableDoubleColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForDoubles(columnView));
-				break;
-			case NullableCharColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForChars(columnView));
-				break;
-			case NullableBooleanColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForBooleans(columnView));
-				break;
-			default:
-				
-			}
-		}else{
-			switch(column.typeCode()){
-			case ByteColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForBytes(columnView));
-				break;
-			case ShortColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForShorts(columnView));
-				break;
-			case IntColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForInts(columnView));
-				break;
-			case LongColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForLongs(columnView));
-				break;
-			case StringColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForStrings(columnView));
-				break;
-			case FloatColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForFloats(columnView));
-				break;
-			case DoubleColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForDoubles(columnView));
-				break;
-			case CharColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForChars(columnView));
-				break;
-			case BooleanColumn.TYPE_CODE:
-				menu.getItems().addAll(menuItemsForBooleans(columnView));
-				break;
-			default:
-				
-			}
-		}
-		return menu;
-	}
-	
-	private List<MenuItem> menuItemsForBytes(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(8);
-		list.add(createMenuItemForShorts(columnView));
-		list.add(createMenuItemForInts(columnView));
-		list.add(createMenuItemForLongs(columnView));
-		list.add(createMenuItemForStrings(columnView));
-		list.add(createMenuItemForFloats(columnView));
-		list.add(createMenuItemForDoubles(columnView));
-		list.add(createMenuItemForChars(columnView));
-		list.add(createMenuItemForBooleans(columnView));
-		return list;
-	}
-	
-	private List<MenuItem> menuItemsForShorts(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(8);
-		list.add(createMenuItemForBytes(columnView));
-		list.add(createMenuItemForInts(columnView));
-		list.add(createMenuItemForLongs(columnView));
-		list.add(createMenuItemForStrings(columnView));
-		list.add(createMenuItemForFloats(columnView));
-		list.add(createMenuItemForDoubles(columnView));
-		list.add(createMenuItemForChars(columnView));
-		list.add(createMenuItemForBooleans(columnView));
-		return list;
-	}
-	
-	private List<MenuItem> menuItemsForInts(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(8);
-		list.add(createMenuItemForBytes(columnView));
-		list.add(createMenuItemForShorts(columnView));
-		list.add(createMenuItemForLongs(columnView));
-		list.add(createMenuItemForStrings(columnView));
-		list.add(createMenuItemForFloats(columnView));
-		list.add(createMenuItemForDoubles(columnView));
-		list.add(createMenuItemForChars(columnView));
-		list.add(createMenuItemForBooleans(columnView));
-		return list;
-	}
-	
-	private List<MenuItem> menuItemsForLongs(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(8);
-		list.add(createMenuItemForBytes(columnView));
-		list.add(createMenuItemForShorts(columnView));
-		list.add(createMenuItemForInts(columnView));
-		list.add(createMenuItemForStrings(columnView));
-		list.add(createMenuItemForFloats(columnView));
-		list.add(createMenuItemForDoubles(columnView));
-		list.add(createMenuItemForChars(columnView));
-		list.add(createMenuItemForBooleans(columnView));
-		return list;
-	}
-	
-	private List<MenuItem> menuItemsForStrings(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(8);
-		list.add(createMenuItemForBytes(columnView));
-		list.add(createMenuItemForShorts(columnView));
-		list.add(createMenuItemForInts(columnView));
-		list.add(createMenuItemForLongs(columnView));
-		list.add(createMenuItemForFloats(columnView));
-		list.add(createMenuItemForDoubles(columnView));
-		list.add(createMenuItemForChars(columnView));
-		list.add(createMenuItemForBooleans(columnView));
-		return list;
-	}
-	
-	private List<MenuItem> menuItemsForFloats(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(2);
-		list.add(createMenuItemForStrings(columnView));
-		list.add(createMenuItemForDoubles(columnView));
-		return list;
-	}
-	
-	private List<MenuItem> menuItemsForDoubles(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(2);
-		list.add(createMenuItemForStrings(columnView));
-		list.add(createMenuItemForFloats(columnView));
-		return list;
-	}
-	
-	private List<MenuItem> menuItemsForChars(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(8);
-		list.add(createMenuItemForBytes(columnView));
-		list.add(createMenuItemForShorts(columnView));
-		list.add(createMenuItemForInts(columnView));
-		list.add(createMenuItemForLongs(columnView));
-		list.add(createMenuItemForStrings(columnView));
-		list.add(createMenuItemForFloats(columnView));
-		list.add(createMenuItemForDoubles(columnView));
-		list.add(createMenuItemForBooleans(columnView));
-		return list;
-	}
-	
-	private List<MenuItem> menuItemsForBooleans(final DataFrameColumnView columnView){
-		final List<MenuItem> list = new ArrayList<>(8);
-		list.add(createMenuItemForBytes(columnView));
-		list.add(createMenuItemForShorts(columnView));
-		list.add(createMenuItemForInts(columnView));
-		list.add(createMenuItemForLongs(columnView));
-		list.add(createMenuItemForStrings(columnView));
-		list.add(createMenuItemForFloats(columnView));
-		list.add(createMenuItemForDoubles(columnView));
-		list.add(createMenuItemForChars(columnView));
-		return list;
-	}
-	
-	private MenuItem createMenuItemForBytes(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_BYTES);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.BYTE));
-		
-		return item;
-	}
-	
-	private MenuItem createMenuItemForShorts(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_SHORTS);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.SHORT));
-		
-		return item;
-	}
-	
-	private MenuItem createMenuItemForInts(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_INTS);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.INT));
-		
-		return item;
-	}
-	
-	private MenuItem createMenuItemForLongs(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_LONGS);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.LONG));
-		
-		return item;
-	}
-	
-	private MenuItem createMenuItemForStrings(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_STRINGS);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.STRING));
-		
-		return item;
-	}
-	
-	private MenuItem createMenuItemForFloats(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_FLOATS);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.FLOAT));
-		
-		return item;
-	}
-	
-	private MenuItem createMenuItemForDoubles(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_DOUBLES);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.DOUBLE));
-		
-		return item;
-	}
-	
-	private MenuItem createMenuItemForChars(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_CHARS);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.CHAR));
-		
-		return item;
-	}
-	
-	private MenuItem createMenuItemForBooleans(final DataFrameColumnView columnView){
-		final MenuItem item = new MenuItem(MENU_ITEM_TITLE_BOOLEANS);
-		item.setOnAction((e) -> columnView.getDataFrameView()
-				.action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.BOOLEAN));
-		
-		return item;
-	}
-	
-	private boolean columnUsesNaNs(final Column col){
-		final byte typeCode = col.typeCode();
-		return (typeCode == StringColumn.TYPE_CODE
-				|| typeCode == CharColumn.TYPE_CODE
-				|| typeCode == BooleanColumn.TYPE_CODE
-				|| typeCode == NullableStringColumn.TYPE_CODE
-				|| typeCode == NullableCharColumn.TYPE_CODE
-				|| typeCode == NullableBooleanColumn.TYPE_CODE);
-		
-	}
+    public static final String MENU_ITEM_TITLE_BYTES    = "bytes";
+    public static final String MENU_ITEM_TITLE_SHORTS   = "shorts";
+    public static final String MENU_ITEM_TITLE_INTS     = "ints";
+    public static final String MENU_ITEM_TITLE_LONGS    = "longs";
+    public static final String MENU_ITEM_TITLE_STRINGS  = "strings";
+    public static final String MENU_ITEM_TITLE_FLOATS   = "floats";
+    public static final String MENU_ITEM_TITLE_DOUBLES  = "doubles";
+    public static final String MENU_ITEM_TITLE_CHARS    = "chars";
+    public static final String MENU_ITEM_TITLE_BOOLEANS = "booleans";
+
+    public DefaultMenuFactory(){ }
+
+    @Override
+    public ContextMenu createContextMenu(final DataFrameColumnView columnView){
+        final Column column = columnView.getColumn();
+        final boolean showStats = !columnUsesNaNs(column);
+
+        final MenuItem item1 = new MenuItem(MENU_TITLE_RENAME);
+        item1.setOnAction((event) -> {
+            columnView.getDataFrameView().action(ContextMenuEvent.Action.RENAME, 
+                    columnView.getText(), null);
+        });
+        final MenuItem item2 = new MenuItem(MENU_TITLE_SORT);
+        item2.setOnAction((event) -> {
+            columnView.getDataFrameView().action(ContextMenuEvent.Action.SORT, 
+                    columnView.getText(), null);
+        });
+        MenuItem item3 = null;
+        if(showStats){
+            item3 = new MenuItem(MENU_TITLE_STATS);
+            item3.setOnAction((event) -> {
+                columnView.getDataFrameView().action(ContextMenuEvent.Action.STATS, 
+                        columnView.getText(), null);
+            });
+        }
+        final MenuItem item4 = new MenuItem(MENU_TITLE_DELETE);
+        item4.setOnAction((event) -> {
+            columnView.getDataFrameView().action(ContextMenuEvent.Action.DELETE, 
+                    columnView.getText(), null);
+        });
+        final Menu menuConvert = createConvertSubmenu(columnView, column);
+        final ContextMenu menu = (showStats 
+                ? new ContextMenu(item1, item2, item3, menuConvert, item4)
+                        : new ContextMenu(item1, item2, menuConvert, item4));
+
+        return menu;
+    }
+
+    private Menu createConvertSubmenu(final DataFrameColumnView columnView, final Column column){
+        final Menu menu = new Menu(MENU_TITLE_CONVERT);
+        //bisect lookup
+        if(column.isNullable()){	
+            switch(column.typeCode()){
+            case NullableByteColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForBytes(columnView));
+                break;
+            case NullableShortColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForShorts(columnView));
+                break;
+            case NullableIntColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForInts(columnView));
+                break;
+            case NullableLongColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForLongs(columnView));
+                break;
+            case NullableStringColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForStrings(columnView));
+                break;
+            case NullableFloatColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForFloats(columnView));
+                break;
+            case NullableDoubleColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForDoubles(columnView));
+                break;
+            case NullableCharColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForChars(columnView));
+                break;
+            case NullableBooleanColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForBooleans(columnView));
+                break;
+            default:
+
+            }
+        }else{
+            switch(column.typeCode()){
+            case ByteColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForBytes(columnView));
+                break;
+            case ShortColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForShorts(columnView));
+                break;
+            case IntColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForInts(columnView));
+                break;
+            case LongColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForLongs(columnView));
+                break;
+            case StringColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForStrings(columnView));
+                break;
+            case FloatColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForFloats(columnView));
+                break;
+            case DoubleColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForDoubles(columnView));
+                break;
+            case CharColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForChars(columnView));
+                break;
+            case BooleanColumn.TYPE_CODE:
+                menu.getItems().addAll(menuItemsForBooleans(columnView));
+                break;
+            default:
+
+            }
+        }
+        return menu;
+    }
+
+    private List<MenuItem> menuItemsForBytes(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(8);
+        list.add(createMenuItemForShorts(columnView));
+        list.add(createMenuItemForInts(columnView));
+        list.add(createMenuItemForLongs(columnView));
+        list.add(createMenuItemForStrings(columnView));
+        list.add(createMenuItemForFloats(columnView));
+        list.add(createMenuItemForDoubles(columnView));
+        list.add(createMenuItemForChars(columnView));
+        list.add(createMenuItemForBooleans(columnView));
+        return list;
+    }
+
+    private List<MenuItem> menuItemsForShorts(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(8);
+        list.add(createMenuItemForBytes(columnView));
+        list.add(createMenuItemForInts(columnView));
+        list.add(createMenuItemForLongs(columnView));
+        list.add(createMenuItemForStrings(columnView));
+        list.add(createMenuItemForFloats(columnView));
+        list.add(createMenuItemForDoubles(columnView));
+        list.add(createMenuItemForChars(columnView));
+        list.add(createMenuItemForBooleans(columnView));
+        return list;
+    }
+
+    private List<MenuItem> menuItemsForInts(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(8);
+        list.add(createMenuItemForBytes(columnView));
+        list.add(createMenuItemForShorts(columnView));
+        list.add(createMenuItemForLongs(columnView));
+        list.add(createMenuItemForStrings(columnView));
+        list.add(createMenuItemForFloats(columnView));
+        list.add(createMenuItemForDoubles(columnView));
+        list.add(createMenuItemForChars(columnView));
+        list.add(createMenuItemForBooleans(columnView));
+        return list;
+    }
+
+    private List<MenuItem> menuItemsForLongs(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(8);
+        list.add(createMenuItemForBytes(columnView));
+        list.add(createMenuItemForShorts(columnView));
+        list.add(createMenuItemForInts(columnView));
+        list.add(createMenuItemForStrings(columnView));
+        list.add(createMenuItemForFloats(columnView));
+        list.add(createMenuItemForDoubles(columnView));
+        list.add(createMenuItemForChars(columnView));
+        list.add(createMenuItemForBooleans(columnView));
+        return list;
+    }
+
+    private List<MenuItem> menuItemsForStrings(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(8);
+        list.add(createMenuItemForBytes(columnView));
+        list.add(createMenuItemForShorts(columnView));
+        list.add(createMenuItemForInts(columnView));
+        list.add(createMenuItemForLongs(columnView));
+        list.add(createMenuItemForFloats(columnView));
+        list.add(createMenuItemForDoubles(columnView));
+        list.add(createMenuItemForChars(columnView));
+        list.add(createMenuItemForBooleans(columnView));
+        return list;
+    }
+
+    private List<MenuItem> menuItemsForFloats(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(2);
+        list.add(createMenuItemForStrings(columnView));
+        list.add(createMenuItemForDoubles(columnView));
+        return list;
+    }
+
+    private List<MenuItem> menuItemsForDoubles(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(2);
+        list.add(createMenuItemForStrings(columnView));
+        list.add(createMenuItemForFloats(columnView));
+        return list;
+    }
+
+    private List<MenuItem> menuItemsForChars(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(8);
+        list.add(createMenuItemForBytes(columnView));
+        list.add(createMenuItemForShorts(columnView));
+        list.add(createMenuItemForInts(columnView));
+        list.add(createMenuItemForLongs(columnView));
+        list.add(createMenuItemForStrings(columnView));
+        list.add(createMenuItemForFloats(columnView));
+        list.add(createMenuItemForDoubles(columnView));
+        list.add(createMenuItemForBooleans(columnView));
+        return list;
+    }
+
+    private List<MenuItem> menuItemsForBooleans(final DataFrameColumnView columnView){
+        final List<MenuItem> list = new ArrayList<>(8);
+        list.add(createMenuItemForBytes(columnView));
+        list.add(createMenuItemForShorts(columnView));
+        list.add(createMenuItemForInts(columnView));
+        list.add(createMenuItemForLongs(columnView));
+        list.add(createMenuItemForStrings(columnView));
+        list.add(createMenuItemForFloats(columnView));
+        list.add(createMenuItemForDoubles(columnView));
+        list.add(createMenuItemForChars(columnView));
+        return list;
+    }
+
+    private MenuItem createMenuItemForBytes(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_BYTES);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.BYTE));
+
+        return item;
+    }
+
+    private MenuItem createMenuItemForShorts(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_SHORTS);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.SHORT));
+
+        return item;
+    }
+
+    private MenuItem createMenuItemForInts(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_INTS);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.INT));
+
+        return item;
+    }
+
+    private MenuItem createMenuItemForLongs(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_LONGS);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.LONG));
+
+        return item;
+    }
+
+    private MenuItem createMenuItemForStrings(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_STRINGS);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.STRING));
+
+        return item;
+    }
+
+    private MenuItem createMenuItemForFloats(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_FLOATS);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.FLOAT));
+
+        return item;
+    }
+
+    private MenuItem createMenuItemForDoubles(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_DOUBLES);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.DOUBLE));
+
+        return item;
+    }
+
+    private MenuItem createMenuItemForChars(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_CHARS);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.CHAR));
+
+        return item;
+    }
+
+    private MenuItem createMenuItemForBooleans(final DataFrameColumnView columnView){
+        final MenuItem item = new MenuItem(MENU_ITEM_TITLE_BOOLEANS);
+        item.setOnAction((e) -> columnView.getDataFrameView()
+                .action(ContextMenuEvent.Action.CONVERT, columnView.getText(), ColumnType.BOOLEAN));
+
+        return item;
+    }
+
+    private boolean columnUsesNaNs(final Column col){
+        final byte typeCode = col.typeCode();
+        return (typeCode == StringColumn.TYPE_CODE
+                || typeCode == CharColumn.TYPE_CODE
+                || typeCode == BooleanColumn.TYPE_CODE
+                || typeCode == NullableStringColumn.TYPE_CODE
+                || typeCode == NullableCharColumn.TYPE_CODE
+                || typeCode == NullableBooleanColumn.TYPE_CODE);
+
+    }
 
 }

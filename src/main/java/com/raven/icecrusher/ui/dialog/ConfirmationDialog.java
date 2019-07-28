@@ -33,42 +33,42 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class ConfirmationDialog extends EditorDialog {
-	
-	/**
-	 * Listener interface for the <code>ConfirmationDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user confirms the action.<br>
-		 * This function will not be called when the dialog gets dismissed
-		 */
-		void onConfirm();
-	}
-	
-	private DialogListener delegate;
 
-	public ConfirmationDialog(StackPane root, String title, String message, String buttonText){
-		super(root, null);
-		JFXDialogLayout layout = new JFXDialogLayout();
-		final JFXButton button = new JFXButton(buttonText);
-		button.getStyleClass().add("dialog-button");
-		button.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
-			if(delegate != null){ 
-				delegate.onConfirm();
-			}
-		});
-		List<JFXButton> actions = new LinkedList<>();
-		actions.add(button);
-		layout.setHeading(new Label(title));
-		layout.setBody(new Label(message));
-		layout.setActions(actions);
-		setContent(layout);
-	}
-	
-	public void setOnConfirm(final DialogListener delegate){
-		this.delegate = delegate;
-	}
+    /**
+     * Listener interface for the <code>ConfirmationDialog</code>.
+     *
+     */
+    public interface DialogListener {
+
+        /**
+         * Called when the user confirms the action.<br>
+         * This function will not be called when the dialog gets dismissed
+         */
+        void onConfirm();
+    }
+
+    private DialogListener delegate;
+
+    public ConfirmationDialog(StackPane root, String title, String message, String buttonText){
+        super(root, null);
+        JFXDialogLayout layout = new JFXDialogLayout();
+        final JFXButton button = new JFXButton(buttonText);
+        button.getStyleClass().add("dialog-button");
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
+            if(delegate != null){ 
+                delegate.onConfirm();
+            }
+        });
+        List<JFXButton> actions = new LinkedList<>();
+        actions.add(button);
+        layout.setHeading(new Label(title));
+        layout.setBody(new Label(message));
+        layout.setActions(actions);
+        setContent(layout);
+    }
+
+    public void setOnConfirm(final DialogListener delegate){
+        this.delegate = delegate;
+    }
 
 }

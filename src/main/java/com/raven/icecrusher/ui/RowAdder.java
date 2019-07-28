@@ -45,85 +45,97 @@ import javafx.scene.layout.GridPane;
  */
 public class RowAdder {
 
-	private DataFrameView view;
-	private FrameController controller;
+    private DataFrameView view;
+    private FrameController controller;
 
-	public RowAdder(FrameController controller){
-		this.controller = controller;
-	}
+    public RowAdder(FrameController controller){
+        this.controller = controller;
+    }
 
-	public void prepareRowAddition(){
-		final FileTab tab = ((FileTab)controller.mainTabs.getSelectionModel().getSelectedItem());
-		this.view = tab.getView();
-		final DataFrame selected = tab.getDataFrame();
-		final GridPane grid = new GridPane();
-		final Node[] fields = new Node[selected.columns()];
-		for(int i=0; i<selected.columns(); ++i){
-			final Column col = selected.getColumnAt(i);
-			Node node = null;
-			if(col instanceof BooleanColumn || col instanceof NullableBooleanColumn){
-				JFXComboBox<Object> cb = new JFXComboBox<>((col instanceof NullableColumn) 
-						? BooleanCellView.optionsNullable 
-						: BooleanCellView.optionsDefault);
-				
-				cb.getSelectionModel().select(Boolean.FALSE);
-				cb.setTooltip(new Tooltip(selected.getColumnName(i)));
-				node = cb;
-			}else{
-				final ConversionPack pack = ConversionPack.columnConversion(col);
-				final JFXTextField txt = new JFXTextField();
-				txt.setPromptText(selected.getColumnName(i));
-				txt.setLabelFloat(true);
-				txt.setTextFormatter(new TextFormatter<Object>(pack.getConverter(), null, pack.getFilter()));
-				node = txt;
-			}
-			fields[i] = node;
-			GridPane.setMargin(node, new Insets(20, 10, 0, 10));
-		}
-		grid.setAlignment(Pos.CENTER);
-		grid.addRow(1, fields);
-		controller.editSceneAnchor.getChildren().add(grid);
-		final EditorFile file = tab.getFile();
-		controller.editSceneFile.setText(file != null ? file.getName() : Files.DEFAULT_NEW_FILENAME);
-	}
+    public void prepareRowAddition(){
+        final FileTab tab = ((FileTab)controller.mainTabs
+                .getSelectionModel().getSelectedItem());
+        
+        this.view = tab.getView();
+        final DataFrame selected = tab.getDataFrame();
+        final GridPane grid = new GridPane();
+        final Node[] fields = new Node[selected.columns()];
+        for(int i=0; i<selected.columns(); ++i){
+            final Column col = selected.getColumnAt(i);
+            Node node = null;
+            if(col instanceof BooleanColumn || col instanceof NullableBooleanColumn){
+                JFXComboBox<Object> cb = new JFXComboBox<>((col instanceof NullableColumn) 
+                        ? BooleanCellView.optionsNullable 
+                                : BooleanCellView.optionsDefault);
 
-	public boolean addRow(){
-		ObservableList<Node> nodes = ((GridPane)controller.editSceneAnchor.getChildren().get(0)).getChildren();
-		final DataFrame df = this.view.getDataFrame();
-		final boolean NULLABLE = this.view.getDataFrame().isNullable();
-		final Object[] row = new Object[nodes.size()];
-		for(final Node node : nodes){
-			if(node instanceof JFXTextField){
-				final JFXTextField field = ((JFXTextField)node);
-				final String s = field.getText();
-				if(!NULLABLE && (s == null || s.isEmpty())){
-					OneShotSnackbar.showFor(controller.rootPane, "DefaultDataFrame cannot use null");
-					return false;
-				}
-				row[df.getColumnIndex(field.getPromptText())] = field.getTextFormatter().getValue();
-			}else{
-				final JFXComboBox<?> field = (JFXComboBox<?>)node;
-				Object value = field.getValue();
-				if((value != null) && value.toString().equals("null")){
-					value = null;
-				}
-				row[df.getColumnIndex(field.getTooltip().getText())] = value;
-			}
-		}
-		df.addRow(row);
-		this.view.reload();
-		if(controller.config.booleanOf(Section.GLOBAL, EditorConfiguration.CONFIG_CLEAR_AFTER_ROW_ADD)){
-			clearFields(nodes);
-		}
-		return true;
-	}
+                cb.getSelectionModel().select(Boolean.FALSE);
+                cb.setTooltip(new Tooltip(selected.getColumnName(i)));
+                node = cb;
+            }else{
+                final ConversionPack pack = ConversionPack.columnConversion(col);
+                final JFXTextField txt = new JFXTextField();
+                txt.setPromptText(selected.getColumnName(i));
+                txt.setLabelFloat(true);
+                txt.setTextFormatter(
+                        new TextFormatter<Object>(pack.getConverter(), null, pack.getFilter()));
+                
+                node = txt;
+            }
+            fields[i] = node;
+            GridPane.setMargin(node, new Insets(20, 10, 0, 10));
+        }
+        grid.setAlignment(Pos.CENTER);
+        grid.addRow(1, fields);
+        controller.editSceneAnchor.getChildren().add(grid);
+        final EditorFile file = tab.getFile();
+        controller.editSceneFile.setText(file != null
+                ? file.getName()
+                : Files.DEFAULT_NEW_FILENAME);
+    }
 
-	private void clearFields(final ObservableList<Node> nodes){
-		for(final Node node : nodes){
-			if(node instanceof JFXTextField){
-				((JFXTextField)node).getTextFormatter().setValue(null);
-			}
-		}
-	}
+    public boolean addRow(){
+        ObservableList<Node> nodes = ((GridPane)controller
+                .editSceneAnchor.getChildren().get(0)).getChildren();
+        
+        final DataFrame df = this.view.getDataFrame();
+        final boolean NULLABLE = this.view.getDataFrame().isNullable();
+        final Object[] row = new Object[nodes.size()];
+        for(final Node node : nodes){
+            if(node instanceof JFXTextField){
+                final JFXTextField field = ((JFXTextField)node);
+                final String s = field.getText();
+                if(!NULLABLE && (s == null || s.isEmpty())){
+                    OneShotSnackbar.showFor(controller.rootPane,
+                            "DefaultDataFrame cannot use null");
+                    
+                    return false;
+                }
+                row[df.getColumnIndex(field.getPromptText())] = field.getTextFormatter().getValue();
+            }else{
+                final JFXComboBox<?> field = (JFXComboBox<?>)node;
+                Object value = field.getValue();
+                if((value != null) && value.toString().equals("null")){
+                    value = null;
+                }
+                row[df.getColumnIndex(field.getTooltip().getText())] = value;
+            }
+        }
+        df.addRow(row);
+        this.view.reload();
+        if(controller.config.booleanOf(Section.GLOBAL,
+                EditorConfiguration.CONFIG_CLEAR_AFTER_ROW_ADD)){
+            
+            clearFields(nodes);
+        }
+        return true;
+    }
+
+    private void clearFields(final ObservableList<Node> nodes){
+        for(final Node node : nodes){
+            if(node instanceof JFXTextField){
+                ((JFXTextField)node).getTextFormatter().setValue(null);
+            }
+        }
+    }
 
 }

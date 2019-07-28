@@ -30,26 +30,26 @@ import javafx.scene.layout.StackPane;
  */
 public class SaveDialog extends EditorDialog {
 
-	private SaveDialogController controller;
+    private SaveDialogController controller;
 
-	public SaveDialog(StackPane root){
-		super(root, null);
+    public SaveDialog(StackPane root){
+        super(root, null);
         final Layout layout = Layout.of(Dialog.SAVE);
         final Parent parent = layout.load();
         controller = layout.getController();
-		setContent((Region)parent);
-	}
-	
-	public void setTitle(final String title){
-		this.controller.setTitle(title);
-	}
-	
-	public void setMessage(final String message){
-		this.controller.setMessage(message);
-	}
-	
-	public void setOnConfirm(DialogListener listener){
-		controller.setConfirmListener(listener);
-	}
+        setContent((Region) parent);
+    }
+
+    public void setTitle(final String title){
+        this.controller.setTitle(title);
+    }
+
+    public void setMessage(final String message){
+        this.controller.setMessage(message);
+    }
+
+    public void setOnConfirm(DialogListener listener){
+        controller.setConfirmListener(listener);
+    }
 
 }

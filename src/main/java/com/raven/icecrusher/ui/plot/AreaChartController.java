@@ -32,118 +32,118 @@ import javafx.scene.chart.XYChart.Series;
  *
  */
 public class AreaChartController extends XYChartController {
-	
-	@FXML
-	private StackedAreaChart<Number, Number> chart;
 
-	public AreaChartController(){
-		super();
-	}
-	
-	@FXML
-	@Override
-	public void initialize(){
-		super.initialize(this.chart);
-	}
-	
-	@Override
-	public void onStart(ArgumentBundle bundle){
-		super.onStart(bundle);
-		//CheckBoxes
-		checkDataPoints.selectedProperty().addListener((ov, oldValue, newValue) -> {
-			chart.setCreateSymbols(newValue);
-			if(newValue){
-				updateAllSymbolsColor(chart);
-			}
-		});
-		chart.setCreateSymbols(checkDataPoints.isSelected());
-	}
+    @FXML
+    private StackedAreaChart<Number, Number> chart;
 
-	@FXML
-	@Override
-	public void onPlot(ActionEvent event){
-		if(!plotIsShown || (preparedSeries != null)){
-			this.chart.getData().addAll(preparedSeries);
-			this.plotIsShown = true;
-			this.btnPlotExport.setText("Export as PNG");
-			for(final Series<Number, Number> series : preparedSeries){
-				final String color = getSettingsViewForSeries(series).getColor();
-				updateAreaColor(series.getNode(), color);
-				updateSymbolsColor(series.getData(), color);
-			}
-			updateAllLegendColors();
-			this.preparedSeries = null;
-		}else{
-			exportSnapshot();
-		}
-	}
-	
-	@FXML
-	@Override
-	protected void onAdd(ActionEvent event){
-		prepareChart();
-	}
-	
-	@FXML
-	protected void onClose(ActionEvent event){
-		super.onClose(event);
-	}
-	
-	private void prepareChart(){
-		final Column colX = selectedXColumn();
-		final Column colY = selectedYColumn();
+    public AreaChartController(){
+        super();
+    }
 
-		final XYChartData data = prepareData(colX, colY);
-		if(data == null){
-			return;
-		}
-		final Series<Number, Number> series = data.getSeries();
-		setDateControlsDisabled(true);
-		
-		final int index = this.settingsList.getChildren().size();
-		final SettingsView lsv = new LineSettingsView(index, series.getName());
-		lsv.setViewListener(new ViewListener(){
-			@Override
-			public void onRelabel(SettingsView view, String newLabel){
-				series.setName(newLabel);
-				updateAllLegendColors();
-			}
-			@Override
-			public void onColorChanged(SettingsView view, String newColor){
-				final Node node = series.getNode();
-				if(node != null){//only set color if plot is rendered on screen
-					updateAreaColor(node ,newColor);
-					updateLegendColor(view, newColor);
-					updateSymbolsColor(series.getData(), newColor);
-				}
-			}
-			@Override
-			public void onRemove(SettingsView view){
-				//an animation may still be in process
-				if(!settingsList.isRemoving()){
-					removeSeries(view);		
-				}
-			}
-		});
-		addSettingsViewToList(lsv);
-		
-		if(preparedSeries == null){
-			this.preparedSeries = new LinkedList<>();
-		}
-		this.preparedSeries.add(series);
-		
-		this.btnPlotExport.setDisable(false);
-		this.btnPlotExport.setText("Plot");
-	}
-	
-	private void updateAreaColor(final Node node, final String color){
-			final Node fill = node.lookup(".chart-series-area-fill");
-			final Node line = node.lookup(".chart-series-area-line");
-			if((fill != null) && (line != null)){
-				//specify an alpha channel for the area fill
-				fill.setStyle("-fx-fill: " + color + "55");
-				line.setStyle("-fx-stroke: " + color);
-			}
-	}
+    @FXML
+    @Override
+    public void initialize(){
+        super.initialize(this.chart);
+    }
+
+    @Override
+    public void onStart(ArgumentBundle bundle){
+        super.onStart(bundle);
+        //CheckBoxes
+        checkDataPoints.selectedProperty().addListener((ov, oldValue, newValue) -> {
+            chart.setCreateSymbols(newValue);
+            if(newValue){
+                updateAllSymbolsColor(chart);
+            }
+        });
+        chart.setCreateSymbols(checkDataPoints.isSelected());
+    }
+
+    @FXML
+    @Override
+    public void onPlot(ActionEvent event){
+        if(!plotIsShown || (preparedSeries != null)){
+            this.chart.getData().addAll(preparedSeries);
+            this.plotIsShown = true;
+            this.btnPlotExport.setText("Export as PNG");
+            for(final Series<Number, Number> series : preparedSeries){
+                final String color = getSettingsViewForSeries(series).getColor();
+                updateAreaColor(series.getNode(), color);
+                updateSymbolsColor(series.getData(), color);
+            }
+            updateAllLegendColors();
+            this.preparedSeries = null;
+        }else{
+            exportSnapshot();
+        }
+    }
+
+    @FXML
+    @Override
+    protected void onAdd(ActionEvent event){
+        prepareChart();
+    }
+
+    @FXML
+    protected void onClose(ActionEvent event){
+        super.onClose(event);
+    }
+
+    private void prepareChart(){
+        final Column colX = selectedXColumn();
+        final Column colY = selectedYColumn();
+
+        final XYChartData data = prepareData(colX, colY);
+        if(data == null){
+            return;
+        }
+        final Series<Number, Number> series = data.getSeries();
+        setDateControlsDisabled(true);
+
+        final int index = this.settingsList.getChildren().size();
+        final SettingsView lsv = new LineSettingsView(index, series.getName());
+        lsv.setViewListener(new ViewListener(){
+            @Override
+            public void onRelabel(SettingsView view, String newLabel){
+                series.setName(newLabel);
+                updateAllLegendColors();
+            }
+            @Override
+            public void onColorChanged(SettingsView view, String newColor){
+                final Node node = series.getNode();
+                if(node != null){//only set color if plot is rendered on screen
+                    updateAreaColor(node ,newColor);
+                    updateLegendColor(view, newColor);
+                    updateSymbolsColor(series.getData(), newColor);
+                }
+            }
+            @Override
+            public void onRemove(SettingsView view){
+                //an animation may still be in process
+                if(!settingsList.isRemoving()){
+                    removeSeries(view);		
+                }
+            }
+        });
+        addSettingsViewToList(lsv);
+
+        if(preparedSeries == null){
+            this.preparedSeries = new LinkedList<>();
+        }
+        this.preparedSeries.add(series);
+
+        this.btnPlotExport.setDisable(false);
+        this.btnPlotExport.setText("Plot");
+    }
+
+    private void updateAreaColor(final Node node, final String color){
+        final Node fill = node.lookup(".chart-series-area-fill");
+        final Node line = node.lookup(".chart-series-area-line");
+        if((fill != null) && (line != null)){
+            //specify an alpha channel for the area fill
+            fill.setStyle("-fx-fill: " + color + "55");
+            line.setStyle("-fx-stroke: " + color);
+        }
+    }
 
 }

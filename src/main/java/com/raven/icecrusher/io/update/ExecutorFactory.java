@@ -24,30 +24,30 @@ package com.raven.icecrusher.io.update;
  */
 public class ExecutorFactory {
 
-	private ExecutorFactory(){ }
-	
-	/**
-	 * Gets an UpdateExecutor for performing application updates
-	 * 
-	 * @param updateInfo The <code>UpdateInfo</code> object holding the necessary update 
-	 *                   data polled over the network
-	 * @param updateRoutine The <code>UpdateRoutine</code> to be used by the returned UpdateExecutor
-	 * @return An <code>UpdateExecutor</code> for the underlying platform
-	 */
-	protected static UpdateExecutor getUpdateExecutor(final UpdateInfo updateInfo, final UpdateRoutine updateRoutine){
-		if((updateInfo == null) || (updateRoutine == null)){
-			throw new IllegalArgumentException("Update arguments must not be null");
-		}
-		final String os = System.getProperty("os.name");
-		if((os != null) && (!os.isEmpty())){
-			final String name = os.toLowerCase();
-			if(name.contains("linux")){
-				return new LinuxUpdateExecutor(updateInfo, updateRoutine);
-			}else if(name.contains("windows") || name.contains("win")){
-				return new WindowsUpdateExecutor(updateInfo, updateRoutine);
-			}
-		}
-		return null;
-	}
+    private ExecutorFactory(){ }
+
+    /**
+     * Gets an UpdateExecutor for performing application updates
+     * 
+     * @param updateInfo The <code>UpdateInfo</code> object holding the necessary update 
+     *                   data polled over the network
+     * @param updateRoutine The <code>UpdateRoutine</code> to be used by the returned UpdateExecutor
+     * @return An <code>UpdateExecutor</code> for the underlying platform
+     */
+    protected static UpdateExecutor getUpdateExecutor(final UpdateInfo updateInfo, final UpdateRoutine updateRoutine){
+        if((updateInfo == null) || (updateRoutine == null)){
+            throw new IllegalArgumentException("Update arguments must not be null");
+        }
+        final String os = System.getProperty("os.name");
+        if((os != null) && (!os.isEmpty())){
+            final String name = os.toLowerCase();
+            if(name.contains("linux")){
+                return new LinuxUpdateExecutor(updateInfo, updateRoutine);
+            }else if(name.contains("windows") || name.contains("win")){
+                return new WindowsUpdateExecutor(updateInfo, updateRoutine);
+            }
+        }
+        return null;
+    }
 
 }

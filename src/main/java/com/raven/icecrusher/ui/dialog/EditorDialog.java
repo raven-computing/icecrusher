@@ -35,57 +35,57 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class EditorDialog extends JFXDialog {
-	
-	private Pane rootPane;
-	
-	/**
-	 * Creates new dialog with the default transition animation
-	 * 
-	 * @param dialogContainer The parent of the dialog to create
-	 * @param content The content of the dialog
-	 */
-	public EditorDialog(StackPane dialogContainer, Region content){
-		this(dialogContainer, content, JFXDialog.DialogTransition.CENTER);
-	}
-	
-	/**
-	 * Creates new dialog with the specified transition animation
-	 * 
-	 * @param dialogContainer The parent of the dialog to create
-	 * @param content The content of the dialog
-	 * @param transitionType The transition animation to apply to the dialog
-	 */
-	public EditorDialog(StackPane dialogContainer, Region content, DialogTransition transitionType){
-		super(dialogContainer, content, transitionType);
-		this.rootPane = dialogContainer;
-	}
-	
-	/**
-	 * Sets an effect on a node of your choosing which will get removed when the dialog closes.<br>
-	 * Use this method to apply a background effect when showing a dialog
-	 * 
-	 * @param node The <code>Node</code> object to set an effect to
-	 * @param effect The <code>Effect</code> object to apply to the specified Node
-	 */
-	public void setBackgroundEffect(final Node node, final Effect effect){
-		//adding an Eventhandler here so that the setOnDialogClosed() method 
-		//can be used for other things by the API user
-		addEventHandler(JFXDialogEvent.CLOSED, new EventHandler<Event>(){
-			@Override
-			public void handle(Event event){
-				node.setEffect(null);
-			}
-		});
-		node.setEffect(effect);
-	}
 
-	/**
-	 * Shows a Snackbar warning visible when the dialog is showing
-	 * 
-	 * @param msg The message of the warning
-	 */
-	protected void showWarning(final String msg){
-		OneShotSnackbar.showFor(rootPane, msg);
-	}
+    private Pane rootPane;
+
+    /**
+     * Creates new dialog with the default transition animation
+     * 
+     * @param dialogContainer The parent of the dialog to create
+     * @param content The content of the dialog
+     */
+    public EditorDialog(StackPane dialogContainer, Region content){
+        this(dialogContainer, content, JFXDialog.DialogTransition.CENTER);
+    }
+
+    /**
+     * Creates new dialog with the specified transition animation
+     * 
+     * @param dialogContainer The parent of the dialog to create
+     * @param content The content of the dialog
+     * @param transitionType The transition animation to apply to the dialog
+     */
+    public EditorDialog(StackPane dialogContainer, Region content, DialogTransition transitionType){
+        super(dialogContainer, content, transitionType);
+        this.rootPane = dialogContainer;
+    }
+
+    /**
+     * Sets an effect on a node of your choosing which will get removed when the dialog closes.<br>
+     * Use this method to apply a background effect when showing a dialog
+     * 
+     * @param node The <code>Node</code> object to set an effect to
+     * @param effect The <code>Effect</code> object to apply to the specified Node
+     */
+    public void setBackgroundEffect(final Node node, final Effect effect){
+        //adding an Eventhandler here so that the setOnDialogClosed() method 
+        //can be used for other things by the API user
+        addEventHandler(JFXDialogEvent.CLOSED, new EventHandler<Event>(){
+            @Override
+            public void handle(Event event){
+                node.setEffect(null);
+            }
+        });
+        node.setEffect(effect);
+    }
+
+    /**
+     * Shows a Snackbar warning visible when the dialog is showing
+     * 
+     * @param msg The message of the warning
+     */
+    protected void showWarning(final String msg){
+        OneShotSnackbar.showFor(rootPane, msg);
+    }
 
 }

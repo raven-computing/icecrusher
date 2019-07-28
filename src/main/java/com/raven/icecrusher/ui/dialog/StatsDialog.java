@@ -29,17 +29,17 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class StatsDialog extends EditorDialog {
-	
-	private StatsDialogController controller;
-	
-	public StatsDialog(StackPane root, ColumnStats stats){
-		super(root, null);
+
+    private StatsDialogController controller;
+
+    public StatsDialog(StackPane root, ColumnStats stats){
+        super(root, null);
         final Layout layout = Layout.of(Dialog.STATS);
         final Parent parent = layout.load();
         controller = layout.getController();
         controller.setCloseListener(() -> close());
         controller.setColumnStats(stats);
-		setContent((Region)parent);
-	}
+        setContent((Region)parent);
+    }
 
 }

@@ -36,123 +36,123 @@ import javafx.fxml.FXML;
  *
  */
 public class PreferencesController extends Controller {
-	
-	/**
-	 * All theme options shown in the appearance combo box
-	 */
-	protected static final ObservableList<String> OPTIONS_THEME = 
-			FXCollections.observableArrayList("Dark Theme", "Light Theme");
-	
-	@FXML
-	private JFXToggleButton prefRememberTabs;
-	
-	@FXML
-	private JFXToggleButton prefShowIndex;
-	
-	@FXML
-	private JFXToggleButton prefClearAfterRowAdd;
-	
-	@FXML
-	private JFXToggleButton prefConfirmRowDeletion;
-	
-	@FXML
-	private JFXToggleButton prefDialogAlwaysHome;
-	
-	@FXML
-	private JFXComboBox<String> prefTheme;
-	
-	private EditorConfiguration config;
-	private boolean isDirty;
-	private boolean reloadRequired;
-	private boolean themeChanged;
-	private boolean currentThemeDark;
 
-	public PreferencesController(){
-		this.config = getConfiguration();
-	}
-	
-	@Override
-	public boolean onExitRequested(){
-		//ignore exit requests when an update is in progress
-		if(Updater.isExecuting()){
-			return false;
-		}
-		if(isDirty){
-			this.config.persistConfiguration();
-		}
-		ArgumentBundle bundle = new ArgumentBundle();
-		bundle.addArgument(Const.BUNDLE_KEY_RELOAD_REQUIRED, reloadRequired);
-		bundle.addArgument(Const.BUNDLE_KEY_EXIT_REQUESTED, true);
-		bundle.addArgument(Const.BUNDLE_KEY_THEME_CHANGED, themeChanged);
-		finishActivity(bundle);
-		return false;
-	}
-	
-	@FXML
-	public void initialize(){
-		prefRememberTabs.setSelected(config.booleanOf(GLOBAL, CONFIG_RECALL_TABS));
-		prefShowIndex.setSelected(config.booleanOf(GLOBAL, CONFIG_SHOW_INDEX_COL));
-		prefClearAfterRowAdd.setSelected(config.booleanOf(GLOBAL, CONFIG_CLEAR_AFTER_ROW_ADD));
-		prefConfirmRowDeletion.setSelected(config.booleanOf(GLOBAL, CONFIG_CONFIRM_ROW_DELETION));
-		prefDialogAlwaysHome.setSelected(config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME));
-		prefTheme.setItems(OPTIONS_THEME);
-		prefTheme.getSelectionModel().select((config.booleanOf(GLOBAL, CONFIG_THEME_VIEW_DARK)) 
-                        ? OPTIONS_THEME.get(0) 
+    /**
+     * All theme options shown in the appearance combo box
+     */
+    protected static final ObservableList<String> OPTIONS_THEME = 
+            FXCollections.observableArrayList("Dark Theme", "Light Theme");
+
+    @FXML
+    private JFXToggleButton prefRememberTabs;
+
+    @FXML
+    private JFXToggleButton prefShowIndex;
+
+    @FXML
+    private JFXToggleButton prefClearAfterRowAdd;
+
+    @FXML
+    private JFXToggleButton prefConfirmRowDeletion;
+
+    @FXML
+    private JFXToggleButton prefDialogAlwaysHome;
+
+    @FXML
+    private JFXComboBox<String> prefTheme;
+
+    private EditorConfiguration config;
+    private boolean isDirty;
+    private boolean reloadRequired;
+    private boolean themeChanged;
+    private boolean currentThemeDark;
+
+    public PreferencesController(){
+        this.config = getConfiguration();
+    }
+
+    @Override
+    public boolean onExitRequested(){
+        //ignore exit requests when an update is in progress
+        if(Updater.isExecuting()){
+            return false;
+        }
+        if(isDirty){
+            this.config.persistConfiguration();
+        }
+        ArgumentBundle bundle = new ArgumentBundle();
+        bundle.addArgument(Const.BUNDLE_KEY_RELOAD_REQUIRED, reloadRequired);
+        bundle.addArgument(Const.BUNDLE_KEY_EXIT_REQUESTED, true);
+        bundle.addArgument(Const.BUNDLE_KEY_THEME_CHANGED, themeChanged);
+        finishActivity(bundle);
+        return false;
+    }
+
+    @FXML
+    public void initialize(){
+        prefRememberTabs.setSelected(config.booleanOf(GLOBAL, CONFIG_RECALL_TABS));
+        prefShowIndex.setSelected(config.booleanOf(GLOBAL, CONFIG_SHOW_INDEX_COL));
+        prefClearAfterRowAdd.setSelected(config.booleanOf(GLOBAL, CONFIG_CLEAR_AFTER_ROW_ADD));
+        prefConfirmRowDeletion.setSelected(config.booleanOf(GLOBAL, CONFIG_CONFIRM_ROW_DELETION));
+        prefDialogAlwaysHome.setSelected(config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME));
+        prefTheme.setItems(OPTIONS_THEME);
+        prefTheme.getSelectionModel().select((config.booleanOf(GLOBAL, CONFIG_THEME_VIEW_DARK)) 
+                ? OPTIONS_THEME.get(0) 
                         : OPTIONS_THEME.get(1));
-		
-		currentThemeDark = config.booleanOf(GLOBAL, CONFIG_THEME_VIEW_DARK);
-	}
-	
-	@FXML
-	private void onClose(ActionEvent event){
-		if(isDirty){
-			this.config.persistConfiguration();
-		}
-		ArgumentBundle bundle = new ArgumentBundle();
-		bundle.addArgument(Const.BUNDLE_KEY_RELOAD_REQUIRED, reloadRequired);
-		bundle.addArgument(Const.BUNDLE_KEY_THEME_CHANGED, themeChanged);
-		finishActivity(bundle);
-	}
-	
-	@FXML
-	private void onPreferenceChanged(ActionEvent event){
-		if((event.getSource() instanceof JFXComboBox)){
-			themePreference();
-			return;
-		}
-		final JFXToggleButton btn = (JFXToggleButton) event.getSource();
-		switch(btn.getId()){
-		case "prefRememberTabs":
-			config.set(GLOBAL, CONFIG_RECALL_TABS, btn.isSelected());
-			break;
-		case "prefShowIndex":
-			config.set(GLOBAL, CONFIG_SHOW_INDEX_COL, btn.isSelected());
-			reloadRequired = true;
-			break;
-		case "prefClearAfterRowAdd":
-			config.set(GLOBAL, CONFIG_CLEAR_AFTER_ROW_ADD, btn.isSelected());
-			break;
-		case "prefConfirmRowDeletion":
-			config.set(GLOBAL, CONFIG_CONFIRM_ROW_DELETION, btn.isSelected());
-			break;
-		case "prefDialogAlwaysHome":
-			final boolean isSelected = btn.isSelected();
-			config.set(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME, isSelected);
-			if(isSelected){
-				config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, Const.KEY_USER_HOME);
-			}
-			break;
-		}
-		isDirty = true;
-	}
 
-	public void themePreference(){
-		final boolean selectedDark = (prefTheme.getSelectionModel().getSelectedItem()
-				.equals(OPTIONS_THEME.get(0)));
-		
-		themeChanged = (selectedDark ^ currentThemeDark);
-		config.set(GLOBAL, CONFIG_THEME_VIEW_DARK, selectedDark);
-		isDirty = true;
-	}
+        currentThemeDark = config.booleanOf(GLOBAL, CONFIG_THEME_VIEW_DARK);
+    }
+
+    @FXML
+    private void onClose(ActionEvent event){
+        if(isDirty){
+            this.config.persistConfiguration();
+        }
+        ArgumentBundle bundle = new ArgumentBundle();
+        bundle.addArgument(Const.BUNDLE_KEY_RELOAD_REQUIRED, reloadRequired);
+        bundle.addArgument(Const.BUNDLE_KEY_THEME_CHANGED, themeChanged);
+        finishActivity(bundle);
+    }
+
+    @FXML
+    private void onPreferenceChanged(ActionEvent event){
+        if((event.getSource() instanceof JFXComboBox)){
+            themePreference();
+            return;
+        }
+        final JFXToggleButton btn = (JFXToggleButton) event.getSource();
+        switch(btn.getId()){
+        case "prefRememberTabs":
+            config.set(GLOBAL, CONFIG_RECALL_TABS, btn.isSelected());
+            break;
+        case "prefShowIndex":
+            config.set(GLOBAL, CONFIG_SHOW_INDEX_COL, btn.isSelected());
+            reloadRequired = true;
+            break;
+        case "prefClearAfterRowAdd":
+            config.set(GLOBAL, CONFIG_CLEAR_AFTER_ROW_ADD, btn.isSelected());
+            break;
+        case "prefConfirmRowDeletion":
+            config.set(GLOBAL, CONFIG_CONFIRM_ROW_DELETION, btn.isSelected());
+            break;
+        case "prefDialogAlwaysHome":
+            final boolean isSelected = btn.isSelected();
+            config.set(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME, isSelected);
+            if(isSelected){
+                config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, Const.KEY_USER_HOME);
+            }
+            break;
+        }
+        isDirty = true;
+    }
+
+    public void themePreference(){
+        final boolean selectedDark = (prefTheme.getSelectionModel().getSelectedItem()
+                .equals(OPTIONS_THEME.get(0)));
+
+        themeChanged = (selectedDark ^ currentThemeDark);
+        config.set(GLOBAL, CONFIG_THEME_VIEW_DARK, selectedDark);
+        isDirty = true;
+    }
 
 }

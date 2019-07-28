@@ -31,97 +31,99 @@ import static com.raven.icecrusher.util.EditorConfiguration.Section.*;
  *
  */
 public class FileTab extends Tab {
-	
-	private EditorFile file;
-	private DataFrame df;
-	private DataFrameView view;
-	private boolean isSave = true;
 
-	/**
-	 * Constructs a new <code>FileTab</code> from the specified EditorFile and DataFrame
-	 * 
-	 * @param file The <code>EditorFile</code> of this Tab
-	 * @param df The <code>DataFrame</code> used to fill the DataFrameView inside the created Tab
-	 */
-	public FileTab(EditorFile file, DataFrame df){
-		this.file = file;
-		this.df = df;
-		if(file != null){
-			setTooltip(new Tooltip(file.getAbsolutePath()));
-		}
-		this.view = new DataFrameView(df, getConfiguration().booleanOf(GLOBAL, CONFIG_SHOW_INDEX_COL));
-		setContent(this.view);
-	}
-	
-	/**
-	 * Gets the DataFrameView of this Tab
-	 * 
-	 * @return The <code>DataFrameView</code> inside this Tab
-	 */
-	public DataFrameView getView(){
-		return this.view;
-	}
+    private EditorFile file;
+    private DataFrame df;
+    private DataFrameView view;
+    private boolean isSave = true;
 
-	/**
-	 * Gets the file of this Tab
-	 * 
-	 * @return The <code>EditorFile</code> used in this Tab
-	 */
-	public EditorFile getFile(){
-		return this.file;
-	}
-	
-	/**
-	 * Sets the file to be associated by this Tab
-	 * 
-	 * @param file The <code>EditorFile</code> to be used by this Tab
-	 */
-	public void setFile(final EditorFile file){
-		this.file = file;
-		this.setText(file.getName());
-		if(file != null){
-			setTooltip(new Tooltip(file.getAbsolutePath()));
-		}
-	}
+    /**
+     * Constructs a new <code>FileTab</code> from the specified EditorFile and DataFrame
+     * 
+     * @param file The <code>EditorFile</code> of this Tab
+     * @param df The <code>DataFrame</code> used to fill the DataFrameView inside the created Tab
+     */
+    public FileTab(EditorFile file, DataFrame df){
+        this.file = file;
+        this.df = df;
+        if(file != null){
+            setTooltip(new Tooltip(file.getAbsolutePath()));
+        }
+        this.view = new DataFrameView(df, getConfiguration()
+                .booleanOf(GLOBAL, CONFIG_SHOW_INDEX_COL));
+        
+        setContent(this.view);
+    }
 
-	/**
-	 * Gets the DataFrame of this Tab
-	 * 
-	 * @return The <code>DataFrame</code> inside this Tab
-	 */
-	public DataFrame getDataFrame(){
-		return this.df;
-	}
-	
-	/**
-	 * Replaces the DataFrame of this Tab
-	 * 
-	 * @param df The <code>DataFrame</code> to be used by this Tab
-	 */
-	public void replaceWith(final DataFrame df){
-		this.df = df;
-		this.view.setDataFrame(df);
-	}
+    /**
+     * Gets the DataFrameView of this Tab
+     * 
+     * @return The <code>DataFrameView</code> inside this Tab
+     */
+    public DataFrameView getView(){
+        return this.view;
+    }
 
-	/**
-	 * Indicates whether this tab has unsaved changes
-	 * 
-	 * @return True if this tab has no unsaved changes. 
-	 *         False if it has unsaved changes
-	 */
-	public boolean isSaved(){
-		return this.isSave;
-	}
+    /**
+     * Gets the file of this Tab
+     * 
+     * @return The <code>EditorFile</code> used in this Tab
+     */
+    public EditorFile getFile(){
+        return this.file;
+    }
 
-	/**
-	 * Specifies whether this Tab has unsaved changes
-	 * 
-	 * @param isSaved Value indicating whether this Tab has unsaved changes. 
-	 *                True if it has no unsaved content, false if it has
-	 *                modified, i.e. unsaved content
-	 */
-	public void setSaved(final boolean isSaved) {
-		this.isSave = isSaved;
-	}
+    /**
+     * Sets the file to be associated by this Tab
+     * 
+     * @param file The <code>EditorFile</code> to be used by this Tab
+     */
+    public void setFile(final EditorFile file){
+        this.file = file;
+        this.setText(file.getName());
+        if(file != null){
+            setTooltip(new Tooltip(file.getAbsolutePath()));
+        }
+    }
+
+    /**
+     * Gets the DataFrame of this Tab
+     * 
+     * @return The <code>DataFrame</code> inside this Tab
+     */
+    public DataFrame getDataFrame(){
+        return this.df;
+    }
+
+    /**
+     * Replaces the DataFrame of this Tab
+     * 
+     * @param df The <code>DataFrame</code> to be used by this Tab
+     */
+    public void replaceWith(final DataFrame df){
+        this.df = df;
+        this.view.setDataFrame(df);
+    }
+
+    /**
+     * Indicates whether this tab has unsaved changes
+     * 
+     * @return True if this tab has no unsaved changes. 
+     *         False if it has unsaved changes
+     */
+    public boolean isSaved(){
+        return this.isSave;
+    }
+
+    /**
+     * Specifies whether this Tab has unsaved changes
+     * 
+     * @param isSaved Value indicating whether this Tab has unsaved changes. 
+     *                True if it has no unsaved content, false if it has
+     *                modified, i.e. unsaved content
+     */
+    public void setSaved(final boolean isSaved) {
+        this.isSave = isSaved;
+    }
 
 }

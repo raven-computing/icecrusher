@@ -28,55 +28,55 @@ import javafx.scene.chart.XYChart.Series;
  */
 public class XYChartData {
 
-	private Series<Number, Number> series;
-	private Column yColumn;
-	private double yUpperBound;
-	private double yLowerBound;
+    private Series<Number, Number> series;
+    private Column yColumn;
+    private double yUpperBound;
+    private double yLowerBound;
 
-	public XYChartData(final Series<Number, Number> series, 
-			final double yLowerBound, final double yUpperBound){
+    public XYChartData(final Series<Number, Number> series, 
+            final double yLowerBound, final double yUpperBound){
 
-		this.series = series;
-		this.yLowerBound = yLowerBound;
-		this.yUpperBound = yUpperBound;
-	}
+        this.series = series;
+        this.yLowerBound = yLowerBound;
+        this.yUpperBound = yUpperBound;
+    }
 
-	public Series<Number, Number> getSeries(){
-		return series;
-	}
+    public Series<Number, Number> getSeries(){
+        return series;
+    }
 
-	public void setSeries(final Series<Number, Number> series){
-		this.series = series;
-	}
+    public void setSeries(final Series<Number, Number> series){
+        this.series = series;
+    }
 
-	public double getYupperBound(){
-		return this.yUpperBound;
-	}
+    public double getYupperBound(){
+        return this.yUpperBound;
+    }
 
-	public void setYupperBound(final double yupperBound){
-		this.yUpperBound = yupperBound;
-	}
+    public void setYupperBound(final double yupperBound){
+        this.yUpperBound = yupperBound;
+    }
 
-	public double getYlowerBound(){
-		return this.yLowerBound;
-	}
+    public double getYlowerBound(){
+        return this.yLowerBound;
+    }
 
-	public void setYlowerBound(final double yLowerBound){
-		this.yLowerBound = yLowerBound;
-	}
+    public void setYlowerBound(final double yLowerBound){
+        this.yLowerBound = yLowerBound;
+    }
 
-	public Column getYcolumn(){
-		return this.yColumn;
-	}
+    public Column getYcolumn(){
+        return this.yColumn;
+    }
 
-	public void setYcolumn(final Column yColumn){
-		this.yColumn = yColumn;
-	}
+    public void setYcolumn(final Column yColumn){
+        this.yColumn = yColumn;
+    }
 
-	 @Override
-	 public boolean equals(Object obj){
-		 //check reference value of Column object
-		 return obj.equals(yColumn);
-	 }
-	 
+    @Override
+    public boolean equals(Object obj){
+        //check reference value of Column object
+        return obj.equals(yColumn);
+    }
+
 }

@@ -38,53 +38,57 @@ import javafx.scene.layout.VBox;
  */
 public class ExportDialog extends EditorDialog {
 
-	/**
-	 * Listener interface for the <code>ExportDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user confirms the intended action
-		 * 
-		 * @param separator The separator to use when exporting to a CSV file
-		 */
-		void onExport(char separator);
-	}
-	
-	private DialogListener delegate;
+    /**
+     * Listener interface for the <code>ExportDialog</code>.
+     *
+     */
+    public interface DialogListener {
 
-	public ExportDialog(StackPane root){
-		super(root, null);
-		final JFXDialogLayout layout = new JFXDialogLayout();
-		final VBox vbox = new VBox();
-		final Label label = new Label("Use separator:");
-		final TextField txtField = new TextField(",");
-		txtField.setTextFormatter(new TextFormatter<Object>(Converters.charConverter(), ",", Filters.charFilter(true)));
-		txtField.setMaxWidth(40.0);
-		vbox.getChildren().addAll(label, txtField);
-		final JFXButton button = new JFXButton("Export");
-		button.getStyleClass().add("dialog-button");
-		button.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
-			final String separator = txtField.getText();
-			if((separator == null) || (separator.isEmpty())){
-				showWarning("Please specify the separator to use");
-				return;
-			}
-			if(delegate != null){ 
-				delegate.onExport(separator.charAt(0));
-			}
-		});
-		List<JFXButton> actions = new LinkedList<>();
-		actions.add(button);
-		layout.setHeading(new Label("Export to CSV file"));
-		layout.setBody(vbox);
-		layout.setActions(actions);
-		setContent(layout);
-	}
-	
-	public void setOnExport(final DialogListener delegate){
-		this.delegate = delegate;
-	}
+        /**
+         * Called when the user confirms the intended action
+         * 
+         * @param separator The separator to use when exporting to a CSV file
+         */
+        void onExport(char separator);
+    }
+
+    private DialogListener delegate;
+
+    public ExportDialog(StackPane root){
+        super(root, null);
+        final JFXDialogLayout layout = new JFXDialogLayout();
+        final VBox vbox = new VBox();
+        final Label label = new Label("Use separator:");
+        final TextField txtField = new TextField(",");
+        txtField.setId("import-field-separator");
+        txtField.setTextFormatter(new TextFormatter<Object>(Converters.charConverter(),
+                ",", Filters.charFilter(true)));
+        
+        txtField.setMaxWidth(40.0);
+        vbox.setSpacing(10.0);
+        vbox.getChildren().addAll(label, txtField);
+        final JFXButton button = new JFXButton("Export");
+        button.getStyleClass().add("dialog-button");
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
+            final String separator = txtField.getText();
+            if((separator == null) || (separator.isEmpty())){
+                showWarning("Please specify the separator to use");
+                return;
+            }
+            if(delegate != null){ 
+                delegate.onExport(separator.charAt(0));
+            }
+        });
+        List<JFXButton> actions = new LinkedList<>();
+        actions.add(button);
+        layout.setHeading(new Label("Export to CSV file"));
+        layout.setBody(vbox);
+        layout.setActions(actions);
+        setContent(layout);
+    }
+
+    public void setOnExport(final DialogListener delegate){
+        this.delegate = delegate;
+    }
 
 }

@@ -29,80 +29,80 @@ import javafx.scene.control.ProgressIndicator;
  *
  */
 public class HttpNetworkService extends Service<NetworkResult> implements NetworkService {
-	
-	private ResourceLocator locator;
-	private Parcel parcel;
-	private DoubleProperty progressProperty;
-	private StringProperty relProgressProperty;
 
-	protected HttpNetworkService(final ResourceLocator locator, final Parcel parcel){
-		if(locator == null){
-			throw new IllegalArgumentException("Locator must not be null");
-		}
-		this.locator = locator;
-		this.parcel = parcel;
-	}
-	
-	@Override
-	public void bindIndicator(final ProgressIndicator indicator){
-		this.progressProperty = indicator.progressProperty();
-	}
-	
-	@Override
-	public void bindIndicator(ProgressIndicator indicator, Label label){
-		this.progressProperty = indicator.progressProperty();
-		this.relProgressProperty = label.textProperty();
-	}
-	
-	@Override
-	public void abort(){
-		this.cancel();
-	}
+    private ResourceLocator locator;
+    private Parcel parcel;
+    private DoubleProperty progressProperty;
+    private StringProperty relProgressProperty;
 
-	@Override
-	public void connect(){
-		try{
-			this.start();
-		}catch(IllegalStateException ex){
-			throw new IllegalStateException("NetworkService was already connected"
-					+ " or connecting", ex);
-		}
-	}
-	
-	@Override
-	public void retry(){
-		try{
-			this.restart();
-		}catch(IllegalStateException ex){
-			throw ex;
-		}
-	}
+    protected HttpNetworkService(final ResourceLocator locator, final Parcel parcel){
+        if(locator == null){
+            throw new IllegalArgumentException("Locator must not be null");
+        }
+        this.locator = locator;
+        this.parcel = parcel;
+    }
 
-	@Override
-	public void setOnResult(ResultHandler resultHandler){
-		this.setOnSucceeded((e) -> {
-			if(progressProperty != null){
-				progressProperty.unbind();
-			}
-			if(relProgressProperty != null){
-				relProgressProperty.unbind();
-			}
-			resultHandler.onResult(getValue());
-		});
-	}
+    @Override
+    public void bindIndicator(final ProgressIndicator indicator){
+        this.progressProperty = indicator.progressProperty();
+    }
 
-	@Override
-	protected Task<NetworkResult> createTask(){
-		final NetworkConnector connector= new NetworkConnector(locator, parcel);
-		if(progressProperty != null){
-			this.progressProperty.unbind();
-			this.progressProperty.bind(connector.progressProperty());
-		}
-		if(relProgressProperty != null){
-			this.relProgressProperty.unbind();
-			this.relProgressProperty.bind(connector.messageProperty());
-		}
-		return connector;
-	}
+    @Override
+    public void bindIndicator(ProgressIndicator indicator, Label label){
+        this.progressProperty = indicator.progressProperty();
+        this.relProgressProperty = label.textProperty();
+    }
+
+    @Override
+    public void abort(){
+        this.cancel();
+    }
+
+    @Override
+    public void connect(){
+        try{
+            this.start();
+        }catch(IllegalStateException ex){
+            throw new IllegalStateException("NetworkService was already connected"
+                    + " or connecting", ex);
+        }
+    }
+
+    @Override
+    public void retry(){
+        try{
+            this.restart();
+        }catch(IllegalStateException ex){
+            throw ex;
+        }
+    }
+
+    @Override
+    public void setOnResult(ResultHandler resultHandler){
+        this.setOnSucceeded((e) -> {
+            if(progressProperty != null){
+                progressProperty.unbind();
+            }
+            if(relProgressProperty != null){
+                relProgressProperty.unbind();
+            }
+            resultHandler.onResult(getValue());
+        });
+    }
+
+    @Override
+    protected Task<NetworkResult> createTask(){
+        final NetworkConnector connector= new NetworkConnector(locator, parcel);
+        if(progressProperty != null){
+            this.progressProperty.unbind();
+            this.progressProperty.bind(connector.progressProperty());
+        }
+        if(relProgressProperty != null){
+            this.relProgressProperty.unbind();
+            this.relProgressProperty.bind(connector.messageProperty());
+        }
+        return connector;
+    }
 
 }

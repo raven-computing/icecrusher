@@ -27,84 +27,84 @@ import com.raven.icecrusher.ui.view.Filters.Filter;
  */
 public class ConversionPack {
 
-	private Filter filter;
-	private Converter converter;
+    private Filter filter;
+    private Converter converter;
 
-	public ConversionPack(Filter filter, Converter converter){
-		this.filter = filter;
-		this.converter = converter;
-	}
-	
-	/**
-	 * Gets the filter of this pack
-	 * 
-	 * @return A reference to a Filter
-	 */
-	public Filter getFilter() {
-		return this.filter;
-	}
+    public ConversionPack(Filter filter, Converter converter){
+        this.filter = filter;
+        this.converter = converter;
+    }
 
-	/**
-	 * Gets the converter of this pack
-	 * 
-	 * @return A reference to a StringConverter
-	 */
-	public Converter getConverter() {
-		return this.converter;
-	}
-	
-	/**
-	 * Creates a <code>ConversionPack</code> holding the appropriate filters and converters for a 
-	 * cell used in DataFrameViews. The choice which filters and converters to pick is made according
-	 * to the column's type
-	 * 
-	 * @param col The <code>Column</code> for which to get a ConversionPack
-	 * @return The <code>ConversionPack</code> to be used for this Column
-	 */
-	public static ConversionPack columnConversion(final Column col){
-		if(col instanceof NullableColumn){
-			switch(col.getClass().getSimpleName()){
-			case "NullableStringColumn":
-				return new ConversionPack(Filters.stringFilter(true), Converters.stringConverter());
-			case "NullableByteColumn":
-				return new ConversionPack(Filters.byteFilter(true), Converters.byteConverter());
-			case "NullableShortColumn":
-				return new ConversionPack(Filters.shortFilter(true), Converters.shortConverter());
-			case "NullableIntColumn":
-				return new ConversionPack(Filters.intFilter(true), Converters.intConverter());
-			case "NullableLongColumn":
-				return new ConversionPack(Filters.longFilter(true), Converters.longConverter());
-			case "NullableFloatColumn":
-				return new ConversionPack(Filters.floatFilter(true), Converters.floatConverter());
-			case "NullableDoubleColumn":
-				return new ConversionPack(Filters.doubleFilter(true), Converters.doubleConverter());
-			case "NullableBooleanColumn":
-				return new ConversionPack(Filters.booleanFilter(true), Converters.booleanConverter());
-			case "NullableCharColumn":
-				return new ConversionPack(Filters.charFilter(true), Converters.charConverter());
-			}
-		}else{
-			switch(col.getClass().getSimpleName()){
-			case "StringColumn":
-				return new ConversionPack(Filters.stringFilter(false), Converters.stringConverter());
-			case "ByteColumn":
-				return new ConversionPack(Filters.byteFilter(false), Converters.byteConverter());
-			case "ShortColumn":
-				return new ConversionPack(Filters.shortFilter(false), Converters.shortConverter());
-			case "IntColumn":
-				return new ConversionPack(Filters.intFilter(false), Converters.intConverter());
-			case "LongColumn":
-				return new ConversionPack(Filters.longFilter(false), Converters.longConverter());
-			case "FloatColumn":
-				return new ConversionPack(Filters.floatFilter(false), Converters.floatConverter());
-			case "DoubleColumn":
-				return new ConversionPack(Filters.doubleFilter(false), Converters.doubleConverter());
-			case "BooleanColumn":
-				return new ConversionPack(Filters.booleanFilter(false), Converters.booleanConverter());
-			case "CharColumn":
-				return new ConversionPack(Filters.charFilter(false), Converters.charConverter());
-			}
-		}
-		return null;
-	}
+    /**
+     * Gets the filter of this pack
+     * 
+     * @return A reference to a Filter
+     */
+    public Filter getFilter() {
+        return this.filter;
+    }
+
+    /**
+     * Gets the converter of this pack
+     * 
+     * @return A reference to a StringConverter
+     */
+    public Converter getConverter() {
+        return this.converter;
+    }
+
+    /**
+     * Creates a <code>ConversionPack</code> holding the appropriate filters and converters for a 
+     * cell used in DataFrameViews. The choice which filters and converters to pick is made according
+     * to the column's type
+     * 
+     * @param col The <code>Column</code> for which to get a ConversionPack
+     * @return The <code>ConversionPack</code> to be used for this Column
+     */
+    public static ConversionPack columnConversion(final Column col){
+        if(col instanceof NullableColumn){
+            switch(col.getClass().getSimpleName()){
+            case "NullableStringColumn":
+                return new ConversionPack(Filters.stringFilter(true), Converters.stringConverter());
+            case "NullableByteColumn":
+                return new ConversionPack(Filters.byteFilter(true), Converters.byteConverter());
+            case "NullableShortColumn":
+                return new ConversionPack(Filters.shortFilter(true), Converters.shortConverter());
+            case "NullableIntColumn":
+                return new ConversionPack(Filters.intFilter(true), Converters.intConverter());
+            case "NullableLongColumn":
+                return new ConversionPack(Filters.longFilter(true), Converters.longConverter());
+            case "NullableFloatColumn":
+                return new ConversionPack(Filters.floatFilter(true), Converters.floatConverter());
+            case "NullableDoubleColumn":
+                return new ConversionPack(Filters.doubleFilter(true), Converters.doubleConverter());
+            case "NullableBooleanColumn":
+                return new ConversionPack(Filters.booleanFilter(true), Converters.booleanConverter());
+            case "NullableCharColumn":
+                return new ConversionPack(Filters.charFilter(true), Converters.charConverter());
+            }
+        }else{
+            switch(col.getClass().getSimpleName()){
+            case "StringColumn":
+                return new ConversionPack(Filters.stringFilter(false), Converters.stringConverter());
+            case "ByteColumn":
+                return new ConversionPack(Filters.byteFilter(false), Converters.byteConverter());
+            case "ShortColumn":
+                return new ConversionPack(Filters.shortFilter(false), Converters.shortConverter());
+            case "IntColumn":
+                return new ConversionPack(Filters.intFilter(false), Converters.intConverter());
+            case "LongColumn":
+                return new ConversionPack(Filters.longFilter(false), Converters.longConverter());
+            case "FloatColumn":
+                return new ConversionPack(Filters.floatFilter(false), Converters.floatConverter());
+            case "DoubleColumn":
+                return new ConversionPack(Filters.doubleFilter(false), Converters.doubleConverter());
+            case "BooleanColumn":
+                return new ConversionPack(Filters.booleanFilter(false), Converters.booleanConverter());
+            case "CharColumn":
+                return new ConversionPack(Filters.charFilter(false), Converters.charConverter());
+            }
+        }
+        return null;
+    }
 }

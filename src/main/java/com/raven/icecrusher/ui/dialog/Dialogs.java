@@ -45,169 +45,169 @@ import javafx.stage.Stage;
  *
  */
 public class Dialogs {
-	
-	private static EditorConfiguration config = getConfiguration();
-	private static BoxBlur blur = new BoxBlur(3, 3, 3);
 
-	private Dialogs(){ }
-	
-	/**
-	 * Shows a native open file dialog where the user can choose a file to open
-	 * 
-	 * @param stage The owner stage of the displayed file dialog
-	 * @return An <code>EditorFile</code> object representing the file chosen by the user
-	 */
-	public static EditorFile showFileOpenDialog(final Stage stage){
-		final FileChooser fileChooser = new FileChooser();
+    private static EditorConfiguration config = getConfiguration();
+    private static BoxBlur blur = new BoxBlur(3, 3, 3);
+
+    private Dialogs(){ }
+
+    /**
+     * Shows a native open file dialog where the user can choose a file to open
+     * 
+     * @param stage The owner stage of the displayed file dialog
+     * @return An <code>EditorFile</code> object representing the file chosen by the user
+     */
+    public static EditorFile showFileOpenDialog(final Stage stage){
+        final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a DataFrame file to open");
         fileChooser.setInitialDirectory(initDir());
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("DataFrame file (.df)", "*.df")
-            );
-        
+                );
+
         final EditorFile file = EditorFile.fromFile(fileChooser.showOpenDialog(stage));
-		if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
-			final String parent = file.getParent();
-			config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
-		}
+        if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
+            final String parent = file.getParent();
+            config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
+        }
         return file;
-	}
-	
-	/**
-	 * Shows a native save file dialog where the user can choose the file to save data to
-	 * 
-	 * @param stage The owner stage of the displayed file dialog
-	 * @return An <code>EditorFile</code> object representing the file chosen by the user
-	 */
-	public static EditorFile showFileSaveDialog(final Stage stage){
-		final FileChooser fileChooser = new FileChooser();
+    }
+
+    /**
+     * Shows a native save file dialog where the user can choose the file to save data to
+     * 
+     * @param stage The owner stage of the displayed file dialog
+     * @return An <code>EditorFile</code> object representing the file chosen by the user
+     */
+    public static EditorFile showFileSaveDialog(final Stage stage){
+        final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save DataFrame to a file");
         fileChooser.setInitialDirectory(initDir());
-        
+
         final EditorFile file = EditorFile.fromFile(fileChooser.showSaveDialog(stage));
-		if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
-			final String parent = file.getParent();
-			config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
-		}
+        if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
+            final String parent = file.getParent();
+            config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
+        }
         return file;
-	}
-	
-	/**
-	 * Shows a native import file dialog (for CSV files) where the user can choose a file to import
-	 * 
-	 * @param stage The owner stage of the displayed file dialog
-	 * @return An <code>EditorFile</code> object representing the file chosen by the user
-	 */
-	public static EditorFile showFileImportDialog(final Stage stage){
-		final FileChooser fileChooser = new FileChooser();
+    }
+
+    /**
+     * Shows a native import file dialog (for CSV files) where the user can choose a file to import
+     * 
+     * @param stage The owner stage of the displayed file dialog
+     * @return An <code>EditorFile</code> object representing the file chosen by the user
+     */
+    public static EditorFile showFileImportDialog(final Stage stage){
+        final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a CSV file to import");
         fileChooser.setInitialDirectory(initDir());
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("CSV file (.csv)", "*.csv"),
                 new FileChooser.ExtensionFilter("All files", "*")
-            );
-        
+                );
+
         final EditorFile file = EditorFile.fromFile(fileChooser.showOpenDialog(stage));
-		if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
-			final String parent = file.getParent();
-			config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
-		}
+        if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
+            final String parent = file.getParent();
+            config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
+        }
         return file;
-	}
-	
-	/**
-	 * Shows a native export file dialog (for CSV files) where the user can choose a file to export
-	 * 
-	 * @param stage The owner stage of the displayed file dialog
-	 * @return An <code>EditorFile</code> object representing the file chosen by the user
-	 */
-	public static EditorFile showFileExportDialog(final Stage stage){
-		final FileChooser fileChooser = new FileChooser();
+    }
+
+    /**
+     * Shows a native export file dialog (for CSV files) where the user can choose a file to export
+     * 
+     * @param stage The owner stage of the displayed file dialog
+     * @return An <code>EditorFile</code> object representing the file chosen by the user
+     */
+    public static EditorFile showFileExportDialog(final Stage stage){
+        final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export DataFrame to a CSV file");
         fileChooser.setInitialDirectory(initDir());
         final EditorFile file = EditorFile.fromFile(fileChooser.showSaveDialog(stage));
-		if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
-			final String parent = file.getParent();
-			config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
-		}
+        if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
+            final String parent = file.getParent();
+            config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
+        }
         return file;
-	}
-	
-	/**
-	 * Shows a native export file dialog (for plots) where the user can choose a file to save 
-	 * the created PNG plot image to
-	 * 
-	 * @param stage The owner stage of the displayed file dialog
-	 * @return A <code>File</code> object representing the file chosen by the user
-	 */
-	public static File showPlotExportDialog(final Stage stage){
-		final FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Export plot to PNG file");
-		fileChooser.setInitialDirectory(initDir());
-		final File file = fileChooser.showSaveDialog(stage);
-		if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
-			final String parent = file.getParent();
-			config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
-		}
-		return file;
-	}
-	
-	/**
-	 * Shows a simple informational dialog displaying text from an <code>Exception</code>.<br>
-	 * This method can be called to give a response to the user in the case of an Exception occurring during
-	 * some operation
-	 * 
-	 * @param stage The owner stage of the displayed file dialog
-	 * @param ex The throwable Exception that occured
-	 */
-	public static void showExceptionDialog(final Stage stage, final Throwable ex){
-		final Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("An error occurred for "+Const.APPLICATION_NAME+" - "+Const.APPLICATION_VERSION);
-		alert.setContentText("An Exception was thrown with the message: \""+ex.getMessage()+"\"");
-		final StringWriter sw = new StringWriter();
-		ex.printStackTrace(new PrintWriter(sw));
-		String exceptionText = sw.toString();
-		final Label label = new Label("Stacktrace:");
-		final TextArea txt = new TextArea(exceptionText);
-		txt.setEditable(false);
-		txt.setWrapText(true);
-		txt.setMaxWidth(Double.MAX_VALUE);
-		txt.setMaxHeight(Double.MAX_VALUE);
-		GridPane.setVgrow(txt, Priority.ALWAYS);
-		GridPane.setHgrow(txt, Priority.ALWAYS);
-		final GridPane grid = new GridPane();
-		grid.setMaxWidth(Double.MAX_VALUE);
-		grid.add(label, 0, 0);
-		grid.add(txt, 0, 1);
-		alert.getDialogPane().setExpandableContent(grid);
-		alert.initOwner(stage);
-		alert.initModality(Modality.APPLICATION_MODAL);
-		alert.showAndWait();
-	}
-	
-	/**
-	 * Gets a blur effect which can be applied to the background nodes of a shown dialog
-	 * 
-	 * @return A <code>BoxBlur</code> object to be applied to a Node
-	 */
-	public static BoxBlur getBackgroundBlur(){
-		return blur;
-	}
-	
-	private static File initDir(){
-		File file = null;
-		final String dir = config.valueOf(WINDOW, CONFIG_WINDOW_DIALOG_DIR);
-		if(dir.equals(KEY_USER_HOME)){
-			file = new File(System.getProperty(KEY_USER_HOME));
-		}else{
-			file = new File(dir);
-			if(!file.exists() || !file.isDirectory()){
-				file = new File(System.getProperty(KEY_USER_HOME));
-				config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, KEY_USER_HOME);
-			}
-		}
-		return file;
-	}
+    }
+
+    /**
+     * Shows a native export file dialog (for plots) where the user can choose a file to save 
+     * the created PNG plot image to
+     * 
+     * @param stage The owner stage of the displayed file dialog
+     * @return A <code>File</code> object representing the file chosen by the user
+     */
+    public static File showPlotExportDialog(final Stage stage){
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export plot to PNG file");
+        fileChooser.setInitialDirectory(initDir());
+        final File file = fileChooser.showSaveDialog(stage);
+        if((file != null) && !config.booleanOf(GLOBAL, CONFIG_DIALOG_ALWAYS_HOME)){
+            final String parent = file.getParent();
+            config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, ((parent != null) ? parent : KEY_USER_HOME));
+        }
+        return file;
+    }
+
+    /**
+     * Shows a simple informational dialog displaying text from an <code>Exception</code>.<br>
+     * This method can be called to give a response to the user in the case of an Exception occurring during
+     * some operation
+     * 
+     * @param stage The owner stage of the displayed file dialog
+     * @param ex The throwable Exception that occured
+     */
+    public static void showExceptionDialog(final Stage stage, final Throwable ex){
+        final Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("An error occurred for "+Const.APPLICATION_NAME+" - "+Const.APPLICATION_VERSION);
+        alert.setContentText("An Exception was thrown with the message: \""+ex.getMessage()+"\"");
+        final StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+        String exceptionText = sw.toString();
+        final Label label = new Label("Stacktrace:");
+        final TextArea txt = new TextArea(exceptionText);
+        txt.setEditable(false);
+        txt.setWrapText(true);
+        txt.setMaxWidth(Double.MAX_VALUE);
+        txt.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(txt, Priority.ALWAYS);
+        GridPane.setHgrow(txt, Priority.ALWAYS);
+        final GridPane grid = new GridPane();
+        grid.setMaxWidth(Double.MAX_VALUE);
+        grid.add(label, 0, 0);
+        grid.add(txt, 0, 1);
+        alert.getDialogPane().setExpandableContent(grid);
+        alert.initOwner(stage);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+    }
+
+    /**
+     * Gets a blur effect which can be applied to the background nodes of a shown dialog
+     * 
+     * @return A <code>BoxBlur</code> object to be applied to a Node
+     */
+    public static BoxBlur getBackgroundBlur(){
+        return blur;
+    }
+
+    private static File initDir(){
+        File file = null;
+        final String dir = config.valueOf(WINDOW, CONFIG_WINDOW_DIALOG_DIR);
+        if(dir.equals(KEY_USER_HOME)){
+            file = new File(System.getProperty(KEY_USER_HOME));
+        }else{
+            file = new File(dir);
+            if(!file.exists() || !file.isDirectory()){
+                file = new File(System.getProperty(KEY_USER_HOME));
+                config.set(WINDOW, CONFIG_WINDOW_DIALOG_DIR, KEY_USER_HOME);
+            }
+        }
+        return file;
+    }
 
 }

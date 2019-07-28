@@ -24,42 +24,42 @@ package com.raven.icecrusher.ui.plot;
  */
 public class BarDescriptor {
 
-	private String column;
-	private int mode;
+    private String column;
+    private int mode;
 
-	private BarDescriptor(final String column, final int mode){
-		this.column = column;
-		this.mode = mode;
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		if(!(obj instanceof BarDescriptor)){
-			return false;
-		}
-		final BarDescriptor bar = (BarDescriptor)obj;
-		return ((this.column.equals(bar.getColumn())) 
-				&& (this.mode == bar.getMode()));
-	}
-	
-	public String getColumn(){
-		return column;
-	}
+    private BarDescriptor(final String column, final int mode){
+        this.column = column;
+        this.mode = mode;
+    }
 
-	public void setColumn(final String column){
-		this.column = column;
-	}
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof BarDescriptor)){
+            return false;
+        }
+        final BarDescriptor bar = (BarDescriptor)obj;
+        return ((this.column.equals(bar.getColumn())) 
+                && (this.mode == bar.getMode()));
+    }
 
-	public int getMode(){
-		return mode;
-	}
+    public String getColumn(){
+        return column;
+    }
 
-	public void setMode(final int mode){
-		this.mode = mode;
-	}
-	
-	public static BarDescriptor from(final String column, final int mode){
-		return new BarDescriptor(column, mode);
-	}
-	
+    public void setColumn(final String column){
+        this.column = column;
+    }
+
+    public int getMode(){
+        return mode;
+    }
+
+    public void setMode(final int mode){
+        this.mode = mode;
+    }
+
+    public static BarDescriptor from(final String column, final int mode){
+        return new BarDescriptor(column, mode);
+    }
+
 }

@@ -30,132 +30,141 @@ import com.raven.common.io.ConfigurationFile.Section;
  *
  */
 public class History {
-	
-	private static final String HISTORY_SECTION_META = "/-RECALL-/";
-	private static final String HISTORY_KEY_TIMESTAMP = "since";
-	private static final String HISTORY_KEY_FOCUS = "focus";
-	private static final String HISTORY_KEY_PATH = "path";
-	private static final String HISTORY_KEY_IMPORTED = "imported";
-	private static final String HISTORY_KEY_HEADER = "header";
-	private static final String HISTORY_KEY_SEPARATOR = "separator";
-	
-	private ConfigurationFile recallFile;
-	private List<EditorFile> historyList;
 
-	/**
-	 * Constructs a new <code>History</code> object with the standard header section.<br>
-	 * The History object is otherwise empty
-	 * 
-	 */
-	public History(){
-		this.recallFile = new ConfigurationFile();
-		final Section meta = new Section(HISTORY_SECTION_META);
-		meta.set(HISTORY_KEY_TIMESTAMP, Const.DATE_FORMAT.format(new Date()));
-		this.recallFile.addSection(meta);
-	}
-	
-	protected History(final ConfigurationFile file){
-		this.recallFile = file;
-	}
+    private static final String HISTORY_SECTION_META = "/-RECALL-/";
+    private static final String HISTORY_KEY_TIMESTAMP = "since";
+    private static final String HISTORY_KEY_FOCUS = "focus";
+    private static final String HISTORY_KEY_PATH = "path";
+    private static final String HISTORY_KEY_IMPORTED = "imported";
+    private static final String HISTORY_KEY_HEADER = "header";
+    private static final String HISTORY_KEY_SEPARATOR = "separator";
 
-	/**
-	 * Gets the list of previously used <code>EditorFile</code> objects
-	 * 
-	 * @return A <code>List</code> holding the EditorFile objects of this history
-	 */
-	public List<EditorFile> getHistoryList(){
-		if(historyList == null){
-			final Iterator<Section> iter = recallFile.iterator();
-			if(iter.hasNext()){
-				iter.next();//unused. Ignore meta section
-			}
-			final List<EditorFile> list = new ArrayList<>();
-			while(iter.hasNext()){
-				final Section section = iter.next();
-				final EditorFile file = new EditorFile(section.valueOf(HISTORY_KEY_PATH));
-				final boolean wasImported = Boolean.valueOf(section.valueOf(HISTORY_KEY_IMPORTED));
-				file.setImported(wasImported);
-				if(wasImported){
-					file.hasCSVHeader(Boolean.valueOf(section.valueOf(HISTORY_KEY_HEADER)));
-					file.setCSVSeparator(section.valueOf(HISTORY_KEY_SEPARATOR).charAt(0));
-				}
-				list.add(file);
-			}
-			this.historyList = list;
-		}
-		return this.historyList;
-	}
+    private ConfigurationFile recallFile;
+    private List<EditorFile> historyList;
 
-	/**
-	 * Sets the list of EditorFiles previously used. They will be set as the history
-	 * 
-	 * @param historyList A <code>List</code> holding all EditorFile objects to be used
-	 *                    by this History
-	 */
-	public void setHistoryList(final List<EditorFile> historyList){
-		this.historyList = historyList;
-		final ConfigurationFile newRecall = new ConfigurationFile();
-		final Section meta = new Section(HISTORY_SECTION_META);
-		meta.set(HISTORY_KEY_TIMESTAMP, Const.DATE_FORMAT.format(new Date()));
-		//copy focus index value
-		meta.set(HISTORY_KEY_FOCUS, this.recallFile.getSection(HISTORY_SECTION_META).valueOf(HISTORY_KEY_FOCUS));
-		newRecall.addSection(meta);
-		for(final EditorFile file : historyList){
-			final Section section = new Section(file.getName());
-			section.set(HISTORY_KEY_PATH, file.getAbsolutePath());
-			final boolean wasImported = file.isImported();
-			section.set(HISTORY_KEY_IMPORTED, String.valueOf(wasImported));
-			if(wasImported){
-				section.set(HISTORY_KEY_HEADER, String.valueOf(file.hasCSVHeader()));
-				section.set(HISTORY_KEY_SEPARATOR, String.valueOf(file.getCSVSeparator()));
-			}
-			newRecall.addSection(section);
-		}
-		this.recallFile = newRecall;
-	}
+    /**
+     * Constructs a new <code>History</code> object with the standard header section.<br>
+     * The History object is otherwise empty
+     * 
+     */
+    public History(){
+        this.recallFile = new ConfigurationFile();
+        final Section meta = new Section(HISTORY_SECTION_META);
+        meta.set(HISTORY_KEY_TIMESTAMP, Const.DATE_FORMAT.format(new Date()));
+        this.recallFile.addSection(meta);
+    }
 
-	/**
-	 * Gets the timestamp of this Histsory 
-	 * 
-	 * @return A string representing the timestamp of this History
-	 */
-	public String getTimestamp(){
-		return this.recallFile.getSection(HISTORY_SECTION_META).valueOf(HISTORY_KEY_TIMESTAMP);
-	}
+    protected History(final ConfigurationFile file){
+        this.recallFile = file;
+    }
 
-	/**
-	 * Sets the timestamp of this Histsory 
-	 * 
-	 * @param timestamp The timestamp of this History
-	 */
-	public void setTimestamp(final String timestamp){
-		this.recallFile.getSection(HISTORY_SECTION_META).set(HISTORY_KEY_TIMESTAMP, timestamp);
-	}
+    /**
+     * Gets the list of previously used <code>EditorFile</code> objects
+     * 
+     * @return A <code>List</code> holding the EditorFile objects of this history
+     */
+    public List<EditorFile> getHistoryList(){
+        if(historyList == null){
+            final Iterator<Section> iter = recallFile.iterator();
+            if(iter.hasNext()){
+                iter.next();//unused. Ignore meta section
+            }
+            final List<EditorFile> list = new ArrayList<>();
+            while(iter.hasNext()){
+                final Section section = iter.next();
+                final EditorFile file = new EditorFile(section.valueOf(HISTORY_KEY_PATH));
+                final boolean wasImported = Boolean.valueOf(
+                        section.valueOf(HISTORY_KEY_IMPORTED));
+                
+                file.setImported(wasImported);
+                if(wasImported){
+                    file.hasCSVHeader(Boolean.valueOf(section.valueOf(HISTORY_KEY_HEADER)));
+                    file.setCSVSeparator(section.valueOf(HISTORY_KEY_SEPARATOR).charAt(0));
+                }
+                list.add(file);
+            }
+            this.historyList = list;
+        }
+        return this.historyList;
+    }
 
-	/**
-	 * Gets the index of the focus from the point when the history was created
-	 * 
-	 * @return The index of the focus of this history
-	 */
-	public int getFocusIndex(){
-		return Integer.valueOf(recallFile.getSection(HISTORY_SECTION_META).valueOf(HISTORY_KEY_FOCUS));
-	}
+    /**
+     * Sets the list of EditorFiles previously used. They will be set as the history
+     * 
+     * @param historyList A <code>List</code> holding all EditorFile objects to be used
+     *                    by this History
+     */
+    public void setHistoryList(final List<EditorFile> historyList){
+        this.historyList = historyList;
+        final ConfigurationFile newRecall = new ConfigurationFile();
+        final Section meta = new Section(HISTORY_SECTION_META);
+        meta.set(HISTORY_KEY_TIMESTAMP, Const.DATE_FORMAT.format(new Date()));
+        //copy focus index value
+        meta.set(HISTORY_KEY_FOCUS, this.recallFile.getSection(HISTORY_SECTION_META)
+                .valueOf(HISTORY_KEY_FOCUS));
+        
+        newRecall.addSection(meta);
+        for(final EditorFile file : historyList){
+            final Section section = new Section(file.getName());
+            section.set(HISTORY_KEY_PATH, file.getAbsolutePath());
+            final boolean wasImported = file.isImported();
+            section.set(HISTORY_KEY_IMPORTED, String.valueOf(wasImported));
+            if(wasImported){
+                section.set(HISTORY_KEY_HEADER, String.valueOf(file.hasCSVHeader()));
+                section.set(HISTORY_KEY_SEPARATOR, String.valueOf(file.getCSVSeparator()));
+            }
+            newRecall.addSection(section);
+        }
+        this.recallFile = newRecall;
+    }
 
-	/**
-	 * Sets the index of the focus of this history
-	 * 
-	 * @param focusIndex The index of the focus to be used in this history
-	 */
-	public void setFocusIndex(final int focusIndex){
-		this.recallFile.getSection(HISTORY_SECTION_META).set(HISTORY_KEY_FOCUS, String.valueOf(focusIndex));
-	}
-	
-	protected ConfigurationFile getRecallFile(){
-		return this.recallFile;
-	}
-	
-	protected static History fromFile(final ConfigurationFile file){
-		return new History(file);
-	}
+    /**
+     * Gets the timestamp of this Histsory 
+     * 
+     * @return A string representing the timestamp of this History
+     */
+    public String getTimestamp(){
+        return this.recallFile.getSection(HISTORY_SECTION_META).valueOf(HISTORY_KEY_TIMESTAMP);
+    }
+
+    /**
+     * Sets the timestamp of this Histsory 
+     * 
+     * @param timestamp The timestamp of this History
+     */
+    public void setTimestamp(final String timestamp){
+        this.recallFile.getSection(HISTORY_SECTION_META).set(
+                HISTORY_KEY_TIMESTAMP, timestamp);
+    }
+
+    /**
+     * Gets the index of the focus from the point when the history was created
+     * 
+     * @return The index of the focus of this history
+     */
+    public int getFocusIndex(){
+        return Integer.valueOf(recallFile.getSection(HISTORY_SECTION_META)
+                .valueOf(HISTORY_KEY_FOCUS));
+        
+    }
+
+    /**
+     * Sets the index of the focus of this history
+     * 
+     * @param focusIndex The index of the focus to be used in this history
+     */
+    public void setFocusIndex(final int focusIndex){
+        this.recallFile.getSection(HISTORY_SECTION_META).set(
+                HISTORY_KEY_FOCUS, String.valueOf(focusIndex));
+        
+    }
+
+    protected ConfigurationFile getRecallFile(){
+        return this.recallFile;
+    }
+
+    protected static History fromFile(final ConfigurationFile file){
+        return new History(file);
+    }
 
 }

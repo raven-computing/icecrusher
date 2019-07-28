@@ -28,56 +28,56 @@ import javafx.scene.control.Label;
  */
 public class SaveDialogController {
 
-	/**
-	 * Listener interface for the <code>SaveDialog</code>.
-	 *
-	 */
-	public interface DialogListener {
-		
-		/**
-		 * Called when the user confirms the action
-		 * 
-		 * @param save Indicates whether to save or dismiss 
-		 *        changes made by the user
-		 */
-		void onConfirm(boolean save);
-	}
-	
-	@FXML
-	private Label labelTitle;
-	
-	@FXML
-	private Label labelMessage;
-	
-	@FXML
-	private JFXButton btnSave;
-	
-	@FXML
-	private JFXButton btnDiscard;
-	
-	private DialogListener delegate;
-	
-	public void setConfirmListener(DialogListener delegate){
-		this.delegate = delegate;
-	}
-	
-	public void setTitle(final String title){
-		this.labelTitle.setText(title);
-	}
-	
-	public void setMessage(final String message){
-		this.labelMessage.setText(message);
-	}
-	
-	@FXML
-	private void initialize(){ }
-	
-	@FXML
-	private void onConfirm(ActionEvent event){
-		final JFXButton btn = (JFXButton) event.getSource();
-		if(delegate != null){
-			delegate.onConfirm(btn.getId().equals("btnSave"));
-		}
-	}
-	
+    /**
+     * Listener interface for the <code>SaveDialog</code>.
+     *
+     */
+    public interface DialogListener {
+
+        /**
+         * Called when the user confirms the action
+         * 
+         * @param save Indicates whether to save or dismiss 
+         *        changes made by the user
+         */
+        void onConfirm(boolean save);
+    }
+
+    @FXML
+    private Label labelTitle;
+
+    @FXML
+    private Label labelMessage;
+
+    @FXML
+    private JFXButton btnSave;
+
+    @FXML
+    private JFXButton btnDiscard;
+
+    private DialogListener delegate;
+
+    public void setConfirmListener(DialogListener delegate){
+        this.delegate = delegate;
+    }
+
+    public void setTitle(final String title){
+        this.labelTitle.setText(title);
+    }
+
+    public void setMessage(final String message){
+        this.labelMessage.setText(message);
+    }
+
+    @FXML
+    private void initialize(){ }
+
+    @FXML
+    private void onConfirm(ActionEvent event){
+        final JFXButton btn = (JFXButton) event.getSource();
+        if(delegate != null){
+            delegate.onConfirm(btn.getId().equals("btnSave"));
+        }
+    }
+
 }

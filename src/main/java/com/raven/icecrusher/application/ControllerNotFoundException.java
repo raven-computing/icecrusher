@@ -26,28 +26,28 @@ package com.raven.icecrusher.application;
  */
 public class ControllerNotFoundException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public ControllerNotFoundException(){ 
-		super();
-	}
+    public ControllerNotFoundException(){ 
+        super();
+    }
 
-	public ControllerNotFoundException(String message){
-		super(message);
-	}
+    public ControllerNotFoundException(String message){
+        super(message);
+    }
 
-	public ControllerNotFoundException(Throwable cause){
-		super(cause);
-	}
+    public ControllerNotFoundException(Throwable cause){
+        super(cause);
+    }
 
-	public ControllerNotFoundException(String message, Throwable cause){
-		super(message, cause);
-	}
+    public ControllerNotFoundException(String message, Throwable cause){
+        super(message, cause);
+    }
 
-	public ControllerNotFoundException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace){
-		
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+    public ControllerNotFoundException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace){
+
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 
 }

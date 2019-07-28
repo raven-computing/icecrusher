@@ -28,68 +28,68 @@ import javafx.scene.control.TableColumn;
  *
  */
 public class DataFrameColumnView extends TableColumn<Integer, Object> {
-	
-	/**
-	 * Defines all supported column types by their internally used types.
-	 *
-	 */
-	public enum ColumnType {
-		BYTE,
-		SHORT,
-		INT,
-		LONG,
-		STRING,
-		FLOAT,
-		DOUBLE,
-		CHAR,
-		BOOLEAN;
-	}
-	
-	private Column column;
-	
-	/**
-	 * Constructs a new <code>DataFrameColumnView</code> for the specified 
-	 * column with the specified name
-	 * 
-	 * @param column The <code>Column</code> to use
-	 * @param columnName The name of the view. This will be used as the title 
-	 *                   of the view
-	 */
-	public DataFrameColumnView(final Column column, final String columnName){
-		super(columnName);
-		this.column = column;
-		//make sure the internal column width is not fractional.
-		//Fractional width properties seem to be causing minor visual problems
-		//on startup and when a column is resized
-		ensureCeiledWidth();
-	}
-	
-	public Column getColumn(){
-		return this.column;
-	}
-	
-	public DataFrameView getDataFrameView(){
-		return ((DataFrameView)super.getTableView());
-	}
-	
-	private void ensureCeiledWidth(){
-		//ensures this table column has an integer width property
-		//this only needs to be set once. Subsequent resizing does not
-		//appear to further change the decimal place  
-		final ChangeListener<Number> listener = new ChangeListener<Number>(){
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, 
-					Number oldValue, Number newValue){
-				
-				//always round up to the nearest integer number
-				setPrefWidth(Math.ceil(getWidth()));
-				//remove listener declared above. There is no need to further
-				//ceil subsequent column resizing
-				widthProperty().removeListener(this);
-			}
-		};
-		//adds listener at the beginning
-		widthProperty().addListener(listener);
-	}
+
+    /**
+     * Defines all supported column types by their internally used types.
+     *
+     */
+    public enum ColumnType {
+        BYTE,
+        SHORT,
+        INT,
+        LONG,
+        STRING,
+        FLOAT,
+        DOUBLE,
+        CHAR,
+        BOOLEAN;
+    }
+
+    private Column column;
+
+    /**
+     * Constructs a new <code>DataFrameColumnView</code> for the specified 
+     * column with the specified name
+     * 
+     * @param column The <code>Column</code> to use
+     * @param columnName The name of the view. This will be used as the title 
+     *                   of the view
+     */
+    public DataFrameColumnView(final Column column, final String columnName){
+        super(columnName);
+        this.column = column;
+        //make sure the internal column width is not fractional.
+        //Fractional width properties seem to be causing minor visual problems
+        //on startup and when a column is resized
+        ensureCeiledWidth();
+    }
+
+    public Column getColumn(){
+        return this.column;
+    }
+
+    public DataFrameView getDataFrameView(){
+        return ((DataFrameView)super.getTableView());
+    }
+
+    private void ensureCeiledWidth(){
+        //ensures this table column has an integer width property
+        //this only needs to be set once. Subsequent resizing does not
+        //appear to further change the decimal place  
+        final ChangeListener<Number> listener = new ChangeListener<Number>(){
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, 
+                    Number oldValue, Number newValue){
+
+                //always round up to the nearest integer number
+                setPrefWidth(Math.ceil(getWidth()));
+                //remove listener declared above. There is no need to further
+                //ceil subsequent column resizing
+                widthProperty().removeListener(this);
+            }
+        };
+        //adds listener at the beginning
+        widthProperty().addListener(listener);
+    }
 
 }

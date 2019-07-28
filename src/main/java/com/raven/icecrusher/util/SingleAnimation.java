@@ -34,37 +34,37 @@ import javafx.util.Duration;
  * 
  */
 public class SingleAnimation {
-	
-	private Timeline timeline;
 
-	public SingleAnimation(final Node node, final String startColor, 
-			final String endColor, final Duration duration){
-		
-		final ObjectProperty<Color> animColor = new SimpleObjectProperty<>();
-		final KeyFrame kf1 = new KeyFrame(Duration.ZERO, 
-				new KeyValue(animColor, Color.valueOf(startColor), Interpolator.EASE_BOTH));
-		
-		final KeyFrame kf2 = new KeyFrame(duration, 
-				new KeyValue(animColor, Color.valueOf(endColor), Interpolator.EASE_BOTH));
-		this.timeline = new Timeline(kf1, kf2);
+    private Timeline timeline;
 
-		animColor.addListener((ov, oldColor, newColor) -> {
-			node.setStyle(String.format("-text-color-anim: #%02x%02x%02x; ",
-					(int)(newColor.getRed()*255),
-					(int)(newColor.getGreen()*255),
-					(int)(newColor.getBlue()*255)));
-		});
-		this.timeline.setAutoReverse(true);
-		this.timeline.setCycleCount(Animation.INDEFINITE);
-	}
-	
-	public void start(){
-		this.timeline.play();
-	}
-	
-	public void stop(){
-		this.timeline.stop();
-		this.timeline = null;
-	}
+    public SingleAnimation(final Node node, final String startColor, 
+            final String endColor, final Duration duration){
+
+        final ObjectProperty<Color> animColor = new SimpleObjectProperty<>();
+        final KeyFrame kf1 = new KeyFrame(Duration.ZERO, 
+                new KeyValue(animColor, Color.valueOf(startColor), Interpolator.EASE_BOTH));
+
+        final KeyFrame kf2 = new KeyFrame(duration, 
+                new KeyValue(animColor, Color.valueOf(endColor), Interpolator.EASE_BOTH));
+        this.timeline = new Timeline(kf1, kf2);
+
+        animColor.addListener((ov, oldColor, newColor) -> {
+            node.setStyle(String.format("-text-color-anim: #%02x%02x%02x; ",
+                    (int)(newColor.getRed()*255),
+                    (int)(newColor.getGreen()*255),
+                    (int)(newColor.getBlue()*255)));
+        });
+        this.timeline.setAutoReverse(true);
+        this.timeline.setCycleCount(Animation.INDEFINITE);
+    }
+
+    public void start(){
+        this.timeline.play();
+    }
+
+    public void stop(){
+        this.timeline.stop();
+        this.timeline = null;
+    }
 
 }
