@@ -22,11 +22,11 @@ import java.util.List;
 
 import com.raven.common.io.CSVFileReader;
 import com.raven.common.io.CSVFileWriter;
-import com.raven.common.io.ConcurrentReader;
 import com.raven.common.io.ConcurrentWriter;
 import com.raven.common.io.DataFrameSerializer;
 import com.raven.common.struct.DataFrame;
 import com.raven.icecrusher.application.StackedApplication;
+import com.raven.icecrusher.ui.FileTab;
 import com.raven.icecrusher.ui.OneShotSnackbar;
 import com.raven.icecrusher.util.EditorFile;
 import com.raven.icecrusher.util.ExceptionHandler;
@@ -92,15 +92,19 @@ public class Files {
      * This operation will be performed on a background thread
      * 
      * @param file The EditorFile object representing the file to read from the filesystem. Must not be null
-     * @param delegate The ConcurrentReader callback, called when this operation has finished. Must not be null
+     * @param delegate The ConcurrentSinlgeReader callback, called when this operation has finished. Must not be null
      */
-    public static void readFile(final EditorFile file, final ConcurrentReader delegate){
+    public static void readFile(final EditorFile file, final ConcurrentSingleReader delegate){
         try{
             if(file.isImported()){
                 readImported(file, delegate);
             }else{
                 DataFrameSerializer.parallelReadFile(file, (df) -> {
-                    Platform.runLater(() -> delegate.onRead(sanitize(df)));
+                    if(df != null){
+                        Platform.runLater(() -> delegate.onRead(new FileTab(file, sanitize(df))));
+                    }else{
+                        Platform.runLater(() -> delegate.onRead(null));
+                    }
                 });
             }
         }catch(Exception ex){
@@ -122,7 +126,7 @@ public class Files {
      * @param delegate The ConcurrentBulkReader callback, called when this operation has finished. Must not be null
      */
     public static void readAllFiles(final List<EditorFile> files, final ConcurrentBulkReader delegate){
-        final List<DataFrame> list = new ArrayList<>();
+        final List<FileTab> list = new ArrayList<>();
         final Task<Void> task = new Task<Void>(){
             @Override
             protected Void call() throws Exception{
@@ -131,11 +135,13 @@ public class Files {
                     if(file.exists()){
                         try{
                             if(file.isImported()){
-                                list.add(sanitize(new CSVFileReader(file, file.hasCSVHeader())
-                                        .useSeparator(file.getCSVSeparator()).read()));
-
+                                final DataFrame df = sanitize(new CSVFileReader(file, file.hasCSVHeader())
+                                                                  .useSeparator(file.getCSVSeparator()).read());
+                                
+                                list.add(new FileTab(file, df));
                             }else{
-                                list.add(sanitize(DataFrameSerializer.readFile(file)));
+                                final DataFrame df = sanitize(DataFrameSerializer.readFile(file));
+                                list.add(new FileTab(file, df));
                             }
                         }catch(IOException ex){
                             //Error while reading specific file
@@ -165,7 +171,7 @@ public class Files {
         return tmp;
     }
 
-    private static void readImported(final EditorFile file, final ConcurrentReader delegate){
+    private static void readImported(final EditorFile file, final ConcurrentSingleReader delegate){
         final Task<Void> task = new Task<Void>(){
             @Override
             protected Void call() throws Exception{
@@ -174,7 +180,11 @@ public class Files {
                         DataFrame df = new CSVFileReader(file, file.hasCSVHeader())
                                 .useSeparator(file.getCSVSeparator()).read();
 
-                        Platform.runLater(() -> delegate.onRead(sanitize(df)));
+                        if(df != null){
+                            Platform.runLater(() -> delegate.onRead(new FileTab(file, sanitize(df))));
+                        }else{
+                            Platform.runLater(() -> delegate.onRead(null));
+                        }
                     }catch(IOException ex){
                         Platform.runLater(() -> {
                             final String msg = ex.getMessage();

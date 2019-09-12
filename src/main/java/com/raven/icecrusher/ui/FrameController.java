@@ -312,7 +312,7 @@ public class FrameController extends Controller implements ViewListener {
                         dialog.close();
                         view.getDataFrame().removeRow(event.getRow());
                         view.reload();
-                        labelRows.setText(String.valueOf(view.getDataFrame().rows()));
+                        labelRows.setText(String.format("%,d", view.getDataFrame().rows()));
                         setStatsMenuItemsDisabled(view.getDataFrame());
                     });
                     dialog.setOnDialogClosed((e) -> showingConfirmation = false);
@@ -324,8 +324,8 @@ public class FrameController extends Controller implements ViewListener {
                 setStatsMenuItemsDisabled(view.getDataFrame());
             }
         }
-        labelRows.setText(String.valueOf(event.getView().getDataFrame().rows()));
-        labelCols.setText(String.valueOf(event.getView().getDataFrame().columns()));
+        labelRows.setText(String.format("%,d", event.getView().getDataFrame().rows()));
+        labelCols.setText(String.format("%,d", event.getView().getDataFrame().columns()));
     }
 
     @Override
@@ -386,8 +386,8 @@ public class FrameController extends Controller implements ViewListener {
                 menuAddCol.setDisable(false);
             }
             labelType.setText(df.getClass().getSimpleName());
-            labelRows.setText(String.valueOf(df.rows()));
-            labelCols.setText(String.valueOf(df.columns()));
+            labelRows.setText(String.format("%,d", df.rows()));
+            labelCols.setText(String.format("%,d", df.columns()));
         }else{//all tabs got closed
             setEditMenuItemsDisabled(true);
             setStatsMenuItemsDisabled(true);
@@ -471,12 +471,12 @@ public class FrameController extends Controller implements ViewListener {
             if(!historyList.isEmpty()){
                 setLoadingIndication(true);
                 labelHint.setVisible(false);
-                Files.readAllFiles(historyList, (dataFrames) -> {
-                    for(int i=0; i<dataFrames.size(); ++i){
+                Files.readAllFiles(historyList, (tabs) -> {
+                    for(int i=0; i<tabs.size(); ++i){
+                        final FileTab tab = tabs.get(i);
                         final EditorFile file = historyList.get(i);
-                        final DataFrame df = dataFrames.get(i);
+                        final DataFrame df = tab.getDataFrame();
                         if(df != null){
-                            final FileTab tab = new FileTab(file, df);
                             tab.setText(file.getName());
                             tab.getView().addEditListener(this);
                             tab.setOnCloseRequest((e) -> setTabCloseBehaviour(e, tab));
@@ -492,7 +492,7 @@ public class FrameController extends Controller implements ViewListener {
                         }
                     }
                     setLoadingIndication(false);
-                    if(dataFrames.isEmpty()){//no file could be recovered
+                    if(tabs.isEmpty()){//no file could be recovered
                         labelHint.setVisible(true);
                     }
                     final int i = history.getFocusIndex();
@@ -678,7 +678,7 @@ public class FrameController extends Controller implements ViewListener {
             view.getDataFrame().removeColumn(event.getColumnName());
             view.reload();
             setStatsMenuItemsDisabled(view.getDataFrame());
-            labelCols.setText(String.valueOf(view.getDataFrame().columns()));
+            labelCols.setText(String.format("%,d", view.getDataFrame().columns()));
         });
         dialog.show();
     }
@@ -891,9 +891,9 @@ public class FrameController extends Controller implements ViewListener {
             }
             setLoadingIndication(true);
             labelHint.setVisible(false);
-            Files.readFile(file, (df) -> {
-                if(df != null){
-                    FileTab tab = new FileTab(file, df);
+            Files.readFile(file, (tab) -> {
+                if(tab != null){
+                    final DataFrame df = tab.getDataFrame();
                     tab.setText(file.getName());
                     tab.getView().addEditListener(this);
                     tab.setOnCloseRequest((e) -> setTabCloseBehaviour(e, tab));
@@ -954,20 +954,19 @@ public class FrameController extends Controller implements ViewListener {
                 file.setCSVSeparator(separator);
                 file.hasCSVHeader(hasHeader);
                 setLoadingIndication(true);
-                Files.readFile(file, (df) -> {
-                    if(df == null){
+                dialog.close();
+                Files.readFile(file, (tab) -> {
+                    if(tab == null){
                         showSnackbar("Improperly formatted CSV file");
                     }else{
-                        FileTab tab = new FileTab(file, df);
                         tab.setText(file.getName());
                         tab.getView().addEditListener(this);
                         tab.setOnCloseRequest((e) -> setTabCloseBehaviour(e, tab));
                         mainTabs.getTabs().add(tab);
                         mainTabs.getSelectionModel().select(tab);
-                        setStatsMenuItemsDisabled(df);
+                        setStatsMenuItemsDisabled(tab.getDataFrame());
                         setEditMenuItemsDisabled(false);
                     }
-                    dialog.close();
                     setLoadingIndication(false);
                 });
             });
@@ -988,10 +987,10 @@ public class FrameController extends Controller implements ViewListener {
         final ExportDialog dialog = new ExportDialog(rootPane);
         dialog.setBackgroundEffect(mainBorderPane, Dialogs.getBackgroundBlur());
         dialog.setOnExport((separator) -> {
+            dialog.close();
             file.setCSVSeparator(separator);
             setLoadingIndication(true);
             Files.persistFile(file, tab.getDataFrame(), (f) -> setLoadingIndication(false));
-            dialog.close();
         });
         dialog.show();
     }
@@ -1016,7 +1015,7 @@ public class FrameController extends Controller implements ViewListener {
             if(adder.addRow()){
                 final FileTab tab = currentlySelectedTab();
                 final int rows = tab.getDataFrame().rows();
-                labelRows.setText(String.valueOf(rows));
+                labelRows.setText(String.format("%,d", rows));
                 tab.setSaved(false);
                 setSaveButtonsDisabled(false);
                 setStatsMenuItemsDisabled(tab.getDataFrame());
@@ -1045,7 +1044,7 @@ public class FrameController extends Controller implements ViewListener {
             df.addColumn(name, col);
             view.reload();
             dialog.close();
-            labelCols.setText(String.valueOf(df.columns()));
+            labelCols.setText(String.format("%,d", df.columns()));
             setSaveButtonsDisabled(false);
             if(df.columns() > 0){
                 //enable when adding first col to uninitialized df
@@ -1102,7 +1101,7 @@ public class FrameController extends Controller implements ViewListener {
                     tab.replaceWith(filtered);
                     tab.setSaved(false);
                     setSaveButtonsDisabled(false);
-                    labelRows.setText(String.valueOf(filtered.rows()));
+                    labelRows.setText(String.format("%,d", filtered.rows()));
                     dialog.close();
                 }
             }

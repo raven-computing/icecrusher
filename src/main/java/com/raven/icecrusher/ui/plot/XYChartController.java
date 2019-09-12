@@ -425,6 +425,7 @@ public abstract class XYChartController extends ChartController {
      * @return A <code>XYChartData</code> object holding a <code>XYChart.Series</code> for the 
      *         given column data
      */
+    @SuppressWarnings("unlikely-arg-type")
     protected XYChartData prepareData(final Column colX, final Column colY){
         //do various checks
         if(DataFrames.columnUsesNaNs(colX) && !DataFrames.columnUsesStrings(colX)){

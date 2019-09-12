@@ -1,3 +1,9 @@
+#### 2.1.4
+* When opening and importing files, background threads will now also create the FileTab content
+* Added the ConcurrentSingleReader functional interface
+* Fixed the visual bug that prevented the ImportDialog and ExportDialog from closing right away when the confirmation button is pressed
+* Added string formatting for the footer informational text views to include a thousand separator
+
 #### 2.1.1
 * Changed ExportDialog class to match optics of the ImportDialog
 * Changed file formatting. Improved structure and tabs removed

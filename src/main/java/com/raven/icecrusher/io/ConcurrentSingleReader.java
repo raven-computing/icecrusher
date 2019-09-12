@@ -16,25 +16,24 @@
 
 package com.raven.icecrusher.io;
 
-import java.util.List;
-
 import com.raven.icecrusher.ui.FileTab;
 
 /**
  * Functional interface defining a callback for concurrently 
- * reading a List of files and representing the result of the
- * background operation as a List of FileTabs.
+ * reading a file and representing the result of the
+ * background operation as a prepared FileTab.
  *
  */
-public interface ConcurrentBulkReader {
-
+public interface ConcurrentSingleReader {
+    
     /**
      * Called when a concurrent reading operation has finished, 
-     * passing the result in form of a List of FileTabs as an 
-     * argument to this method
+     * passing the result in form of a FileTab as an argument
+     * to this method
      * 
-     * @param tabs The List holding all FileTabs created from
-     *             the DataFrames read
+     * @param tab The <code>FileTab</code> holding the DataFrameView
+     *            content and the DataFrame read
      */
-    void onRead(List<FileTab> tabs);
+    void onRead(FileTab tab);
+
 }
