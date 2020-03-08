@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.raven.icecrusher.ui.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.raven.common.struct.BinaryColumn;
 import com.raven.common.struct.BooleanColumn;
 import com.raven.common.struct.ByteColumn;
 import com.raven.common.struct.CharColumn;
@@ -27,6 +28,7 @@ import com.raven.common.struct.DoubleColumn;
 import com.raven.common.struct.FloatColumn;
 import com.raven.common.struct.IntColumn;
 import com.raven.common.struct.LongColumn;
+import com.raven.common.struct.NullableBinaryColumn;
 import com.raven.common.struct.NullableBooleanColumn;
 import com.raven.common.struct.NullableByteColumn;
 import com.raven.common.struct.NullableCharColumn;
@@ -99,12 +101,17 @@ public class DefaultMenuFactory implements MenuFactory {
             columnView.getDataFrameView().action(ContextMenuEvent.Action.DELETE, 
                     columnView.getText(), null);
         });
-        final Menu menuConvert = createConvertSubmenu(columnView, column);
-        final ContextMenu menu = (showStats 
-                ? new ContextMenu(item1, item2, item3, menuConvert, item4)
-                        : new ContextMenu(item1, item2, menuConvert, item4));
+        
+        if(columnUsesBinary(column)){
+            return new ContextMenu(item1, item2, item4);
+        }else{
+            final Menu menuConvert = createConvertSubmenu(columnView, column);
+            final ContextMenu menu = (showStats
+                    ? new ContextMenu(item1, item2, item3, menuConvert, item4)
+                            : new ContextMenu(item1, item2, menuConvert, item4));
 
-        return menu;
+            return menu;
+        }
     }
 
     private Menu createConvertSubmenu(final DataFrameColumnView columnView, final Column column){
@@ -360,10 +367,18 @@ public class DefaultMenuFactory implements MenuFactory {
         return (typeCode == StringColumn.TYPE_CODE
                 || typeCode == CharColumn.TYPE_CODE
                 || typeCode == BooleanColumn.TYPE_CODE
+                || typeCode == BinaryColumn.TYPE_CODE
                 || typeCode == NullableStringColumn.TYPE_CODE
                 || typeCode == NullableCharColumn.TYPE_CODE
-                || typeCode == NullableBooleanColumn.TYPE_CODE);
+                || typeCode == NullableBooleanColumn.TYPE_CODE
+                || typeCode == NullableBinaryColumn.TYPE_CODE);
 
     }
+    
+    private boolean columnUsesBinary(final Column col){
+        final byte typeCode = col.typeCode();
+        return (typeCode == BinaryColumn.TYPE_CODE
+                || typeCode == NullableBinaryColumn.TYPE_CODE);
 
+    }
 }

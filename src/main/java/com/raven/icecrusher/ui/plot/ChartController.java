@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,6 @@ import javafx.scene.layout.AnchorPane;
  * 
  *
  */
-@SuppressWarnings("restriction")
 public abstract class ChartController extends Controller {
 
     protected static final double CHART_PANE_HEIGHT_OFFSET = 250.0;

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class Tooltips {
     private static Tooltip doubleTooltip = new Tooltip("double");
     private static Tooltip charTooltip = new Tooltip("character");
     private static Tooltip booleanTooltip = new Tooltip("boolean");
+    private static Tooltip binaryTooltip = new Tooltip("binary");
 
     private Tooltips(){ }
 
@@ -46,7 +47,7 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip byteTooltip() {
+    public static Tooltip byteTooltip(){
         return byteTooltip;
     }
 
@@ -55,7 +56,7 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip shortTooltip() {
+    public static Tooltip shortTooltip(){
         return shortTooltip;
     }
 
@@ -64,7 +65,7 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip intTooltip() {
+    public static Tooltip intTooltip(){
         return intTooltip;
     }
 
@@ -73,7 +74,7 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip longTooltip() {
+    public static Tooltip longTooltip(){
         return longTooltip;
     }
 
@@ -82,7 +83,7 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip stringTooltip() {
+    public static Tooltip stringTooltip(){
         return stringTooltip;
     }
 
@@ -91,7 +92,7 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip floatTooltip() {
+    public static Tooltip floatTooltip(){
         return floatTooltip;
     }
 
@@ -100,7 +101,7 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip doubleTooltip() {
+    public static Tooltip doubleTooltip(){
         return doubleTooltip;
     }
 
@@ -109,7 +110,7 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip charTooltip() {
+    public static Tooltip charTooltip(){
         return charTooltip;
     }
 
@@ -118,10 +119,19 @@ public class Tooltips {
      * 
      * @return A Tooltip
      */
-    public static Tooltip booleanTooltip() {
+    public static Tooltip booleanTooltip(){
         return booleanTooltip;
     }
-
+    
+    /**
+     * Returns a reference to a Tooltip responsible for binary columns
+     * 
+     * @return A Tooltip
+     */
+    public static Tooltip binaryTooltip(){
+        return binaryTooltip;
+    }
+    
     /**
      * Returns the appropriate <code>Tooltip</code> object for the specified column
      * 
@@ -149,6 +159,8 @@ public class Tooltips {
                 return booleanTooltip();
             case "NullableCharColumn":
                 return charTooltip();
+            case "NullableBinaryColumn":
+                return binaryTooltip();
             }
         }else{
             switch(col.getClass().getSimpleName()){
@@ -170,9 +182,10 @@ public class Tooltips {
                 return booleanTooltip();
             case "CharColumn":
                 return charTooltip();
+            case "BinaryColumn":
+                return binaryTooltip();
             }
         }
         return null;
     }
-
 }

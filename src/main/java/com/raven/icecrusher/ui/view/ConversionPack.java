@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,8 @@ public class ConversionPack {
                 return new ConversionPack(Filters.booleanFilter(true), Converters.booleanConverter());
             case "NullableCharColumn":
                 return new ConversionPack(Filters.charFilter(true), Converters.charConverter());
+            case "NullableBinaryColumn":
+                return new ConversionPack(Filters.binaryFilter(true), Converters.binaryTruncatingConverter());
             }
         }else{
             switch(col.getClass().getSimpleName()){
@@ -103,6 +105,8 @@ public class ConversionPack {
                 return new ConversionPack(Filters.booleanFilter(false), Converters.booleanConverter());
             case "CharColumn":
                 return new ConversionPack(Filters.charFilter(false), Converters.charConverter());
+            case "BinaryColumn":
+                return new ConversionPack(Filters.binaryFilter(false), Converters.binaryTruncatingConverter());
             }
         }
         return null;

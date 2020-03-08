@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package com.raven.icecrusher.ui.view;
 
 import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
@@ -44,6 +45,7 @@ public final class Filters {
     private static Filter doubleF = new DoubleFilter();
     private static Filter charF = new CharFilter();
     private static Filter booleanF = new BooleanFilter();
+    private static Filter binaryF = new BinaryFilter();
 
     private static Filter nullByteF = new NullByteFilter();
     private static Filter nullShortF = new NullShortFilter();
@@ -54,6 +56,7 @@ public final class Filters {
     private static Filter nullDoubleF = new NullDoubleFilter();
     private static Filter nullCharF = new NullCharFilter();
     private static Filter nullBooleanF = new NullBooleanFilter();
+    private static Filter nullBinaryF = new NullBinaryFilter();
 
     private Filters(){ }
 
@@ -156,6 +159,17 @@ public final class Filters {
      */
     public static Filter booleanFilter(final boolean nullable){
         return (nullable ? nullBooleanF : booleanF);
+    }
+    
+    /**
+     * Returns a reference to a Filter responsible for handling binary values
+     * 
+     * @param nullable Specifies whether the returned filter should accept null 
+     *        values as valid input
+     * @return A BinaryFilter or NullBinaryFilter respectively
+     */
+    public static Filter binaryFilter(final boolean nullable){
+        return (nullable ? nullBinaryF : binaryF);
     }
 
     /*********************************************************
@@ -282,6 +296,21 @@ public final class Filters {
         public Change apply(Change t){
             final String s = t.getControlNewText();
             if(s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false")){
+                return t;
+            }else{
+                return null;
+            }
+        }
+    }
+    
+    private static class BinaryFilter implements Filter {
+        
+        private static final Pattern HEX_PATTERN = Pattern.compile("[0-9a-fA-F]*");
+        
+        @Override
+        public Change apply(Change t){
+            final String s = t.getControlNewText();
+            if(HEX_PATTERN.matcher(s).matches()){
                 return t;
             }else{
                 return null;
@@ -438,5 +467,20 @@ public final class Filters {
             }
         }
     }
-
+    
+    private static class NullBinaryFilter implements Filter {
+        
+        private static final Pattern HEX_PATTERN = Pattern.compile("[0-9a-fA-F]*");
+        
+        @Override
+        public Change apply(Change t){
+            final String s = t.getControlNewText();
+            if((s == null) || HEX_PATTERN.matcher(s).matches()){
+                return t;
+            }else{
+                return null;
+            }
+        }
+    }
+    
 }

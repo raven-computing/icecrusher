@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.swing.SwingUtilities;
 
 import com.jfoenix.controls.JFXDialog.DialogTransition;
+import com.raven.common.util.Action;
 import com.raven.icecrusher.application.Controller;
 import com.raven.icecrusher.application.ProxyController;
 import com.raven.icecrusher.application.StackedApplication;
@@ -219,6 +220,24 @@ public class Updater implements UpdateRoutine {
 
     public static void showReleaseNotes(){
         browse(ResourceLocator.RELEASE_NOTES);
+    }
+
+    public static void showPostUpdateMessage(final Action action){
+        final StackPane pane = action.getArgument(StackPane.class);
+        if(pane == null){
+            return;
+        }
+        Platform.runLater(() -> {
+            OneShotSnackbar.showFor(pane,
+                    Const.APPLICATION_NAME 
+                    + " has been updated to version " 
+                    + Const.APPLICATION_VERSION,
+                    "What's new?",
+                    10000, (e) -> {// show for 10 seconds
+                        OneShotSnackbar.closeIfVisible();
+                        Updater.showReleaseNotes();
+                    });
+        });
     }
 
     private void doUpdate(final StackPane rootPane, final Parent activityRootPane){

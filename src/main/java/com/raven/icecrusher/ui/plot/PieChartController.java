@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,8 @@ import javafx.scene.chart.PieChart;
  * Controller class for the Pie Chart activity.
  *
  */
-@SuppressWarnings("restriction")
 public class PieChartController extends ChartController {
-
+    
     /**
      * The maximum number of slices the pie chart is allowed to create.
      * Prevents performance issues on weak machines. Having more slices results
@@ -180,6 +179,10 @@ public class PieChartController extends ChartController {
     }
 
     private void prepareChart(final Column keys, final Column values){
+        if(DataFrames.columnUsesBinary(keys)){
+            showInfo("Cannot use binary data");
+            return;
+        }
         final boolean hasValues = (values != null);
         if(hasValues && DataFrames.columnUsesNaNs(values)){
             showInfo("Values must be numeric");
@@ -364,5 +367,4 @@ public class PieChartController extends ChartController {
             this.btnPlotExport.setDisable(true);
         }
     }
-
 }

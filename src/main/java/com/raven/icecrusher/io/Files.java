@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package com.raven.icecrusher.io;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-import com.raven.common.io.CSVFileReader;
-import com.raven.common.io.CSVFileWriter;
-import com.raven.common.io.ConcurrentWriter;
+import com.raven.common.io.CSVReader;
+import com.raven.common.io.CSVWriter;
 import com.raven.common.io.DataFrameSerializer;
 import com.raven.common.struct.DataFrame;
 import com.raven.icecrusher.application.StackedApplication;
@@ -50,39 +50,32 @@ public class Files {
 
     /**
      * Persists the specified <code>DataFrame</code> as the specified file. All information on how exactly
-     * the DataFrame will be persisted, for example as a .df or CSV file, is being retrieved from the provided 
+     * the DataFrame will be persisted, for example as a .df or CSV file, will be retrieved from the provided 
      * <code>EditorFile</code> object.<br>
      * This operation will be performed on a background thread
      * 
      * @param file The EditorFile object representing the file to persist. Must not be null
      * @param df The DataFrame to persist as the content of the above file. Must not be null
-     * @param delegate The ConcurrentWriter callback, called when this operation has finished. Must not be null
+     * @return A <code>CompletableFuture</code> that completes when the operation has finished
      */
-    public static void persistFile(final EditorFile file, final DataFrame df, final ConcurrentWriter delegate){
+    public static CompletableFuture<Void> persistFile(final EditorFile file, final DataFrame df){
         try{
             if(file.isImported()){//Imported CSV file
-                if(!file.hasCSVHeader()){
-                    final String[] names = df.getColumnNames();
-                    df.removeColumnNames();
-                    new CSVFileWriter(file).useSeparator(file.getCSVSeparator()).parallelWrite(df, (f) -> {
-                        Platform.runLater(() -> delegate.onWritten(f));
-                    });
-                    df.setColumnNames(names);
-                }else{
-                    new CSVFileWriter(file).useSeparator(file.getCSVSeparator()).parallelWrite(df, (f) -> {
-                        Platform.runLater(() -> delegate.onWritten(f));
-                    });
-                }
+                return new CSVWriter(file)
+                        .useSeparator(file.getCSVSeparator())
+                        .withHeader(file.hasCSVHeader())
+                        .writeAsync(df);
+
             }else{//Normal DataFrame file
-                DataFrameSerializer.parallelWriteFile(file, df, (f) -> {
-                    Platform.runLater(() -> delegate.onWritten(f));
-                });
+                return DataFrameSerializer.writeFileAsync(file, df);
             }
         }catch(Exception ex){
             Platform.runLater(() -> {
-                delegate.onWritten(null);
                 ExceptionHandler.showDialog(ex);
             });
+            final CompletableFuture<Void> future = new CompletableFuture<>();
+            future.completeExceptionally(ex);
+            return future;
         }
     }
 
@@ -99,12 +92,13 @@ public class Files {
             if(file.isImported()){
                 readImported(file, delegate);
             }else{
-                DataFrameSerializer.parallelReadFile(file, (df) -> {
+                DataFrameSerializer.readFileAsync(file).handleAsync((df, ex) -> {
                     if(df != null){
                         Platform.runLater(() -> delegate.onRead(new FileTab(file, sanitize(df))));
                     }else{
                         Platform.runLater(() -> delegate.onRead(null));
                     }
+                    return null;
                 });
             }
         }catch(Exception ex){
@@ -135,8 +129,10 @@ public class Files {
                     if(file.exists()){
                         try{
                             if(file.isImported()){
-                                final DataFrame df = sanitize(new CSVFileReader(file, file.hasCSVHeader())
-                                                                  .useSeparator(file.getCSVSeparator()).read());
+                                final DataFrame df = sanitize(new CSVReader(file)
+                                        .withHeader(file.hasCSVHeader())
+                                        .useSeparator(file.getCSVSeparator())
+                                        .read());
                                 
                                 list.add(new FileTab(file, df));
                             }else{
@@ -171,14 +167,18 @@ public class Files {
         return tmp;
     }
 
-    private static void readImported(final EditorFile file, final ConcurrentSingleReader delegate){
+    private static void readImported(final EditorFile file,
+            final ConcurrentSingleReader delegate){
+        
         final Task<Void> task = new Task<Void>(){
             @Override
             protected Void call() throws Exception{
                 if(file.exists()){
                     try{
-                        DataFrame df = new CSVFileReader(file, file.hasCSVHeader())
-                                .useSeparator(file.getCSVSeparator()).read();
+                        DataFrame df = new CSVReader(file)
+                                .withHeader(file.hasCSVHeader())
+                                .useSeparator(file.getCSVSeparator())
+                                .read();
 
                         if(df != null){
                             Platform.runLater(() -> delegate.onRead(new FileTab(file, sanitize(df))));

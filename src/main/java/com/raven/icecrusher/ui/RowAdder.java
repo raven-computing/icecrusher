@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,19 @@ package com.raven.icecrusher.ui;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.raven.common.struct.BinaryColumn;
 import com.raven.common.struct.BooleanColumn;
 import com.raven.common.struct.Column;
 import com.raven.common.struct.DataFrame;
+import com.raven.common.struct.NullableBinaryColumn;
 import com.raven.common.struct.NullableBooleanColumn;
 import com.raven.common.struct.NullableColumn;
 import com.raven.icecrusher.io.Files;
 import com.raven.icecrusher.ui.view.BooleanCellView;
 import com.raven.icecrusher.ui.view.ConversionPack;
+import com.raven.icecrusher.ui.view.Converters;
 import com.raven.icecrusher.ui.view.DataFrameView;
+import com.raven.icecrusher.ui.view.Filters;
 import com.raven.icecrusher.util.EditorConfiguration;
 import com.raven.icecrusher.util.EditorFile;
 import com.raven.icecrusher.util.EditorConfiguration.Section;
@@ -72,7 +76,15 @@ public class RowAdder {
                 cb.setTooltip(new Tooltip(selected.getColumnName(i)));
                 node = cb;
             }else{
-                final ConversionPack pack = ConversionPack.columnConversion(col);
+                final ConversionPack pack = (col instanceof BinaryColumn
+                                          || col instanceof NullableBinaryColumn) ?
+                                                  
+                       new ConversionPack(
+                               Filters.binaryFilter(col instanceof NullableBinaryColumn),
+                               Converters.binaryConverter())
+                       
+                       : ConversionPack.columnConversion(col);
+                               
                 final JFXTextField txt = new JFXTextField();
                 txt.setPromptText(selected.getColumnName(i));
                 txt.setLabelFloat(true);

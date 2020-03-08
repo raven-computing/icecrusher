@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package com.raven.icecrusher.ui.view;
+
+import com.raven.common.struct.BitVector;
 
 import javafx.util.StringConverter;
 
@@ -36,6 +38,8 @@ public final class Converters {
     private static Converter doubleC = new DoubleConverter();
     private static Converter charC = new CharConverter();
     private static Converter booleanC = new BooleanConverter();
+    private static Converter binaryC = new BinaryConverter();
+    private static Converter binaryCTrunc = new BinaryConverterTruncated();
 
     private Converters() { }
 
@@ -118,6 +122,25 @@ public final class Converters {
      */
     public static Converter booleanConverter(){
         return booleanC;
+    }
+    
+    /**
+     * Returns a reference to a converter responsible for handling binary values
+     * 
+     * @return A BinaryConverter
+     */
+    public static Converter binaryConverter(){
+        return binaryC;
+    }
+    
+    /**
+     * Returns a reference to a converter responsible for handling binary values.
+     * The returned Converter will truncate binary code when converting to strings
+     * 
+     * @return A BinaryConverter
+     */
+    public static Converter binaryTruncatingConverter(){
+        return binaryCTrunc;
     }
 
     /**
@@ -234,7 +257,65 @@ public final class Converters {
         public Object fromString(final String string){
             return (!string.isEmpty() && !string.equalsIgnoreCase("null") 
                     ? Boolean.valueOf(string) 
-                            : null);
+                    : null);
+            
+        }
+    }
+    
+    private static class BinaryConverter extends Converter {
+        @Override
+        public String toString(final Object obj){
+            if(obj instanceof byte[]){
+                byte[] data = (byte[]) obj;
+                return BitVector.wrap(data).toHexString();
+            }else{
+                return "";
+            }
+        }
+        @Override
+        public Object fromString(String string){
+            if(!string.isEmpty() && !string.equalsIgnoreCase("null")){
+                if(string.startsWith("0x")){
+                    string = string.substring(2);
+                }
+                if(string.endsWith("...")){
+                    string = string.substring(0, string.length() - 3);
+                }
+                return BitVector.fromHexString(string).asArray();
+            }else{
+                return null;
+            }
+        }
+    }
+    
+    private static class BinaryConverterTruncated extends Converter {
+        @Override
+        public String toString(final Object obj){
+            if(obj instanceof byte[]){
+                byte[] data = (byte[]) obj;
+                boolean ellipsis = false;
+                if(data.length > 4){
+                    data = new byte[]{data[0], data[1], data[2], data[3]};
+                    ellipsis = true;
+                }
+                return "0x" + BitVector.wrap(data).toHexString() + (ellipsis ? "..." : "");
+            }else{
+                return "";
+            }
+        }
+        @Override
+        public Object fromString(String string){
+            if(!string.isEmpty() && !string.equalsIgnoreCase("null")){
+                if(string.startsWith("0x")){
+                    string = string.substring(2);
+                }
+                if(string.endsWith("...")){
+                    string = string.substring(0, string.length() - 3);
+                }
+                return BitVector.fromHexString(string).asArray();
+            }else{
+                return null;
+            }
         }
     }
 }

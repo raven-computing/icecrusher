@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -394,10 +394,13 @@ public class BarChartController extends ChartController {
                     cbYMode.getSelectionModel().getSelectedIndex());
             
         }catch(RuntimeException ex){
-            OneShotSnackbar.showFor(getRootNode(), ((ex instanceof NumberFormatException)
-                    ? "Only numbers are allowed for the y-Axis"
-                    : ex.getMessage()));
-
+            if(ex instanceof NumberFormatException){
+                OneShotSnackbar.showFor(getRootNode(), "Only numbers are allowed for the y-Axis");
+            }else if(ex instanceof ClassCastException){
+                OneShotSnackbar.showFor(getRootNode(), "A column contains unsupported types");
+            }else{
+                OneShotSnackbar.showFor(getRootNode(), ex.getMessage());
+            }
             return null;
         }
         if(map.isEmpty()){

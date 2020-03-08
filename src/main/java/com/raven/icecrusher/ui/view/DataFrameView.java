@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.raven.common.struct.BooleanColumn;
 import com.raven.common.struct.Column;
 import com.raven.common.struct.DataFrame;
-import com.raven.common.struct.NullableBooleanColumn;
 import com.raven.common.struct.NullableColumn;
+import com.raven.icecrusher.io.DataFrames;
 import com.raven.icecrusher.ui.view.DataFrameColumnView.ColumnType;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -268,12 +267,16 @@ public class DataFrameView extends TableView<Integer> {
             tableCol.setEditable(true);
             addContextMenu(tableCol);
             final Tooltip tooltip = Tooltips.columnTooltip(col);
-            if(col instanceof BooleanColumn || col instanceof NullableBooleanColumn){
+            if(DataFrames.columnUsesBooleans(col)){
                 tableCol.setCellFactory((column)
                         -> new BooleanCellView(col instanceof NullableColumn, tooltip));
 
+            }else if(DataFrames.columnUsesBinary(col)){
+                tableCol.setEditable(false);
+                final ConversionPack pack = ConversionPack.columnConversion(col);
+                tableCol.setCellFactory((column) -> new BinaryCellView(pack, tooltip));
             }else{
-                ConversionPack pack = ConversionPack.columnConversion(col);
+                final ConversionPack pack = ConversionPack.columnConversion(col);
                 tableCol.setCellFactory((column) -> new EditingCellView(pack, tooltip));
             }
             tableCol.setOnEditCommit((event) -> {

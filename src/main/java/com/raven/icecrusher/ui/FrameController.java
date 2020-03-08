@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import com.raven.common.struct.NullableDataFrame;
 import com.raven.common.struct.NullableDoubleColumn;
 import com.raven.common.struct.NullableFloatColumn;
 import com.raven.common.util.Chronometer;
+import com.raven.common.util.FutureAction;
 import com.raven.icecrusher.Editor;
 import com.raven.icecrusher.application.Controller;
 import com.raven.icecrusher.application.Exposed;
@@ -83,6 +84,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 import static com.raven.common.io.DataFrameSerializer.DF_FILE_EXTENSION;
 import static com.raven.icecrusher.util.EditorConfiguration.*;
@@ -244,21 +247,11 @@ public class FrameController extends Controller implements ViewListener {
             recoverHistory();
         }
         if(Editor.wasUpdated()){
-            final Chronometer chrono = new Chronometer();
-            chrono.setTimer(java.time.Duration.ofSeconds(2), (elapsed) -> {
-                chrono.stop();
-                Platform.runLater(() -> {
-                    OneShotSnackbar.showFor(rootPane,
-                            Const.APPLICATION_NAME 
-                            + " has been updated to version " 
-                            + Const.APPLICATION_VERSION,
-                            "What's new?",
-                            10000, (e) -> {// show for 10 seconds
-                                OneShotSnackbar.closeIfVisible();
-                                Updater.showReleaseNotes();
-                            });
-                });
-            }).start();
+            final Chronometer chron = new Chronometer();
+            chron.execute(FutureAction.in(2, SECONDS,
+                    Updater::showPostUpdateMessage)
+                    .with(rootPane));
+            
         }
     }
 
@@ -602,9 +595,10 @@ public class FrameController extends Controller implements ViewListener {
     }
 
     private DataFrame convert(final DataFrame df){
+        df.flush();
         return DataFrames.sanitize(DataFrame.convert(df, (df.isNullable() 
                 ? DefaultDataFrame.class 
-                        : NullableDataFrame.class)));
+                : NullableDataFrame.class)));
     }
 
     private void renameColumn(final ContextMenuEvent event){
@@ -743,16 +737,25 @@ public class FrameController extends Controller implements ViewListener {
             }
         }
         setLoadingIndication(true);
-        Files.persistFile(file, tab.getDataFrame(), (f) -> {
-            setLoadingIndication(false);
-            if(removeWhenSaved){
-                tab.getView().removeEditListener(this);
-                mainTabs.getTabs().remove(tab);
-            }
+        final EditorFile newFile = file;
+        Files.persistFile(file, tab.getDataFrame()).handleAsync((result, ex) -> {
+            Platform.runLater(() -> {
+                setLoadingIndication(false);
+                if(ex == null){
+                    tab.setFile(newFile);
+                    tab.setSaved(true);
+                    if(removeWhenSaved){
+                        tab.getView().removeEditListener(this);
+                        mainTabs.getTabs().remove(tab);
+                    }
+                }else{
+                    ExceptionHandler.showDialog(ex);
+                    setSaveButtonsDisabled(false);
+                }
+            });
+            return null;
         });
         setSaveButtonsDisabled(true);
-        tab.setFile(file);
-        tab.setSaved(true);
     }
 
     private boolean saveAllTabs(final boolean exit){
@@ -788,7 +791,7 @@ public class FrameController extends Controller implements ViewListener {
                 }
                 tab.setFile(file);
             }
-            Files.persistFile(file, tab.getDataFrame(), (f) -> {
+            Files.persistFile(file, tab.getDataFrame()).handleAsync((result, ex) -> {
                 tab.setSaved(true);
                 exitCount();
                 if(exitLatch == 0){
@@ -808,6 +811,7 @@ public class FrameController extends Controller implements ViewListener {
                         });
                     }
                 }
+                return null;
             });
         }
         return true;
@@ -931,9 +935,21 @@ public class FrameController extends Controller implements ViewListener {
             file = Files.addExtensionToFile(file);
         }
         setLoadingIndication(true);
-        Files.persistFile(file, tab.getDataFrame(), (f) -> setLoadingIndication(false));
-        tab.setFile(file);
-        tab.setSaved(true);
+
+        final EditorFile newFile = file;
+        Files.persistFile(file, tab.getDataFrame()).handleAsync((result, ex) -> {
+            Platform.runLater(() -> {
+                setLoadingIndication(false);
+                if(ex == null){
+                    tab.setSaved(true);
+                    tab.setFile(newFile);
+                }else{
+                    ExceptionHandler.showDialog(ex);
+                    setSaveButtonsDisabled(false);
+                }
+            });
+            return null;
+        });
         setSaveButtonsDisabled(true);
     }
 
@@ -990,7 +1006,15 @@ public class FrameController extends Controller implements ViewListener {
             dialog.close();
             file.setCSVSeparator(separator);
             setLoadingIndication(true);
-            Files.persistFile(file, tab.getDataFrame(), (f) -> setLoadingIndication(false));
+            Files.persistFile(file, tab.getDataFrame()).handle((result, ex) -> {
+                Platform.runLater(() -> {
+                    setLoadingIndication(false);
+                    if(ex != null){
+                        ExceptionHandler.showDialog(ex);
+                    }
+                });
+                return null;
+            });
         });
         dialog.show();
     }
@@ -1183,5 +1207,5 @@ public class FrameController extends Controller implements ViewListener {
     private void onAbout(ActionEvent event){
         startActivity(Activity.ABOUT);
     }
-
+    
 }

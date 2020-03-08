@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,14 +59,7 @@ public class Resources {
     public static Image image(final String image) throws Exception{
         return new Image(Resources.class.getClass().getResourceAsStream(Const.DIR_ICON+image));
     }
-
-    /**
-     * Loads and returns bytes of a resource 
-     * 
-     * @param IMAGE The image to load. Should be one of the Resources.IC_*-constants
-     * @return The image loaded
-     * @throws Exception If the image could not be found or loaded
-     */
+    
     /**
      * Loads and returns bytes of a resource
      * 
@@ -124,5 +117,4 @@ public class Resources {
         }
         return 0;
     }
-
 }

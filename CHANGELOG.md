@@ -1,3 +1,9 @@
+#### 2.2.0
+* Update dependencies to use claymore-3.0.1
+* Added support for BinaryColumns
+* Prevent resource leak after an update when copying config template
+* Fixed NPE in DataFrame sanitization
+
 #### 2.1.4
 * When opening and importing files, background threads will now also create the FileTab content
 * Added the ConcurrentSingleReader functional interface

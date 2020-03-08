@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.raven.common.struct.BinaryColumn;
 import com.raven.common.struct.BooleanColumn;
 import com.raven.common.struct.ByteColumn;
 import com.raven.common.struct.CharColumn;
@@ -29,6 +30,7 @@ import com.raven.common.struct.DoubleColumn;
 import com.raven.common.struct.FloatColumn;
 import com.raven.common.struct.IntColumn;
 import com.raven.common.struct.LongColumn;
+import com.raven.common.struct.NullableBinaryColumn;
 import com.raven.common.struct.NullableBooleanColumn;
 import com.raven.common.struct.NullableByteColumn;
 import com.raven.common.struct.NullableCharColumn;
@@ -105,7 +107,8 @@ public class DataFrames {
             }else if(col.typeCode() == NullableCharColumn.TYPE_CODE){
                 final NullableCharColumn chars = (NullableCharColumn)col;
                 for(int i=0; i<df.rows(); ++i){
-                    if(chars.get(i) == '\u0000'){
+                    final Character c = chars.get(i);
+                    if((c != null) && (c == '\u0000')){
                         chars.set(i, '-');
                     }
                 }
@@ -125,9 +128,11 @@ public class DataFrames {
         return (typeCode == StringColumn.TYPE_CODE
                 || typeCode == CharColumn.TYPE_CODE
                 || typeCode == BooleanColumn.TYPE_CODE
+                || typeCode == BinaryColumn.TYPE_CODE
                 || typeCode == NullableStringColumn.TYPE_CODE
                 || typeCode == NullableCharColumn.TYPE_CODE
-                || typeCode == NullableBooleanColumn.TYPE_CODE);
+                || typeCode == NullableBooleanColumn.TYPE_CODE
+                || typeCode == NullableBinaryColumn.TYPE_CODE);
     }
 
     /**
@@ -139,6 +144,28 @@ public class DataFrames {
     public static boolean columnUsesStrings(final Column col){
         return (col.typeCode() == StringColumn.TYPE_CODE
                 || col.typeCode() == NullableStringColumn.TYPE_CODE);
+    }
+    
+    /**
+     * Indicates whether the given column uses booleans as its internal data
+     * 
+     * @param col The column to check for Boolean usage
+     * @return True if the specified column uses booleans, false otherwise
+     */
+    public static boolean columnUsesBooleans(final Column col){
+        return (col.typeCode() == BooleanColumn.TYPE_CODE
+                || col.typeCode() == NullableBooleanColumn.TYPE_CODE);
+    }
+    
+    /**
+     * Indicates whether the given column uses binary data as its internal data
+     * 
+     * @param col The column to check for binary usage
+     * @return True if the specified column uses binary data, false otherwise
+     */
+    public static boolean columnUsesBinary(final Column col){
+        return (col.typeCode() == BinaryColumn.TYPE_CODE
+                || col.typeCode() == NullableBinaryColumn.TYPE_CODE);
     }
 
     /**
@@ -324,6 +351,8 @@ public class DataFrames {
                     target.setValueAt(i, isTrue);
                 }
             }
+            break;
+        default:
             break;
         }
         return target;

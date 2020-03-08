@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 Raven Computing
+ * Copyright (C) 2020 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -362,7 +362,6 @@ public class EditorConfiguration {
             }
             os.write(baos.toByteArray());
             os.close();
-            os = null;
             template = new ConfigurationFileHandler(CONFIG_DIR+CONFIG_FILE).read();
         }catch(IOException ex){
             throw ex;
