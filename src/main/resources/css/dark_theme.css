@@ -1107,30 +1107,3 @@ dialog causes the JVM to crash */
 .jfx-color-picker .jfx-button{
     visibility: false;
 }
-
-/* IDs for JFXColorPickers which will set default color
-values for visible color boxes */
-#color-picker-box-0 .color-box{
-    -fx-background-color: #f3622d; 
-}
-#color-picker-box-1 .color-box{
-    -fx-background-color: #fba71b; 
-}
-#color-picker-box-2 .color-box{ 
-    -fx-background-color: #57b757; 
-}
-#color-picker-box-3 .color-box{
-    -fx-background-color: #41a9c9; 
-}
-#color-picker-box-4 .color-box{
-    -fx-background-color: #4258c9; 
-}
-#color-picker-box-5 .color-box{
-    -fx-background-color: #9a42c8; 
-}
-#color-picker-box-6 .color-box{
-    -fx-background-color: #c84164; 
-}
-#color-picker-box-7 .color-box{
-    -fx-background-color: #888888; 
-}

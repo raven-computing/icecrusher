@@ -24,12 +24,12 @@ public enum ResourceLocator {
 
     LATEST_VERSION("GET", "https://www.raven-computing.com/products/icecrusher/releases/latest/release.xml"),
     SEND_FEEDBACK("POST", "https://www.raven-computing.com/api/icecrusher/feedbacks"),
-    UPDATE_PACKAGE_LINUX_APP("GET", "https://www.raven-computing.com/products/icecrusher/releases/update_linux_app.zip"),
-    UPDATE_PACKAGE_LINUX_FULL("GET", "https://www.raven-computing.com/products/icecrusher/releases/update_linux_full.zip"),
-    UPDATE_PACKAGE_WINDOWS_APP("GET", "https://www.raven-computing.com/products/icecrusher/releases/update_windows_app.zip"),
-    UPDATE_PACKAGE_WINDOWS_FULL("GET", "https://www.raven-computing.com/products/icecrusher/releases/update_windows_full.zip"),
-    UPDATE_INSTRUCT_LINUX("GET", "https://www.raven-computing.com/products/icecrusher/releases/update.sh"),
-    UPDATE_INSTRUCT_WINDOWS("GET", "https://www.raven-computing.com/products/icecrusher/releases/update.bat"),
+    UPDATE_PACKAGE_LINUX_APP("GET", "https://www.raven-computing.com/assets/file/products/icecrusher/update_linux_app.zip"),
+    UPDATE_PACKAGE_LINUX_FULL("GET", "https://www.raven-computing.com/assets/file/products/icecrusher/update_linux_full.zip"),
+    UPDATE_PACKAGE_WINDOWS_APP("GET", "https://www.raven-computing.com/assets/file/products/icecrusher/update_windows_app.zip"),
+    UPDATE_PACKAGE_WINDOWS_FULL("GET", "https://www.raven-computing.com/assets/file/products/icecrusher/update_windows_full.zip"),
+    UPDATE_INSTRUCT_LINUX("GET", "https://www.raven-computing.com/assets/file/products/icecrusher/update.sh"),
+    UPDATE_INSTRUCT_WINDOWS("GET", "https://www.raven-computing.com/assets/file/products/icecrusher/update.bat"),
     RELEASE_NOTES("GET", "https://www.raven-computing.com/products/icecrusher/release-notes.html"),
     UPDATE_SHOW_IN_BROWSER("GET", "https://github.com/raven-computing/icecrusher");
 

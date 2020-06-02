@@ -38,6 +38,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
 
+import static com.raven.icecrusher.util.EditorConfiguration.*;
+import static com.raven.icecrusher.util.EditorConfiguration.Section.*;
+
 /**
  * Controller class for the Pie Chart activity.
  *
@@ -89,6 +92,7 @@ public class PieChartController extends ChartController {
         //CheckBoxes
         this.checkShowAbs.selectedProperty().addListener((ov, oldValue, newValue) -> {
             this.showAbs = newValue;
+            getConfiguration().set(PLOT, CONFIG_PIECHART_SHOW_ABS, newValue);
             if(!plotDataChanged){
                 reloadSliceLabels();
                 updateAllLegendColors();
@@ -96,13 +100,16 @@ public class PieChartController extends ChartController {
         });
         this.checkShowPerc.selectedProperty().addListener((ov, oldValue, newValue) -> {
             this.showPerc = newValue;
+            getConfiguration().set(PLOT, CONFIG_PIECHART_SHOW_PERC, newValue);
             if(!plotDataChanged){
                 reloadSliceLabels();
                 updateAllLegendColors();
             }
         });
-        this.showAbs = true;
-        this.showPerc = true;
+        this.showAbs = getConfiguration().booleanOf(PLOT, CONFIG_PIECHART_SHOW_ABS);
+        this.showPerc = getConfiguration().booleanOf(PLOT, CONFIG_PIECHART_SHOW_PERC);
+        this.checkShowAbs.setSelected(showAbs);
+        this.checkShowPerc.setSelected(showPerc);
         //add a listener to get notified when the selection changes
         //and update the entire legend. Otherwise the legend will display
         //the old items when its visibility changes after the user has plotted a new chart
@@ -114,7 +121,7 @@ public class PieChartController extends ChartController {
                     }
                 });
     }
-
+    
     @Override
     public void onStart(ArgumentBundle bundle){
         super.onStart(bundle);
@@ -215,7 +222,7 @@ public class PieChartController extends ChartController {
         final List<SettingsView> views = new ArrayList<>();
         int index = 0;
         for(final Map.Entry<String, Number> e : map.entrySet()){
-            final PieChart.Data slice = new PieChart.Data(labelForSlice(e.getKey(), 
+            final PieChart.Data slice = new PieChart.Data(labelForSlice(e.getKey(),
                     e.getValue().doubleValue()),
                     e.getValue().doubleValue());
 

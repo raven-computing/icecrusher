@@ -45,7 +45,8 @@ public class EditorConfiguration {
 
         GLOBAL("Global"),
         WINDOW("Window"),
-        UPDATER("Updater");
+        UPDATER("Updater"),
+        PLOT("Plot");
 
         private String key;
 
@@ -60,6 +61,7 @@ public class EditorConfiguration {
     public static final String CONFIG_CONFIRM_ROW_DELETION = "confirm.row.deletion";
     public static final String CONFIG_DIALOG_ALWAYS_HOME = "dialog.always.at_home";
     public static final String CONFIG_THEME_VIEW_DARK = "dfview.theme.dark";
+    public static final String CONFIG_CACHE_SESSION_SIZE = "cache.session.size";
 
     public static final String CONFIG_WINDOW_WIDTH = "width";
     public static final String CONFIG_WINDOW_HEIGHT = "height";
@@ -70,6 +72,15 @@ public class EditorConfiguration {
     public static final String CONFIG_UPDATE_AVAILABLE = "check.available";
     public static final String CONFIG_USE_HTTPS = "use.https";
     public static final String CONFIG_DATA_STALE_THRESHOLD = "check.stale.threshold.days";
+    
+    public static final String CONFIG_TITLE_POSITION = "title.position";
+    public static final String CONFIG_LEGEND_POSITION = "legend.position";
+    public static final String CONFIG_GRID_VISIBLE = "grid.visible";
+    public static final String CONFIG_BACKGROUND_WHITE = "background.white";
+    public static final String CONFIG_XYCHART_DATAPOINTS = "xychart.show_datapoints";
+    public static final String CONFIG_BARCHART_MODE = "barchart.mode";
+    public static final String CONFIG_PIECHART_SHOW_ABS = "piechart.show_abs";
+    public static final String CONFIG_PIECHART_SHOW_PERC = "piechart.show_perc";
 
     /** Directory for user specific configuration files **/
     private static final String CONFIG_DIR = System.getProperty(Const.KEY_USER_HOME)
@@ -155,6 +166,54 @@ public class EditorConfiguration {
             return 0.0;
         }
     }
+    
+    /**
+     * Returns the value of the configuration in the specified Section with the specified value
+     * directly converted to an integer
+     * 
+     * @param SECTION The <code>Section</code> of the configuration to access
+     * @param CONFIGURATION The key of the configuration to access
+     * @return The value of the configuration with the specified key. Might return 0 (zero)
+     *         if the configuration accessed is not an integer or was not found
+     */
+    public int integerOf(final Section SECTION, final String CONFIGURATION){
+        try{
+            return Integer.valueOf(config.getSection(SECTION.key).valueOf(CONFIGURATION));
+        }catch(NumberFormatException ex){
+            return 0;
+        }
+    }
+    
+    /**
+     * Returns the value of the configuration denoting a memory size value in the specified
+     * Section with the specified value directly converted to an integer in bytes
+     * 
+     * @param SECTION The <code>Section</code> of the configuration to access
+     * @param CONFIGURATION The key of the configuration to access
+     * @return The value of the memory size configuration (in bytes) with the specified key.
+     *         Might return 0 (zero) if the configuration accessed is not an integer, was not
+     *         found or the entry was incorrectly formatted
+     */
+    public int memoryOf(final Section SECTION, final String CONFIGURATION){
+        String val = config.getSection(SECTION.key).valueOf(CONFIGURATION);
+        if((val == null) || val.isEmpty()){
+            return 0;
+        }
+        try{
+            val = val.toUpperCase();
+            int factor = 1;
+            if(val.endsWith("KB")){
+                factor = 1000;
+                val = val.substring(0, val.length()-2);
+            }else if(val.endsWith("MB")){
+                factor = 1000000;
+                val = val.substring(0, val.length()-2);
+            }
+            return Integer.valueOf(val) * factor;
+        }catch(Exception ex){
+            return 0;
+        }
+    }
 
     /**
      * Sets the value of the configuration in the specified Section with the specified key to the 
@@ -191,6 +250,19 @@ public class EditorConfiguration {
      * @param value The new value of the configuration to set
      */
     public void set(final Section SECTION, final String CONFIGURATION, final double value){
+        configChanged = true;
+        this.config.getSection(SECTION.key).set(CONFIGURATION, String.valueOf(value));
+    }
+    
+    /**
+     * Sets the value of the configuration in the specified Section with the specified key to the 
+     * specified integer value
+     * 
+     * @param SECTION The <code>Section</code> of the configuration to access
+     * @param CONFIGURATION The key of the configuration to set
+     * @param value The new value of the configuration to set
+     */
+    public void set(final Section SECTION, final String CONFIGURATION, final int value){
         configChanged = true;
         this.config.getSection(SECTION.key).set(CONFIGURATION, String.valueOf(value));
     }

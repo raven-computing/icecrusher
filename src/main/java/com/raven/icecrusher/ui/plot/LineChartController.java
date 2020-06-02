@@ -103,7 +103,8 @@ public class LineChartController extends XYChartController {
         setDateControlsDisabled(true);
 
         final int index = this.settingsList.getChildren().size();
-        final SettingsView lsv = new LineSettingsView(index, series.getName());
+        final SettingsView lsv = new LineSettingsView(index, colY.getName());
+        series.setName(lsv.getEditText());
         lsv.setViewListener(new ViewListener(){
             @Override
             public void onRelabel(SettingsView view, String newLabel){
@@ -143,5 +144,4 @@ public class LineChartController extends XYChartController {
             node.setStyle("-fx-stroke: " + color);
         }
     }
-
 }

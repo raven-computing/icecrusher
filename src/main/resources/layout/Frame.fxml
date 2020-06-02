@@ -35,13 +35,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
-  minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/dark_theme.css"
-  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="com.raven.icecrusher.ui.FrameController">
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/dark_theme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.raven.icecrusher.ui.FrameController">
   <children>
-    <BorderPane fx:id="mainBorderPane" prefHeight="561.0"
-      prefWidth="774.0">
+    <BorderPane fx:id="mainBorderPane" prefHeight="561.0" prefWidth="774.0">
       <bottom>
         <HBox alignment="CENTER" BorderPane.alignment="CENTER">
           <children>
@@ -87,22 +83,13 @@
       <center>
         <AnchorPane BorderPane.alignment="CENTER">
           <children>
-            <SplitPane fx:id="splitPane" dividerPositions="0.6960352422907489"
-              orientation="VERTICAL" AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
+            <SplitPane fx:id="splitPane" dividerPositions="0.6960352422907489" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
-                <AnchorPane fx:id="mainTabsPane">
+                <AnchorPane fx:id="mainTabsPane" onDragDropped="#onDragDroppedFile" onDragExited="#onDragExitedFile" onDragOver="#onDragOverFile">
                   <children>
-                    <Label fx:id="labelHint" alignment="CENTER"
-                      contentDisplay="TOP"
-                      text="Nothing to show&#13;Open a file or create a new DataFrame"
-                      textAlignment="CENTER" AnchorPane.bottomAnchor="0.0"
-                      AnchorPane.leftAnchor="0.0"
-                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <Label fx:id="labelHint" alignment="CENTER" contentDisplay="TOP" text="Nothing to show&#13;Open a file or create a new DataFrame" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <graphic>
-                        <ImageView fitHeight="96.0" fitWidth="96.0"
-                          pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
                           <image>
                             <Image url="@../icon/ic_folder_black_48dp.png" />
                           </image>
@@ -112,17 +99,12 @@
                         <Font name="System Bold" size="13.0" />
                       </font>
                     </Label>
-                    <JFXTabPane fx:id="mainTabs"
-                      tabClosingPolicy="ALL_TABS"
-                      AnchorPane.bottomAnchor="0.0"
-                      AnchorPane.leftAnchor="0.0"
-                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                    <JFXTabPane fx:id="mainTabs" tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                   </children>
                 </AnchorPane>
                 <AnchorPane fx:id="editScene" styleClass="row-adder-pane">
                   <children>
-                    <VBox AnchorPane.leftAnchor="0.0"
-                      AnchorPane.rightAnchor="0.0">
+                    <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                       <children>
                         <AnchorPane>
                           <children>
@@ -131,8 +113,7 @@
                                 <Label text="Add row to " />
                                 <Label fx:id="editSceneFile" text="file">
                                   <font>
-                                    <Font name="System Italic"
-                                      size="13.0" />
+                                    <Font name="System Italic" size="13.0" />
                                   </font>
                                   <HBox.margin>
                                     <Insets left="5.0" />
@@ -140,25 +121,19 @@
                                 </Label>
                               </children>
                             </HBox>
-                            <HBox alignment="TOP_RIGHT"
-                              AnchorPane.rightAnchor="0.0">
+                            <HBox alignment="TOP_RIGHT" AnchorPane.rightAnchor="0.0">
                               <children>
-                                <JFXButton onAction="#onRowAdd"
-                                  styleClass="row-adder-add-button"
-                                  text="Add">
+                                <JFXButton onAction="#onRowAdd" styleClass="row-adder-add-button" text="Add">
                                   <HBox.margin>
                                     <Insets />
                                   </HBox.margin>
                                 </JFXButton>
-                                <JFXButton onAction="#onRowClose"
-                                  styleClass="row-adder-close-button"
-                                  text="X" />
+                                <JFXButton onAction="#onRowClose" styleClass="row-adder-close-button" text="X" />
                               </children>
                             </HBox>
                           </children>
                         </AnchorPane>
-                        <ScrollPane prefHeight="100.0"
-                          vbarPolicy="NEVER">
+                        <ScrollPane prefHeight="100.0" vbarPolicy="NEVER">
                           <content>
                             <AnchorPane fx:id="editSceneAnchor" />
                           </content>
@@ -179,85 +154,50 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#onFileNew"
-                      text="New" />
-                    <MenuItem mnemonicParsing="false" onAction="#onFileOpen"
-                      text="Open..." />
-                    <SeparatorMenuItem
-                      mnemonicParsing="false" />
-                    <MenuItem fx:id="menuSave" mnemonicParsing="false"
-                      onAction="#onFileSave" text="Save" />
-                    <MenuItem fx:id="menuSaveAs"
-                      mnemonicParsing="false" onAction="#onFileSaveAs"
-                      text="Save as..." />
-                    <MenuItem mnemonicParsing="false" onAction="#onFileImport"
-                      text="Import from CSV..." />
-                    <MenuItem fx:id="menuExport"
-                      mnemonicParsing="false" onAction="#onFileExport"
-                      text="Export to CSV..." />
-                    <SeparatorMenuItem
-                      mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" onAction="#onFileQuit"
-                      text="Quit" />
+                    <MenuItem mnemonicParsing="false" onAction="#onFileNew" text="New" />
+                    <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open..." />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
+                    <MenuItem fx:id="menuSaveAs" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save as..." />
+                    <MenuItem mnemonicParsing="false" onAction="#onFileImport" text="Import from CSV..." />
+                    <MenuItem fx:id="menuExport" mnemonicParsing="false" onAction="#onFileExport" text="Export to CSV..." />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" onAction="#onFileQuit" text="Quit" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                   <items>
-                    <MenuItem fx:id="menuAddRow"
-                      mnemonicParsing="false" onAction="#onEditAddRow"
-                      text="Add Row" />
-                    <MenuItem fx:id="menuAddCol"
-                      mnemonicParsing="false" onAction="#onEditAddColumn"
-                      text="Add Column" />
-                    <SeparatorMenuItem
-                      mnemonicParsing="false" />
-                    <MenuItem fx:id="menuSort" mnemonicParsing="false"
-                      onAction="#onEditSort" text="Sort" />
-                    <MenuItem fx:id="menuFilter"
-                      mnemonicParsing="false" onAction="#onEditFilter"
-                      text="Filter" />
-                    <MenuItem fx:id="menuConvert"
-                      mnemonicParsing="false" onAction="#onEditConvert"
-                      text="Convert" />
-                    <SeparatorMenuItem
-                      mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" onAction="#onPreferences"
-                      text="Preferences" />
+                    <MenuItem fx:id="menuAddRow" mnemonicParsing="false" onAction="#onEditAddRow" text="Add Row" />
+                    <MenuItem fx:id="menuAddCol" mnemonicParsing="false" onAction="#onEditAddColumn" text="Add Column" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem fx:id="menuSort" mnemonicParsing="false" onAction="#onEditSort" text="Sort" />
+                    <MenuItem fx:id="menuFilter" mnemonicParsing="false" onAction="#onEditFilter" text="Filter" />
+                    <MenuItem fx:id="menuConvert" mnemonicParsing="false" onAction="#onEditConvert" text="Convert" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" onAction="#onPreferences" text="Preferences" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Statistics">
                   <items>
-                    <MenuItem fx:id="menuPieChart"
-                      mnemonicParsing="false" onAction="#onPlotPieChart"
-                      text="Plot Pie Chart" />
-                    <MenuItem fx:id="menuLineChart"
-                      mnemonicParsing="false" onAction="#onPlotLineChart"
-                      text="Plot Line Chart" />
-                    <MenuItem fx:id="menuAreaChart"
-                      mnemonicParsing="false" onAction="#onPlotAreaChart"
-                      text="Plot Area Chart" />
-                    <MenuItem fx:id="menuBarChart"
-                      mnemonicParsing="false" onAction="#onPlotBarChart"
-                      text="Plot Bar Chart" />
+                    <MenuItem fx:id="menuPieChart" mnemonicParsing="false" onAction="#onPlotPieChart" text="Plot Pie Chart" />
+                    <MenuItem fx:id="menuLineChart" mnemonicParsing="false" onAction="#onPlotLineChart" text="Plot Line Chart" />
+                    <MenuItem fx:id="menuAreaChart" mnemonicParsing="false" onAction="#onPlotAreaChart" text="Plot Area Chart" />
+                    <MenuItem fx:id="menuBarChart" mnemonicParsing="false" onAction="#onPlotBarChart" text="Plot Bar Chart" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#onFeedback"
-                      text="Send feedback" />
-                    <MenuItem mnemonicParsing="false" onAction="#onAbout"
-                      text="About" />
+                    <MenuItem mnemonicParsing="false" onAction="#onFeedback" text="Send feedback" />
+                    <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
                   </items>
                 </Menu>
               </menus>
             </MenuBar>
             <AnchorPane>
               <children>
-                <HBox layoutX="6.0" layoutY="7.0"
-                  AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                <HBox layoutX="6.0" layoutY="7.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                   <children>
-                    <JFXButton buttonType="RAISED" onAction="#onFileNew"
-                      text="+" textAlignment="CENTER">
+                    <JFXButton buttonType="RAISED" onAction="#onFileNew" text="+" textAlignment="CENTER">
                       <cursor>
                         <Cursor fx:constant="HAND" />
                       </cursor>
@@ -270,11 +210,9 @@
                     </JFXButton>
                   </children>
                 </HBox>
-                <HBox alignment="TOP_RIGHT" layoutX="620.0"
-                  AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                <HBox alignment="TOP_RIGHT" layoutX="620.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                   <children>
-                    <JFXButton fx:id="btnSave" buttonType="RAISED"
-                      onAction="#onFileSave" text="Save" textFill="#00000026">
+                    <JFXButton fx:id="btnSave" buttonType="RAISED" onAction="#onFileSave" text="Save" textFill="#00000026">
                       <cursor>
                         <Cursor fx:constant="HAND" />
                       </cursor>

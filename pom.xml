@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.raven-computing</groupId>
   <artifactId>icecrusher</artifactId>
-  <version>2.2.0</version>
+  <version>2.3.0</version>
   <name>Icecrusher</name>
   <description>An editor and analysis tool for DataFrame files</description>
   <url>https://github.com/raven-computing/icecrusher</url>
@@ -37,8 +37,6 @@
       <id>kilo52</id>
       <name>Phil Gaiser</name>
       <email>phil.gaiser@raven-computing.com</email>
-      <organization>Raven Computing</organization>
-      <organizationUrl>https://www.raven-computing.com</organizationUrl>
     </developer>
   </developers>
   <dependencies>

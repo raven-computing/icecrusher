@@ -1,3 +1,19 @@
+#### 2.3.0
+* Added drag event handlers for enabling file drag and drop opening behaviour
+* Added selection entry for BinaryColumn type in CreateDialog and AddColumnDialog
+* Added persistent configuration entries for basic plot functionalities
+* Added associated drag callbacks in FXML markup and code to handle file drag and drop events
+* Added Effects utility class for file drag and drop effects
+* Added abstract application Cache class and SessionCache implementation
+* Added SceneShowingProperty class to handle scene showing events
+* Refactored plot activities argument handover
+* Changed URLs in ResourceLocator class
+* Changed ChartController implementations to adhere to persisted and cached configurations
+* Changed SettingsView and its subclasses to check for session cache entries
+* Changed SettingsView default colors
+* Removed default plot color entries in CSS theme file
+* Fixed NPE in history file setup in FrameController
+
 #### 2.2.0
 * Update dependencies to use claymore-3.0.1
 * Added support for BinaryColumns

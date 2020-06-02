@@ -26,6 +26,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.raven.common.struct.BinaryColumn;
 import com.raven.common.struct.BooleanColumn;
 import com.raven.common.struct.ByteColumn;
 import com.raven.common.struct.CharColumn;
@@ -38,6 +39,7 @@ import com.raven.common.struct.IntColumn;
 import com.raven.common.struct.LongColumn;
 import com.raven.common.struct.ShortColumn;
 import com.raven.common.struct.StringColumn;
+import com.raven.common.struct.NullableBinaryColumn;
 import com.raven.common.struct.NullableBooleanColumn;
 import com.raven.common.struct.NullableByteColumn;
 import com.raven.common.struct.NullableCharColumn;
@@ -80,7 +82,7 @@ public class CreateDialogController {
     }
 
     public static String[] options = new String[]{
-            "Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean"};
+            "Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean", "Binary"};
 
 
     @FXML
@@ -146,6 +148,8 @@ public class CreateDialogController {
                 return (useNull ? new NullableCharColumn() : new CharColumn());
             case "Boolean":
                 return (useNull ? new NullableBooleanColumn() : new BooleanColumn());
+            case "Binary":
+                return (useNull ? new NullableBinaryColumn() : new BinaryColumn());
             }
         }
         return null;
@@ -171,7 +175,7 @@ public class CreateDialogController {
         ++i;
         for(ColumnItemController item : items){
             final Column col2 = constructColumn(item.getSelectedType());
-            final String name2 = item.getColumnName();;
+            final String name2 = item.getColumnName();
             if(col2 == null){
                 showWarnMsg("Please specify all column types");
                 return;

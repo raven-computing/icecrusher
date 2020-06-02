@@ -18,6 +18,7 @@ package com.raven.icecrusher.ui;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTabPane;
@@ -60,6 +61,7 @@ import com.raven.icecrusher.util.ColumnStats;
 import com.raven.icecrusher.util.Const;
 import com.raven.icecrusher.util.EditorConfiguration;
 import com.raven.icecrusher.util.EditorFile;
+import com.raven.icecrusher.util.Effects;
 import com.raven.icecrusher.util.ExceptionHandler;
 import com.raven.icecrusher.util.History;
 
@@ -79,14 +81,18 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+import java.io.File;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static com.raven.common.io.DataFrameSerializer.DF_FILE_EXTENSION;
 import static com.raven.icecrusher.util.EditorConfiguration.*;
 import static com.raven.icecrusher.util.EditorConfiguration.Section.*;
@@ -448,7 +454,10 @@ public class FrameController extends Controller implements ViewListener {
             history.setFocusIndex(mainTabs.getSelectionModel().getSelectedIndex());
             final List<EditorFile> list = new LinkedList<>();
             for(final Tab tab : mainTabs.getTabs()){
-                list.add(((FileTab)tab).getFile());
+                final EditorFile file = ((FileTab)tab).getFile();
+                if(file != null){
+                    list.add(file);
+                }
             }
             history.setHistoryList(list);
             config.setHistory(history);
@@ -460,40 +469,69 @@ public class FrameController extends Controller implements ViewListener {
     private void recoverHistory(){
         final History history = config.getHistory();
         if(history != null){
-            final List<EditorFile> historyList = history.getHistoryList();
-            if(!historyList.isEmpty()){
-                setLoadingIndication(true);
-                labelHint.setVisible(false);
-                Files.readAllFiles(historyList, (tabs) -> {
-                    for(int i=0; i<tabs.size(); ++i){
-                        final FileTab tab = tabs.get(i);
-                        final EditorFile file = historyList.get(i);
-                        final DataFrame df = tab.getDataFrame();
-                        if(df != null){
-                            tab.setText(file.getName());
-                            tab.getView().addEditListener(this);
-                            tab.setOnCloseRequest((e) -> setTabCloseBehaviour(e, tab));
-                            mainTabs.getTabs().add(tab);
-                            if(df.columns() > 0){
-                                setEditMenuItemsDisabled(false);
-                                setStatsMenuItemsDisabled(df);
-                            }else{//disable for uninitialized df, except for adding columns
-                                setEditMenuItemsDisabled(true);
-                                setStatsMenuItemsDisabled(true);
-                                menuAddCol.setDisable(false);
-                            }
-                        }
-                    }
-                    setLoadingIndication(false);
-                    if(tabs.isEmpty()){//no file could be recovered
-                        labelHint.setVisible(true);
-                    }
-                    final int i = history.getFocusIndex();
-                    mainTabs.getSelectionModel().select(
-                            ((i>=0 && i<mainTabs.getTabs().size()) ? i : 0));
-                    
-                });
+            final List<EditorFile> fileList = history.getHistoryList();
+            if(!fileList.isEmpty()){
+                openAllFiles(fileList, history);
             }
+        }
+    }
+
+    private void openAllFiles(final List<EditorFile> files){
+        openAllFiles(files, null);
+    }
+    
+    private void openAllFiles(final List<EditorFile> files, final History history){
+        setLoadingIndication(true);
+        labelHint.setVisible(false);
+        Files.readAllFiles(files, (tabs) -> {
+            for(int i=0; i<tabs.size(); ++i){
+                final FileTab tab = tabs.get(i);
+                final EditorFile file = files.get(i);
+                final DataFrame df = tab.getDataFrame();
+                if(df != null){
+                    tab.setText(file.getName());
+                    tab.getView().addEditListener(this);
+                    tab.setOnCloseRequest((e) -> setTabCloseBehaviour(e, tab));
+                    mainTabs.getTabs().add(tab);
+                    if(df.columns() > 0){
+                        setEditMenuItemsDisabled(false);
+                        setStatsMenuItemsDisabled(df);
+                    }else{//disable for uninitialized df, except for adding columns
+                        setEditMenuItemsDisabled(true);
+                        setStatsMenuItemsDisabled(true);
+                        menuAddCol.setDisable(false);
+                    }
+                }
+            }
+            setLoadingIndication(false);
+            if(tabs.isEmpty()){//no file could be recovered
+                labelHint.setVisible(true);
+            }
+            //when opening from a history use the saved index
+            //otherwise use the last index
+            if(history != null){
+                final int i = history.getFocusIndex();
+                mainTabs.getSelectionModel().select(
+                        ((i>=0 && i<mainTabs.getTabs().size()) ? i : 0));
+            }else{
+                mainTabs.getSelectionModel().selectLast();
+            }
+        });
+    }
+    
+    private void openFilesFromDragboard(final Dragboard dragboard){
+        final List<EditorFile> files = new LinkedList<>();
+        for(final File file : dragboard.getFiles()){
+            final String name = file.toString();
+            if(file.isFile() && name.endsWith(DF_FILE_EXTENSION)){
+                final EditorFile f = EditorFile.fromFile(name);
+                if(!fileIsDuplicate(f)){
+                    files.add(f);
+                }
+            }
+        }
+        if(!files.isEmpty()){
+            openAllFiles(files);
         }
     }
 
@@ -865,6 +903,13 @@ public class FrameController extends Controller implements ViewListener {
             ExceptionHandler.handle(ex);
         }
     }
+    
+    private ArgumentBundle argumentsFrom(final FileTab tab){
+        final ArgumentBundle bundle = new ArgumentBundle();
+        bundle.addArgument(Const.BUNDLE_KEY_EDITORFILE, tab.getFile());
+        bundle.addArgument(Const.BUNDLE_KEY_DATAFRAME, tab.getDataFrame());
+        return bundle;
+    }
 
     @FXML
     private void onFileNew(ActionEvent event){
@@ -1156,7 +1201,51 @@ public class FrameController extends Controller implements ViewListener {
         });
         dialog.show();
     }
-
+    
+    @FXML
+    private void onDragOverFile(DragEvent event){
+        final Dragboard dragboard = event.getDragboard();
+        if((event.getGestureSource() != mainTabsPane) && dragboard.hasFiles()){
+            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            if(dragboard.hasFiles()){
+                for(final File file : dragboard.getFiles()){
+                    final String name = file.toString();
+                    if(file.isFile() && name.endsWith(DF_FILE_EXTENSION)){
+                        // check again
+                        if(!event.isDropCompleted() && dragboard.hasFiles()){
+                            mainTabsPane.setEffect(Effects.dragAndDropLighting(
+                                    mainTabsPane.getWidth(),
+                                    mainTabsPane.getHeight()));
+                            
+                        }else{
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        event.consume();
+    }
+    
+    @FXML
+    private void onDragDroppedFile(DragEvent event){
+        final Dragboard dragboard = event.getDragboard();
+        boolean success = false;
+        if(dragboard.hasFiles()){
+            openFilesFromDragboard(dragboard);
+            success = true;
+        }
+        event.setDropCompleted(success);
+        event.consume();
+    }
+    
+    @FXML
+    private void onDragExitedFile(DragEvent event){
+        event.getDragboard().clear();
+        mainTabsPane.setEffect(null);
+        event.consume();
+    }
+    
     @FXML
     private void onPreferences(ActionEvent event){
         startActivity(Activity.PREFERENCES);
@@ -1164,38 +1253,22 @@ public class FrameController extends Controller implements ViewListener {
 
     @FXML
     private void onPlotPieChart(ActionEvent event){
-        final FileTab tab = currentlySelectedTab();
-        final ArgumentBundle bundle = new ArgumentBundle();
-        bundle.addArgument(Const.BUNDLE_KEY_EDITORFILE, tab.getFile());
-        bundle.addArgument(Const.BUNDLE_KEY_DATAFRAME, tab.getDataFrame());
-        startActivity(Activity.PIE_CHART, bundle);
+        startActivity(Activity.PIE_CHART, argumentsFrom(currentlySelectedTab()));
     }
 
     @FXML
     private void onPlotLineChart(ActionEvent event){
-        final FileTab tab = currentlySelectedTab();
-        final ArgumentBundle bundle = new ArgumentBundle();
-        bundle.addArgument(Const.BUNDLE_KEY_EDITORFILE, tab.getFile());
-        bundle.addArgument(Const.BUNDLE_KEY_DATAFRAME, tab.getDataFrame());
-        startActivity(Activity.LINE_CHART, bundle);
+        startActivity(Activity.LINE_CHART, argumentsFrom(currentlySelectedTab()));
     }
 
     @FXML
     private void onPlotAreaChart(ActionEvent event){
-        final FileTab tab = currentlySelectedTab();
-        final ArgumentBundle bundle = new ArgumentBundle();
-        bundle.addArgument(Const.BUNDLE_KEY_EDITORFILE, tab.getFile());
-        bundle.addArgument(Const.BUNDLE_KEY_DATAFRAME, tab.getDataFrame());
-        startActivity(Activity.AREA_CHART, bundle);
+        startActivity(Activity.AREA_CHART, argumentsFrom(currentlySelectedTab()));
     }
 
     @FXML
     private void onPlotBarChart(ActionEvent event){
-        final FileTab tab = currentlySelectedTab();
-        final ArgumentBundle bundle = new ArgumentBundle();
-        bundle.addArgument(Const.BUNDLE_KEY_EDITORFILE, tab.getFile());
-        bundle.addArgument(Const.BUNDLE_KEY_DATAFRAME, tab.getDataFrame());
-        startActivity(Activity.BAR_CHART, bundle);
+        startActivity(Activity.BAR_CHART, argumentsFrom(currentlySelectedTab()));
     }
 
     @FXML

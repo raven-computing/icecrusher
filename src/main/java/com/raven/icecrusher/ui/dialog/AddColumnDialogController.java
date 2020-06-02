@@ -18,6 +18,7 @@ package com.raven.icecrusher.ui.dialog;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.raven.common.struct.BinaryColumn;
 import com.raven.common.struct.BooleanColumn;
 import com.raven.common.struct.ByteColumn;
 import com.raven.common.struct.CharColumn;
@@ -27,6 +28,7 @@ import com.raven.common.struct.DoubleColumn;
 import com.raven.common.struct.FloatColumn;
 import com.raven.common.struct.IntColumn;
 import com.raven.common.struct.LongColumn;
+import com.raven.common.struct.NullableBinaryColumn;
 import com.raven.common.struct.NullableBooleanColumn;
 import com.raven.common.struct.NullableByteColumn;
 import com.raven.common.struct.NullableCharColumn;
@@ -66,7 +68,7 @@ public class AddColumnDialogController {
     }
 
     public static String[] options = new String[]{
-            "Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean"};
+            "Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean", "Binary"};
 
     @FXML
     private JFXComboBox<String> cBoxColType;
@@ -152,6 +154,18 @@ public class AddColumnDialogController {
                 return col;
             case "Boolean":
                 return (useNullable ? new NullableBooleanColumn(new Boolean[size]) : new BooleanColumn(new boolean[size]));
+            case "Binary":
+                Column colBin = null;
+                if(useNullable){
+                    colBin = new NullableBinaryColumn(new byte[size][]);
+                }else{
+                    final byte[][] bytes = new byte[size][];
+                    for(int i=0; i<bytes.length; ++i){
+                        bytes[i] = new byte[]{0};
+                    }
+                    colBin = new BinaryColumn(bytes);
+                }
+                return colBin;
             }
         }
         return null;

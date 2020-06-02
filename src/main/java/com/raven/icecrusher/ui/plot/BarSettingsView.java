@@ -21,6 +21,8 @@ package com.raven.icecrusher.ui.plot;
  *
  */
 public class BarSettingsView extends SettingsView {
+    
+    private String mode = "";
 
     public BarSettingsView(int index){
         super(index);
@@ -29,12 +31,22 @@ public class BarSettingsView extends SettingsView {
         addColorPickerToSettings();
     }
 
-    public BarSettingsView(int index, String text){
+    public BarSettingsView(int index, String text, String mode){
         super(index);
+        this.mode = mode;
         addRemoveButtonToSettings();
-        addTextFieldToSettings();
-        addColorPickerToSettings();
+        addTextFieldToSettings(text);
+        addColorPickerToSettings(text);
         setEditText(text);
     }
-
+    
+    @Override
+    public String editTextCacheKey(final String text){
+        return "SettingsView.textField.text." + mode + "." + text;
+    }
+    
+    @Override
+    public String colorPickerCacheKey(final String text){
+        return "SettingsView.colorPicker.color." + mode + "." + text;
+    }
 }

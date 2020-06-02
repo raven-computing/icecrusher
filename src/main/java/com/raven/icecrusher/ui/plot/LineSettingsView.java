@@ -32,9 +32,8 @@ public class LineSettingsView extends SettingsView {
     public LineSettingsView(int index, String text){
         super(index);
         addRemoveButtonToSettings();
-        addTextFieldToSettings();
-        addColorPickerToSettings();
+        addTextFieldToSettings(text);
+        addColorPickerToSettings(text);
         setEditText(text);
     }
-
 }

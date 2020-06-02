@@ -44,6 +44,7 @@ import com.raven.common.struct.NullableIntColumn;
 import com.raven.common.struct.NullableLongColumn;
 import com.raven.common.struct.NullableShortColumn;
 import com.raven.common.struct.ShortColumn;
+import com.raven.icecrusher.application.Cache;
 import com.raven.icecrusher.io.DataFrames;
 import com.raven.icecrusher.ui.OneShotSnackbar;
 
@@ -56,6 +57,9 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
+
+import static com.raven.icecrusher.util.EditorConfiguration.*;
+import static com.raven.icecrusher.util.EditorConfiguration.Section.*;
 
 /**
  * Base Controller class for Line- and Area Chart Activities. 
@@ -208,12 +212,20 @@ public abstract class XYChartController extends ChartController {
                 cbDateFormat.setDisable(true);
             }
         });
+        this.checkDataPoints.setSelected(getConfiguration().booleanOf(PLOT, CONFIG_XYCHART_DATAPOINTS));
+        this.checkDataPoints.selectedProperty().addListener(
+                (ov, oldValue, newValue) -> {
+                    
+            getConfiguration().set(PLOT, CONFIG_XYCHART_DATAPOINTS, newValue);
+        });
         this.checkShowGrid.selectedProperty().addListener(
                 (ov, oldValue, newValue) -> {
                     
             chart.setHorizontalGridLinesVisible(newValue);
             chart.setVerticalGridLinesVisible(newValue);
+            getConfiguration().set(PLOT, CONFIG_GRID_VISIBLE, newValue);
         });
+        this.checkShowGrid.setSelected(getConfiguration().booleanOf(PLOT, CONFIG_GRID_VISIBLE));
         this.checkWhiteBackground.selectedProperty().addListener(
                 (ov, oldValue, newValue) -> {
                     
@@ -234,7 +246,9 @@ public abstract class XYChartController extends ChartController {
                         : STYLE_GRID_LINES_DARK);
                 
             }
+            getConfiguration().set(PLOT, CONFIG_BACKGROUND_WHITE, newValue);
         });
+        this.checkWhiteBackground.setSelected(getConfiguration().booleanOf(PLOT, CONFIG_BACKGROUND_WHITE));
     }
 
     @Override
@@ -246,25 +260,53 @@ public abstract class XYChartController extends ChartController {
         this.cbColumnX.getItems().addAll(df.getColumnNames());
         this.cbColumnX.getSelectionModel().selectedItemProperty().addListener(
                 (ov, oldValue, newValue) -> {
-                    
+
             columnSelectionChanged();
             reset();
+            if(newValue != null){
+                final String text = txtAxisXLabel.getText();
+                if((text == null) || text.isEmpty()){
+                    txtAxisXLabel.setText(Cache.session()
+                            .get("ChartController.chart.xaxis.label." + newValue));
+                    
+                }else{
+                    Cache.session().set("ChartController.chart.xaxis.label." + newValue, text);
+                }
+            }
         });
         this.cbColumnY.getItems().addAll(df.getColumnNames());
         this.cbColumnY.getSelectionModel().selectedItemProperty().addListener(
                 (ov, oldValue, newValue) -> {
                     
             columnSelectionChanged();
+            if(newValue != null){
+                final String text = txtAxisYLabel.getText();
+                if((text == null) || text.isEmpty()){
+                    txtAxisYLabel.setText(Cache.session()
+                            .get("ChartController.chart.yaxis.label." + newValue));
+                    
+                }else{
+                    Cache.session().set("ChartController.chart.yaxis.label." + newValue, text);
+                }
+            }
         });
         this.txtAxisXLabel.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     
             chartXAxis.setLabel(newValue);
+            final String axis = cbColumnX.getValue();
+            if(axis != null){
+                Cache.session().set("ChartController.chart.xaxis.label." + axis, newValue);
+            }
         });
         this.txtAxisYLabel.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     
             chartYAxis.setLabel(newValue);
+            final String axis = cbColumnY.getValue();
+            if(axis != null){
+                Cache.session().set("ChartController.chart.yaxis.label." + axis, newValue);
+            }
         });
     }
 
@@ -399,8 +441,8 @@ public abstract class XYChartController extends ChartController {
                 }
             }
         }
-        //series is already plotted on the screen 
-        //remove it from the chart 
+        //series is already plotted on the screen
+        //remove it from the chart
         if(offset < 0){
             chart.getData().remove(i);
             if(chart.getData().isEmpty()){//cleanup
@@ -687,5 +729,4 @@ public abstract class XYChartController extends ChartController {
         }
         return null;
     }
-
 }

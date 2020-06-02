@@ -16,23 +16,31 @@
 
 package com.raven.icecrusher.ui.plot;
 
+import java.util.Set;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXColorPicker;
+import com.jfoenix.controls.JFXRippler;
+import com.raven.icecrusher.application.Cache;
+import com.raven.icecrusher.ui.SceneShowingProperty;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -83,10 +91,10 @@ public class SettingsView extends HBox {
 
     private static final Tooltip TIP_REMOVE_BUTTON = new Tooltip("Remove");
     private static final Tooltip TIP_COLORPICKER= new Tooltip("Change color");
-
+    
     private static final String[] colors = new String[]{
-            "#f3622d","#fba71b","#57b757","#41a9c9",
-            "#4258c9","#9a42c8","#c84164","#888888"};
+            "#1668ff","#f3622d","#57b757","#fba71b",
+            "#41a9c9","#4258c9","#9a42c8","#c84164"};
 
     private JFXButton btnRemove;
     private TextField txt;
@@ -116,7 +124,7 @@ public class SettingsView extends HBox {
      * @param index The index of the settings item
      * @param itemLabel The label of the settings item to construct
      */
-    public SettingsView( final int index, final String itemLabel){
+    public SettingsView(final int index, final String itemLabel){
         this(index);
         this.label = itemLabel;
         final Label label = new Label(itemLabel);
@@ -130,26 +138,60 @@ public class SettingsView extends HBox {
      * Adds an editable text field to this settings view
      */
     public void addTextFieldToSettings(){
-        this.txt = new TextField(this.label);
+        addTextFieldToSettings(null);
+    }
+    
+    /**
+     * Adds an editable text field with the specified text to this settings view
+     * 
+     * @param label The text of the text field to be added
+     */
+    public void addTextFieldToSettings(final String label){
+        if(label != null){
+            this.label = label;
+            this.txt = new TextField(label);
+        }else{
+            this.txt = new TextField(this.label);
+        }
         this.txt.setPromptText("Label");
         this.txt.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(label != null){
+                Cache.session().set(editTextCacheKey(label), newValue);
+            }
             if(delegate != null){
                 delegate.onRelabel(this, newValue);
             }
         });
         getChildren().add(txt);
     }
-
+    
     /**
      * Adds a color picker to this settings view
      */
     public void addColorPickerToSettings(){
-        this.cp = new JFXColorPicker(Color.valueOf(colors[index%colors.length]));
-        this.cp.setId("color-picker-box-" + String.valueOf((index)%colors.length));
+        addColorPickerToSettings(null);
+    }
+    
+    /**
+     * Adds a color picker to this settings view with its color value set
+     * to the specified cache key
+     * 
+     * @param cacheKey The cache key of the color to restore. May be null
+     */
+    public void addColorPickerToSettings(final String cacheKey){
+        final Color color = colorOf((cacheKey != null)
+                ? Cache.session().get(colorPickerCacheKey(cacheKey),
+                        colors[index%colors.length])
+                : colors[index%colors.length]) ;
+        
+        this.cp = new JFXColorPicker(color);
         this.cp.setTooltip(TIP_COLORPICKER);
         HBox.setMargin(cp, new Insets(3.0, 0.0, 0.0, 0.0));
         this.cp.setOnAction((e) -> {
             final String newColor = getColor();
+            if(cacheKey != null){
+                Cache.session().set(colorPickerCacheKey(cacheKey), newColor);
+            }
             cp.lookupAll(".color-box").stream().forEach((node) -> {
                 node.setStyle("-fx-background-color: " + newColor + ";");
             });
@@ -157,6 +199,8 @@ public class SettingsView extends HBox {
                 delegate.onColorChanged(this, newColor);
             }
         });
+        
+        ensureInitialColorIsSet();
         getChildren().add(cp);
     }
 
@@ -234,6 +278,14 @@ public class SettingsView extends HBox {
         });
         t1.play();
     }
+    
+    public String editTextCacheKey(final String text){
+        return "SettingsView.textField.text." + text;
+    }
+    
+    public String colorPickerCacheKey(final String text){
+        return "SettingsView.colorPicker.color." + text;
+    }
 
     public void setViewListener(final ViewListener delegate){
         this.delegate = delegate;
@@ -258,11 +310,68 @@ public class SettingsView extends HBox {
     public String getEditText(){
         return this.txt.getText();
     }
-
+    
     public void setEditText(final String text){
-        this.txt.setText(text);
+        this.txt.setText(Cache.session().get(editTextCacheKey(text), text));
     }
-
+    
+    /**
+     * Ensures that the initial color of the ColorPicker color-box pane
+     * is set to the correct value
+     */
+    private void ensureInitialColorIsSet(){
+        //take action as soon as the color picker
+        //becomes attached to the scene
+        SceneShowingProperty.of(cp).whenShown(
+                (e) -> Platform.runLater(() -> ensureInitialColorIsSet0()));
+        
+    }
+    
+    private void ensureInitialColorIsSet0(){
+        //As we are using the JFX version, the background pane to adjust might
+        //not be attached when this method is called. We work around this issue
+        //by detecting when new nodes are added as children to the color picker.
+        //we then manually loop through the list to find the right node and set
+        //its background color via styling
+        final Set<Node> set = cp.lookupAll(".color-box");
+        if(!set.isEmpty()){
+            set.stream().forEach((node) -> {
+                final Pane pane = (Pane)node;
+                pane.setStyle("-fx-background-color: " + getColor() + ";");
+            });
+        }else{//fallback
+            this.cp.getChildrenUnmodifiable().addListener(new ListChangeListener<Node>(){
+                @Override
+                public void onChanged(Change<? extends Node> c){
+                    boolean found = false;
+                    for(final Node n1 : c.getList()){
+                        if(n1 instanceof JFXRippler){
+                            for(final Node n2 : ((JFXRippler)n1).getChildrenUnmodifiable()){
+                                if(n2 instanceof Pane){
+                                    final Pane pane = (Pane)n2;
+                                    pane.setStyle("-fx-background-color: " + getColor() + ";");
+                                    cp.getChildrenUnmodifiable().removeListener(this);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(found){
+                            break;
+                        }
+                    }
+                }
+            }); 
+        }
+    }
+    
+    private Color colorOf(final String colorCode){
+        try{
+            return Color.valueOf(colorCode);
+        }catch(IllegalArgumentException ex){
+            return Color.valueOf(colors[index%colors.length]);
+        }
+    }
 }
 
 /**

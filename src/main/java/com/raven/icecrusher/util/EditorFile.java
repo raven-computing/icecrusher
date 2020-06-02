@@ -105,4 +105,14 @@ public class EditorFile extends File {
     public static EditorFile fromFile(final File file){
         return (file != null ? new EditorFile(file.getAbsolutePath()) : null);
     }
+    
+    /**
+     * Creates a new <code>EditorFile</code> from the specified file path
+     * 
+     * @param path The file path from which to create the EditorFile
+     * @return A new EditorFile instance
+     */
+    public static EditorFile fromFile(final String path){
+        return (path != null ? new EditorFile(path) : null);
+    }
 }

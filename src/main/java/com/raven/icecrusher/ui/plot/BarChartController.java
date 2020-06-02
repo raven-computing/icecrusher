@@ -27,6 +27,9 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.raven.common.struct.Column;
+import com.raven.common.struct.Item;
+import com.raven.common.struct.WritableItem;
+import com.raven.icecrusher.application.Cache;
 import com.raven.icecrusher.ui.OneShotSnackbar;
 import com.raven.icecrusher.ui.plot.SettingsView.ViewListener;
 
@@ -49,6 +52,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+
+import static com.raven.icecrusher.util.EditorConfiguration.CONFIG_BACKGROUND_WHITE;
+import static com.raven.icecrusher.util.EditorConfiguration.CONFIG_GRID_VISIBLE;
+import static com.raven.icecrusher.util.EditorConfiguration.CONFIG_BARCHART_MODE;
+import static com.raven.icecrusher.util.EditorConfiguration.getConfiguration;
+import static com.raven.icecrusher.util.EditorConfiguration.Section.PLOT;
 
 /**
  * Controller class for the Bar Chart activity.
@@ -106,7 +115,7 @@ public class BarChartController extends ChartController {
 
     private List<Series<String, Number>> preparedSeries;
     private List<BarDescriptor> usedBars;
-    private List<String> xAxisLabels;
+    private List<Item<String>> xAxisLabels;
     private DecimalFormat barFormat;
 
     private int seriesNumber = 1;
@@ -127,11 +136,19 @@ public class BarChartController extends ChartController {
         //ComboBoxes
         this.cbYMode.setItems(OPTIONS_Y_MODE);
         this.cbYMode.getSelectionModel().selectFirst();//default is Sum
+        selectOptionFromConfig(cbYMode, CONFIG_BARCHART_MODE, OPTIONS_Y_MODE);
+        this.cbYMode.getSelectionModel().selectedItemProperty().addListener(
+                (ov, oldValue, newValue) -> {
+                    
+                    getConfiguration().set(PLOT, CONFIG_BARCHART_MODE, newValue);
+                });
         //CheckBoxes
         this.checkShowGrid.selectedProperty().addListener((ov, oldValue, newValue) -> {
             chart.setHorizontalGridLinesVisible(newValue);
             chart.setVerticalGridLinesVisible(newValue);
+            getConfiguration().set(PLOT, CONFIG_GRID_VISIBLE, newValue);
         });
+        this.checkShowGrid.setSelected(getConfiguration().booleanOf(PLOT, CONFIG_GRID_VISIBLE));
         this.checkWhiteBackground.selectedProperty().addListener(
                 (ov, oldValue, newValue) -> {
                     
@@ -143,7 +160,9 @@ public class BarChartController extends ChartController {
                 nLinesVer.setStyle(newValue ? STYLE_GRID_LINES_WHITE : STYLE_GRID_LINES_DARK);
                 nLinesHor.setStyle(newValue ? STYLE_GRID_LINES_WHITE : STYLE_GRID_LINES_DARK);
             }
+            getConfiguration().set(PLOT, CONFIG_BACKGROUND_WHITE, newValue);
         });
+        this.checkWhiteBackground.setSelected(getConfiguration().booleanOf(PLOT, CONFIG_BACKGROUND_WHITE));
     }
 
     @Override
@@ -158,18 +177,46 @@ public class BarChartController extends ChartController {
                        
             columnSelectionChanged();
             reset();
+            if(newValue != null){
+                final String text = txtAxisXLabel.getText();
+                if((text == null) || text.isEmpty()){
+                    txtAxisXLabel.setText(Cache.session()
+                            .get("ChartController.chart.xaxis.label." + newValue));
+                    
+                }else{
+                    Cache.session().set("ChartController.chart.xaxis.label." + newValue, text);
+                }
+            }
         });
         this.cbColumnY.getItems().addAll(df.getColumnNames());
         this.cbColumnY.getSelectionModel().selectedItemProperty()
                    .addListener((ov, oldValue, newValue) -> {
                        
             columnSelectionChanged();
+            if(newValue != null){
+                final String text = txtAxisYLabel.getText();
+                if((text == null) || text.isEmpty()){
+                    txtAxisYLabel.setText(Cache.session()
+                            .get("ChartController.chart.yaxis.label." + newValue));
+                    
+                }else{
+                    Cache.session().set("ChartController.chart.yaxis.label." + newValue, text);
+                }
+            }
         });
         this.txtAxisXLabel.textProperty().addListener((observable, oldValue, newValue) -> {
             chartXAxis.setLabel(newValue);
+            final String axis = cbColumnX.getValue();
+            if(axis != null){
+                Cache.session().set("ChartController.chart.xaxis.label." + axis, newValue);
+            }
         });
         this.txtAxisYLabel.textProperty().addListener((observable, oldValue, newValue) -> {
             chartYAxis.setLabel(newValue);
+            final String axis = cbColumnY.getValue();
+            if(axis != null){
+                Cache.session().set("ChartController.chart.yaxis.label." + axis, newValue);
+            }
         });
         this.chart.needsLayoutProperty().addListener((ov, oldValue, newValue) -> {
             if(plotIsShown){
@@ -345,7 +392,12 @@ public class BarChartController extends ChartController {
             return;
         }
         final int index = this.settingsList.getChildren().size();
-        final SettingsView sv = new BarSettingsView(index, series.getName());
+        final SettingsView sv = new BarSettingsView(
+                index,
+                colY.getName(),
+                cbYMode.getSelectionModel().getSelectedItem());
+        
+        series.setName(sv.getEditText());
         sv.setViewListener(new ViewListener(){
             @Override
             public void onRelabel(SettingsView view, String newLabel){
@@ -415,7 +467,9 @@ public class BarChartController extends ChartController {
         for(final Map.Entry<Object, Double> e : map.entrySet()){
             data.add(new XYChart.Data<>(e.getKey().toString(), e.getValue()));
             if(isEmpty){
-                xAxisLabels.add(e.getKey().toString());
+                final String key = e.getKey().toString();
+                xAxisLabels.add(new WritableItem<String>(key,
+                        Cache.session().get("BarChart.xaxislabel.text." + key, key)));
             }
         }
         usedBars.add(bar);
@@ -489,7 +543,7 @@ public class BarChartController extends ChartController {
         for(final Node node : chartXAxis.getChildrenUnmodifiable()){
             if(node instanceof Text){
                 //set the text fom memory
-                ((Text)node).setText(xAxisLabels.get(i));
+                ((Text)node).setText(xAxisLabels.get(i).getValue());
                 final TextField text =  new TextField(((Text)node).getText());
                 text.setId("bar-chart-edit-text");//CSS ID
                 text.setPrefWidth(173.0);
@@ -521,7 +575,12 @@ public class BarChartController extends ChartController {
                                 text.setOnMouseExited(null);
                                 ((Text)node).setText(text.getText());
                                 //update internal memory
-                                xAxisLabels.set(indexChange, text.getText());
+                                xAxisLabels.get(indexChange).setValue(text.getText());
+                                Cache.session().set(
+                                        "BarChart.xaxislabel.text."
+                                           + xAxisLabels.get(indexChange).getKey(),
+                                        text.getText());
+                                
                                 chartPane.getChildren().remove(text);
                                 ((Pane)chart.getChildrenUnmodifiable().get(1)).requestLayout();
                             }else{

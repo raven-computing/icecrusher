@@ -26,6 +26,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.raven.common.struct.DataFrame;
+import com.raven.icecrusher.application.Cache;
 import com.raven.icecrusher.application.Controller;
 import com.raven.icecrusher.io.Files;
 import com.raven.icecrusher.ui.dialog.Dialogs;
@@ -44,8 +45,12 @@ import javafx.fxml.FXML;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.chart.Chart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
+
+import static com.raven.icecrusher.util.EditorConfiguration.*;
+import static com.raven.icecrusher.util.EditorConfiguration.Section.*;
 
 /**
  * Base Controller class for all Chart Activities. It provides functions for common
@@ -131,19 +136,22 @@ public abstract class ChartController extends Controller {
         this.chart = chart;
         //ComboBoxes
         this.cbTitlePosition.setItems(optionsTitle);
-        this.cbTitlePosition.getSelectionModel().selectFirst();//default is Top
+        this.cbLegendPosition.setItems(optionsLegend);
+        //set listeners
         this.cbTitlePosition.getSelectionModel().selectedIndexProperty().addListener(
                 (ov, oldValue, newValue) -> {
 
                     changeTitlePosition(newValue);
                 });
-        this.cbLegendPosition.setItems(optionsLegend);
-        this.cbLegendPosition.getSelectionModel().select(1);//default is Buttom
+
         this.cbLegendPosition.getSelectionModel().selectedIndexProperty().addListener(
                 (ov, oldValue, newValue) -> {
 
                     changeLegendPosition(newValue);
                 });
+        //restore previous state
+        selectOptionFromConfig(cbTitlePosition, CONFIG_TITLE_POSITION, optionsTitle);
+        selectOptionFromConfig(cbLegendPosition, CONFIG_LEGEND_POSITION, optionsLegend);
     }
 
     @Override
@@ -151,13 +159,20 @@ public abstract class ChartController extends Controller {
         this.df = (DataFrame) bundle.getArgument(Const.BUNDLE_KEY_DATAFRAME);
         final EditorFile file = (EditorFile)bundle.getArgument(Const.BUNDLE_KEY_EDITORFILE);
         final String fileName = (file != null ? file.getName() : Files.DEFAULT_NEW_FILENAME);
-        this.txtChartTitle.setText(fileName);
+        final String chartTitle = Cache.session()
+                .get("ChartController.chart.title." + fileName, fileName);
+        
+        this.txtChartTitle.setText(chartTitle);
+        
         this.txtChartTitle.textProperty().addListener((observable, oldValue, newValue) -> {
+            Cache.session().set("ChartController.chart.title." + fileName, newValue);
             if(!titleDisabled){
                 chart.setTitle(newValue);
             }
         });
-        this.chart.setTitle(fileName);
+        if(!titleDisabled){
+            this.chart.setTitle(chartTitle);
+        }
         chartPane.setPrefHeight(getStage().getHeight()-CHART_PANE_HEIGHT_OFFSET);
     }
 
@@ -239,6 +254,7 @@ public abstract class ChartController extends Controller {
             this.chart.setLegendVisible(false);
             break;
         }
+        getConfiguration().set(PLOT, CONFIG_LEGEND_POSITION, optionsLegend.get(i));
     }
 
     /**
@@ -273,6 +289,30 @@ public abstract class ChartController extends Controller {
             this.chart.setTitle(null);
             this.titleDisabled = true;
             break;
+        }
+        getConfiguration().set(PLOT, CONFIG_TITLE_POSITION, optionsTitle.get(i));
+    }
+    
+    /**
+     * Selects an option in a ComboBox from the saved configuration state.
+     * This method checks that the specified key is set correctly and that it is
+     * contained in the list of valid options of the specified ComboBox. If the option
+     * cannot be set, then this method selects the first item
+     * in the provided ComboBox as a fallback
+     * 
+     * @param comboBox The <code>ComboBox</code> to use for selection
+     * @param configKey The configuration key to use for querying the config
+     *                  state form the PLOT section
+     * @param options The list of valid options of the specified ComboBox
+     */
+    protected void selectOptionFromConfig(final ComboBox<String> comboBox,
+            final String configKey, final List<String> options){
+        
+        final String option = getConfiguration().valueOf(PLOT, configKey);
+        if((option != null) && !option.isEmpty() && options.contains(option)){
+            comboBox.getSelectionModel().select(option);
+        }else{//fallback
+            comboBox.getSelectionModel().selectFirst();
         }
     }
 
@@ -368,5 +408,4 @@ public abstract class ChartController extends Controller {
     private File addPNGFileExtension(final File file){
         return new File(file.getAbsolutePath() + ".png");
     }
-
 }
