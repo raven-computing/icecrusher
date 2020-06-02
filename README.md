@@ -1,7 +1,7 @@
 # Icecrusher
 #### An editor and analysis tool for DataFrame files
 
-[![Release](https://img.shields.io/badge/release-2.3.0-blue.svg)](https://raven-computing.com/products/icecrusher) [![DownloadExe](https://img.shields.io/badge/Download_for_Windows-.exe-blue.svg)](https://www.raven-computing.com/products/icecrusher/releases/icecrusher-2.3.0.exe) [![DownloadDeb](https://img.shields.io/badge/Download_for_Linux-.deb-orange.svg)](https://www.raven-computing.com/products/icecrusher/releases/icecrusher-2.3.0.deb)
+[![Release](https://img.shields.io/badge/release-2.3.0-blue.svg)](https://raven-computing.com/products/icecrusher) [![DownloadExe](https://img.shields.io/badge/Download_for_Windows-.exe-blue.svg)](https://www.raven-computing.com/assets/file/products/icecrusher/icecrusher-2.3.0.exe) [![DownloadDeb](https://img.shields.io/badge/Download_for_Linux-.deb-orange.svg)](https://www.raven-computing.com/assets/file/products/icecrusher/icecrusher-2.3.0.deb)
 
 Icecrusher is an editor and analysis tool for DataFrame files (.df) with a modern-looking user interface. It is an open-source application and entirely implemented in JavaFX. It can read, edit, filter and create *.df* files. Additionally, it also suppports the capability to import and export CSV files. More information can be found on our [website](https://raven-computing.com/products/icecrusher/).
 
