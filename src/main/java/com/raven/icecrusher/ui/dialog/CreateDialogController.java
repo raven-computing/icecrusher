@@ -81,8 +81,8 @@ public class CreateDialogController {
         void onCreate(DataFrame df);
     }
 
-    public static String[] options = new String[]{
-            "Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean", "Binary"};
+    public static String[] options = {"Byte", "Short", "Int", "Long",
+            "String", "Float", "Double", "Char", "Boolean", "Binary"};
 
 
     @FXML

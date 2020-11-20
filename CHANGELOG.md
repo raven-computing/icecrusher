@@ -1,3 +1,10 @@
+#### 2.3.1
+* Fixed bug in computation in column stats
+* Changed tooltip text for CharColumns
+* Changed column construction in CreateDialogController and AddColumnDialogController
+* Updated claymore lib version to 4.0.0 and API calls
+* Removed unused and deprecated code
+
 #### 2.3.0
 * Added drag event handlers for enabling file drag and drop opening behaviour
 * Added selection entry for BinaryColumn type in CreateDialog and AddColumnDialog

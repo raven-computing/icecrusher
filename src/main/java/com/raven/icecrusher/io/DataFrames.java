@@ -87,7 +87,9 @@ public class DataFrames {
      * Currently, all DataFrames must have column names set. If a deserialized DataFrame has
      * not set any column names, default values will be added to it.<br>
      * NULL characters in any CharColumn instance cannot be handled and must be replaced.
-     * As of this implementation, a NULL character will be replaced by a dash
+     * As of this implementation, a NULL character in CharColumns violates the official DataFrame
+     * specification but may still be encountered in DataFrame objects originating from older
+     * formats. Any NULL character will be replaced by the default placeholder char value
      * 
      * @param df The DataFrame to modify
      * @return The sanitized DataFrame instance
@@ -101,7 +103,7 @@ public class DataFrames {
                 final CharColumn chars = (CharColumn)col;
                 for(int i=0; i<df.rows(); ++i){
                     if(chars.get(i) == '\u0000'){
-                        chars.set(i, '-');
+                        chars.set(i, CharColumn.DEFAULT_VALUE);
                     }
                 }
             }else if(col.typeCode() == NullableCharColumn.TYPE_CODE){
@@ -109,30 +111,12 @@ public class DataFrames {
                 for(int i=0; i<df.rows(); ++i){
                     final Character c = chars.get(i);
                     if((c != null) && (c == '\u0000')){
-                        chars.set(i, '-');
+                        chars.set(i, CharColumn.DEFAULT_VALUE);
                     }
                 }
             }
         }
         return df;
-    }
-
-    /**
-     * Indicates whether the given column uses NaNs as its internal data
-     * 
-     * @param col The column to check for NaN usage
-     * @return True if the specified column uses NaNs, false otherwise
-     */
-    public static boolean columnUsesNaNs(final Column col){
-        final byte typeCode = col.typeCode();
-        return (typeCode == StringColumn.TYPE_CODE
-                || typeCode == CharColumn.TYPE_CODE
-                || typeCode == BooleanColumn.TYPE_CODE
-                || typeCode == BinaryColumn.TYPE_CODE
-                || typeCode == NullableStringColumn.TYPE_CODE
-                || typeCode == NullableCharColumn.TYPE_CODE
-                || typeCode == NullableBooleanColumn.TYPE_CODE
-                || typeCode == NullableBinaryColumn.TYPE_CODE);
     }
 
     /**
@@ -145,7 +129,7 @@ public class DataFrames {
         return (col.typeCode() == StringColumn.TYPE_CODE
                 || col.typeCode() == NullableStringColumn.TYPE_CODE);
     }
-    
+
     /**
      * Indicates whether the given column uses booleans as its internal data
      * 
@@ -156,7 +140,7 @@ public class DataFrames {
         return (col.typeCode() == BooleanColumn.TYPE_CODE
                 || col.typeCode() == NullableBooleanColumn.TYPE_CODE);
     }
-    
+
     /**
      * Indicates whether the given column uses binary data as its internal data
      * 
@@ -194,16 +178,16 @@ public class DataFrames {
         switch(targetType){
         case BYTE:
             target = (isNullable
-                    ? new NullableByteColumn(new Byte[size])
-                    : new ByteColumn(new byte[size]));
+                    ? new NullableByteColumn(size)
+                    : new ByteColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
+                final Object value = source.getValue(i);
                 if(sourceIsBoolean){
-                    target.setValueAt(i, ((value != null) ? (((Boolean)value) ? (byte)1 : (byte)0) : null));
+                    target.setValue(i, ((value != null) ? (((Boolean)value) ? (byte)1 : (byte)0) : null));
                 }else{
                     try{
-                        target.setValueAt(i, ((value != null) ? Byte.valueOf(value.toString()) : null));
+                        target.setValue(i, ((value != null) ? Byte.valueOf(value.toString()) : null));
                     }catch(NumberFormatException ex){
                         throw ConversionException.with("Invalid byte", value, i);
                     }
@@ -212,16 +196,16 @@ public class DataFrames {
             break;
         case SHORT:
             target = (isNullable
-                    ? new NullableShortColumn(new Short[size])
-                    : new ShortColumn(new short[size]));
+                    ? new NullableShortColumn(size)
+                    : new ShortColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
+                final Object value = source.getValue(i);
                 if(sourceIsBoolean){
-                    target.setValueAt(i, ((value != null) ? (((Boolean)value) ? (short)1 : (short)0) : null));
+                    target.setValue(i, ((value != null) ? (((Boolean)value) ? (short)1 : (short)0) : null));
                 }else{
                     try{
-                        target.setValueAt(i, ((value != null) ? Short.valueOf(value.toString()) : null));
+                        target.setValue(i, ((value != null) ? Short.valueOf(value.toString()) : null));
                     }catch(NumberFormatException ex){
                         throw ConversionException.with("Invalid short", value, i);
                     }
@@ -230,16 +214,16 @@ public class DataFrames {
             break;
         case INT:
             target = (isNullable
-                    ? new NullableIntColumn(new Integer[size])
-                    : new IntColumn(new int[size]));
+                    ? new NullableIntColumn(size)
+                    : new IntColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
+                final Object value = source.getValue(i);
                 if(sourceIsBoolean){
-                    target.setValueAt(i, ((value != null) ? (((Boolean)value) ? 1 : 0) : null));
+                    target.setValue(i, ((value != null) ? (((Boolean)value) ? 1 : 0) : null));
                 }else{
                     try{
-                        target.setValueAt(i, ((value != null) ? Integer.valueOf(value.toString()) : null));
+                        target.setValue(i, ((value != null) ? Integer.valueOf(value.toString()) : null));
                     }catch(NumberFormatException ex){
                         throw ConversionException.with("Invalid integer", value, i);
                     }
@@ -248,16 +232,16 @@ public class DataFrames {
             break;
         case LONG:
             target = (isNullable
-                    ? new NullableLongColumn(new Long[size])
-                    : new LongColumn(new long[size]));
+                    ? new NullableLongColumn(size)
+                    : new LongColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
+                final Object value = source.getValue(i);
                 if(sourceIsBoolean){
-                    target.setValueAt(i, ((value != null) ? (((Boolean)value) ? 1l : 0l) : null));
+                    target.setValue(i, ((value != null) ? (((Boolean)value) ? 1l : 0l) : null));
                 }else{
                     try{
-                        target.setValueAt(i, ((value != null) ? Long.valueOf(value.toString()) : null));
+                        target.setValue(i, ((value != null) ? Long.valueOf(value.toString()) : null));
                     }catch(NumberFormatException ex){
                         throw ConversionException.with("Invalid long", value, i);
                     }
@@ -266,26 +250,26 @@ public class DataFrames {
             break;
         case STRING:
             target = (isNullable
-                    ? new NullableStringColumn(new String[size])
-                    : new StringColumn(new String[size]));
+                    ? new NullableStringColumn(size)
+                    : new StringColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
-                target.setValueAt(i, ((value != null) ? value.toString() : null));
+                final Object value = source.getValue(i);
+                target.setValue(i, ((value != null) ? value.toString() : null));
             }
             break;
         case FLOAT:
             target = (isNullable
-                    ? new NullableFloatColumn(new Float[size])
-                    : new FloatColumn(new float[size]));
+                    ? new NullableFloatColumn(size)
+                    : new FloatColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
+                final Object value = source.getValue(i);
                 if(sourceIsBoolean){
-                    target.setValueAt(i, ((value != null) ? (((Boolean)value) ? 1.0f : 0.0f) : null));
+                    target.setValue(i, ((value != null) ? (((Boolean)value) ? 1.0f : 0.0f) : null));
                 }else{
                     try{
-                        target.setValueAt(i, ((value != null) ? Float.valueOf(value.toString()) : null));
+                        target.setValue(i, ((value != null) ? Float.valueOf(value.toString()) : null));
                     }catch(NumberFormatException ex){
                         throw ConversionException.with("Invalid float", value, i);
                     }
@@ -294,16 +278,16 @@ public class DataFrames {
             break;
         case DOUBLE:
             target = (isNullable
-                    ? new NullableDoubleColumn(new Double[size])
-                    : new DoubleColumn(new double[size]));
+                    ? new NullableDoubleColumn(size)
+                    : new DoubleColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
+                final Object value = source.getValue(i);
                 if(sourceIsBoolean){
-                    target.setValueAt(i, ((value != null) ? (((Boolean)value) ? 1.0 : 0.0) : null));
+                    target.setValue(i, ((value != null) ? (((Boolean)value) ? 1.0 : 0.0) : null));
                 }else{
                     try{
-                        target.setValueAt(i, ((value != null) ? Double.valueOf(value.toString()) : null));
+                        target.setValue(i, ((value != null) ? Double.valueOf(value.toString()) : null));
                     }catch(NumberFormatException ex){
                         throw ConversionException.with("Invalid double", value, i);
                     }
@@ -312,35 +296,35 @@ public class DataFrames {
             break;
         case CHAR:
             target = (isNullable 
-                    ? new NullableCharColumn(new Character[size])
-                    : new CharColumn(new char[size]));
+                    ? new NullableCharColumn(size)
+                    : new CharColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
+                final Object value = source.getValue(i);
                 if(value == null){
-                    target.setValueAt(i, null);
+                    target.setValue(i, null);
                 }else{
                     final String s = value.toString();
                     if(sourceIsBoolean){
-                        target.setValueAt(i, ((value != null) ? (((Boolean)value) ? 'T' : 'F') : null));
+                        target.setValue(i, ((value != null) ? (((Boolean)value) ? 'T' : 'F') : null));
                     }else{
                         if(s.length() > 1){
                             throw ConversionException.with("Invalid character", s, i);
                         }
-                        target.setValueAt(i, s.charAt(0));
+                        target.setValue(i, s.charAt(0));
                     }
                 }
             }
             break;
         case BOOLEAN:
             target = (isNullable
-                    ? new NullableBooleanColumn(new Boolean[size]) 
-                    : new BooleanColumn(new boolean[size]));
+                    ? new NullableBooleanColumn(size) 
+                    : new BooleanColumn(size));
             
             for(int i=0; i<size; ++i){
-                final Object value = source.getValueAt(i);
+                final Object value = source.getValue(i);
                 if(value == null){
-                    target.setValueAt(i, null);
+                    target.setValue(i, null);
                 }else{
                     final String s = value.toString();
                     final boolean isTrue = SET_VALUES_TRUE.contains(s);
@@ -348,7 +332,7 @@ public class DataFrames {
                     if(!isTrue && !isFalse){
                         throw ConversionException.with("Invalid boolean", s, i);
                     }
-                    target.setValueAt(i, isTrue);
+                    target.setValue(i, isTrue);
                 }
             }
             break;
@@ -357,5 +341,4 @@ public class DataFrames {
         }
         return target;
     }
-
 }

@@ -58,5 +58,4 @@ public final class ExceptionHandler {
     public static void showDialog(final Throwable throwable){
         Dialogs.showExceptionDialog(StackedApplication.getMainStage(), throwable);
     }
-
 }

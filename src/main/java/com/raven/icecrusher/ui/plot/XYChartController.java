@@ -470,13 +470,13 @@ public abstract class XYChartController extends ChartController {
     @SuppressWarnings("unlikely-arg-type")
     protected XYChartData prepareData(final Column colX, final Column colY){
         //do various checks
-        if(DataFrames.columnUsesNaNs(colX) && !DataFrames.columnUsesStrings(colX)){
+        if(!colX.isNumeric() && !DataFrames.columnUsesStrings(colX)){
             OneShotSnackbar.showFor(getRootNode(),
                     "Only numbers and strings are allowed for the x-Axis");
             
             return null;
         }
-        if(DataFrames.columnUsesNaNs(colY)){
+        if(!colY.isNumeric()){
             OneShotSnackbar.showFor(getRootNode(),
                     "Only numbers are allowed for the y-Axis");
             
@@ -532,8 +532,8 @@ public abstract class XYChartController extends ChartController {
         series.setName("Series " + (seriesNumber++));
         final ObservableList<Data<Number, Number>> data = series.getData();
         for(int i=0; i<df.rows(); ++i){
-            final Number x = (Number) colX.getValueAt(i);
-            final Number y = (Number) colY.getValueAt(i);
+            final Number x = (Number) colX.getValue(i);
+            final Number y = (Number) colY.getValue(i);
             if((x != null) && (y != null)){
                 data.add(new Data<Number, Number>(x, y));
                 if(y.doubleValue() < min){ min = y.doubleValue(); }
@@ -558,8 +558,8 @@ public abstract class XYChartController extends ChartController {
             throw new DataFrameException();
         }
         //add the origin t=0
-        final Column y = dates.getColumnAt(1);
-        final Number yZero = (Number) y.getValueAt(0);
+        final Column y = dates.getColumn(1);
+        final Number yZero = (Number) y.getValue(0);
         data.add(new Data<Number, Number>(0, yZero));
         final LocalDate tZero = LocalDate.parse(String.valueOf(dates.getInt(0, 0)),
                 DATE_FORMATTER_ENCODED);
@@ -573,7 +573,7 @@ public abstract class XYChartController extends ChartController {
             
             final Period p = Period.between(tZero, d);
             final int x = ((p.getYears()*365)+(p.getMonths()*30)+p.getDays());
-            final Number yValue = (Number)y.getValueAt(i);
+            final Number yValue = (Number)y.getValue(i);
             data.add(new Data<Number, Number>(x, yValue));
             if(yValue.doubleValue() < min){ min = yValue.doubleValue(); }
             if(yValue.doubleValue() > max){ max = yValue.doubleValue(); }
@@ -616,7 +616,7 @@ public abstract class XYChartController extends ChartController {
         final DateTimeFormatter formatter = getDateFormatterFromSelection();
         for(int i=0; i<df.rows(); ++i){
             try{
-                final String xRaw = String.valueOf(colX.getValueAt(i));
+                final String xRaw = String.valueOf(colX.getValue(i));
                 final LocalDate date = LocalDate.parse(xRaw, formatter);
                 datesRaw[i] = Integer.valueOf(date.format(DATE_FORMATTER_ENCODED));
             }catch(DateTimeParseException ex){
@@ -635,7 +635,7 @@ public abstract class XYChartController extends ChartController {
         final DateTimeFormatter formatter = getDateFormatterFromSelection();
         int validDataPoints = 0;
         for(int i=0; i<df.rows(); ++i){
-            final Object val = colX.getValueAt(i);
+            final Object val = colX.getValue(i);
             if(val != null){
                 try{
                     final String xRaw = String.valueOf(val);
@@ -645,7 +645,7 @@ public abstract class XYChartController extends ChartController {
                     throw new DateFormatException(i);
                 }
                 //increment if both x- and y-value is guaranteed to be non-null
-                if(colY.getValueAt(i) != null){ ++validDataPoints; }
+                if(colY.getValue(i) != null){ ++validDataPoints; }
             }
         }
         //copy non-null entries

@@ -16,9 +16,8 @@
 
 package com.raven.icecrusher.util;
 
-import java.io.IOException;
-
 import com.raven.common.io.DataFrameSerializer;
+import com.raven.common.io.SerializationException;
 import com.raven.common.struct.DataFrame;
 import com.raven.common.struct.DefaultDataFrame;
 import com.raven.common.struct.Row;
@@ -75,7 +74,7 @@ public class Feedback implements Row {
         df.addRow(feedback);
         try{
             return DataFrameSerializer.toBase64(df);
-        }catch(IOException ex){
+        }catch(SerializationException ex){
             ExceptionHandler.handle(ex);
             return "n/a";
         }

@@ -16,6 +16,8 @@
 
 package com.raven.icecrusher.ui.dialog;
 
+import static java.lang.Double.isNaN;
+
 import java.text.DecimalFormat;
 
 import com.raven.icecrusher.util.ColumnStats;
@@ -69,18 +71,28 @@ public class StatsDialogController {
         final boolean b = stats.usesDecimals();
         final DecimalFormat form = new DecimalFormat("##.####");
         if(b){
-            labelMin.setText(form.format(stats.getMinimum()));
-            labelMax.setText(form.format(stats.getMaximum()));
-            labelSum.setText(form.format(stats.getSum()));
+            final double min = stats.getMinimum();
+            labelMin.setText(isNaN(min) ? "NaN" : form.format(min));
+            final double max = stats.getMaximum();
+            labelMax.setText(isNaN(max) ? "NaN" : form.format(max));
+            final double sum = stats.getSum();
+            labelSum.setText(isNaN(sum) ? "NaN" : form.format(sum));
         }else{
-            labelMin.setText(String.valueOf(stats.getMinimumNoDecimals()));
-            labelMax.setText(String.valueOf(stats.getMaximumNoDecimals()));
-            labelSum.setText(String.valueOf(stats.getSumNoDecimals()));
+            final double min = stats.getMinimum();
+            labelMin.setText(isNaN(min) ? "NaN" : String.valueOf(
+                    stats.getMinimumNoDecimals()));
+
+            final double max = stats.getMaximum();
+            labelMax.setText(isNaN(max) ? "NaN" : String.valueOf(
+                    stats.getMaximumNoDecimals()));
+
+            final double sum = stats.getSum();
+            labelSum.setText(isNaN(sum) ? "NaN" : String.valueOf(
+                    stats.getSumNoDecimals()));
+
         }
-        labelAvg.setText(form.format(stats.getAverage()));
-        if(stats.isSumOverflow()){
-            labelSum.setText(labelSum.getText() + "  (Overflow)");
-        }
+        final double avg = stats.getAverage();
+        labelAvg.setText(isNaN(avg) ? "NaN" : form.format(avg));
     }
 
     @FXML
@@ -92,5 +104,4 @@ public class StatsDialogController {
             delegate.onClose();
         }
     }
-
 }

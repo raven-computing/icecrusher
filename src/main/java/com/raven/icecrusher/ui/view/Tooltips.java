@@ -16,8 +16,27 @@
 
 package com.raven.icecrusher.ui.view;
 
+import com.raven.common.struct.BinaryColumn;
+import com.raven.common.struct.BooleanColumn;
+import com.raven.common.struct.ByteColumn;
+import com.raven.common.struct.CharColumn;
 import com.raven.common.struct.Column;
-import com.raven.common.struct.NullableColumn;
+import com.raven.common.struct.DoubleColumn;
+import com.raven.common.struct.FloatColumn;
+import com.raven.common.struct.IntColumn;
+import com.raven.common.struct.LongColumn;
+import com.raven.common.struct.NullableBinaryColumn;
+import com.raven.common.struct.NullableBooleanColumn;
+import com.raven.common.struct.NullableByteColumn;
+import com.raven.common.struct.NullableCharColumn;
+import com.raven.common.struct.NullableDoubleColumn;
+import com.raven.common.struct.NullableFloatColumn;
+import com.raven.common.struct.NullableIntColumn;
+import com.raven.common.struct.NullableLongColumn;
+import com.raven.common.struct.NullableShortColumn;
+import com.raven.common.struct.NullableStringColumn;
+import com.raven.common.struct.ShortColumn;
+import com.raven.common.struct.StringColumn;
 
 import javafx.scene.control.Tooltip;
 
@@ -29,16 +48,16 @@ import javafx.scene.control.Tooltip;
  */
 public class Tooltips {
 
-    private static Tooltip byteTooltip = new Tooltip("byte");
-    private static Tooltip shortTooltip = new Tooltip("short");
-    private static Tooltip intTooltip = new Tooltip("int");
-    private static Tooltip longTooltip = new Tooltip("long");
-    private static Tooltip stringTooltip = new Tooltip("string");
-    private static Tooltip floatTooltip = new Tooltip("float");
-    private static Tooltip doubleTooltip = new Tooltip("double");
-    private static Tooltip charTooltip = new Tooltip("character");
-    private static Tooltip booleanTooltip = new Tooltip("boolean");
-    private static Tooltip binaryTooltip = new Tooltip("binary");
+    private static Tooltip byteTooltip      = new Tooltip("byte");
+    private static Tooltip shortTooltip     = new Tooltip("short");
+    private static Tooltip intTooltip       = new Tooltip("int");
+    private static Tooltip longTooltip      = new Tooltip("long");
+    private static Tooltip stringTooltip    = new Tooltip("string");
+    private static Tooltip floatTooltip     = new Tooltip("float");
+    private static Tooltip doubleTooltip    = new Tooltip("double");
+    private static Tooltip charTooltip      = new Tooltip("char");
+    private static Tooltip booleanTooltip   = new Tooltip("boolean");
+    private static Tooltip binaryTooltip    = new Tooltip("binary");
 
     private Tooltips(){ }
 
@@ -139,50 +158,50 @@ public class Tooltips {
      * @return The <code>Tooltip</code> to be used with the specified column
      */
     public static Tooltip columnTooltip(final Column col){
-        if(col instanceof NullableColumn){
-            switch(col.getClass().getSimpleName()){
-            case "NullableStringColumn":
+        if(col.isNullable()){
+            switch(col.typeCode()){
+            case NullableStringColumn.TYPE_CODE:
                 return stringTooltip();
-            case "NullableByteColumn":
+            case NullableByteColumn.TYPE_CODE:
                 return byteTooltip();
-            case "NullableShortColumn":
+            case NullableShortColumn.TYPE_CODE:
                 return shortTooltip();
-            case "NullableIntColumn":
+            case NullableIntColumn.TYPE_CODE:
                 return intTooltip();
-            case "NullableLongColumn":
+            case NullableLongColumn.TYPE_CODE:
                 return longTooltip();
-            case "NullableFloatColumn":
+            case NullableFloatColumn.TYPE_CODE:
                 return floatTooltip();
-            case "NullableDoubleColumn":
+            case NullableDoubleColumn.TYPE_CODE:
                 return doubleTooltip();
-            case "NullableBooleanColumn":
+            case NullableBooleanColumn.TYPE_CODE:
                 return booleanTooltip();
-            case "NullableCharColumn":
+            case NullableCharColumn.TYPE_CODE:
                 return charTooltip();
-            case "NullableBinaryColumn":
+            case NullableBinaryColumn.TYPE_CODE:
                 return binaryTooltip();
             }
         }else{
-            switch(col.getClass().getSimpleName()){
-            case "StringColumn":
+            switch(col.typeCode()){
+            case StringColumn.TYPE_CODE:
                 return stringTooltip();
-            case "ByteColumn":
+            case ByteColumn.TYPE_CODE:
                 return byteTooltip();
-            case "ShortColumn":
+            case ShortColumn.TYPE_CODE:
                 return shortTooltip();
-            case "IntColumn":
+            case IntColumn.TYPE_CODE:
                 return intTooltip();
-            case "LongColumn":
+            case LongColumn.TYPE_CODE:
                 return longTooltip();
-            case "FloatColumn":
+            case FloatColumn.TYPE_CODE:
                 return floatTooltip();
-            case "DoubleColumn":
+            case DoubleColumn.TYPE_CODE:
                 return doubleTooltip();
-            case "BooleanColumn":
+            case BooleanColumn.TYPE_CODE:
                 return booleanTooltip();
-            case "CharColumn":
+            case CharColumn.TYPE_CODE:
                 return charTooltip();
-            case "BinaryColumn":
+            case BinaryColumn.TYPE_CODE:
                 return binaryTooltip();
             }
         }

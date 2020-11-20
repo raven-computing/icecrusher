@@ -3,8 +3,8 @@
 [Setup]
 AppId={{com.raven.icecrusher}}
 AppName=Icecrusher
-AppVersion=2.3.0
-AppVerName=Icecrusher 2.3.0
+AppVersion=2.3.1
+AppVerName=Icecrusher 2.3.1
 AppPublisher=Raven Computing
 AppComments=An editor and analysis tool for DataFrame files
 AppCopyright=Copyright (C) 2020
@@ -20,7 +20,7 @@ DefaultGroupName=Raven Computing
 LicenseFile=
 ;WinXP or above
 MinVersion=0,5.1 
-OutputBaseFilename=icecrusher-2.3.0
+OutputBaseFilename=icecrusher-2.3.1
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=lowest

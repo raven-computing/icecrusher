@@ -36,27 +36,27 @@ public final class Filters {
      */
     public interface Filter extends UnaryOperator<TextFormatter.Change> { }
 
-    private static Filter byteF = new ByteFilter();
-    private static Filter shortF = new ShortFilter();
-    private static Filter intF = new IntFilter();
-    private static Filter longF = new LongFilter();
-    private static Filter stringF = new StringFilter();
-    private static Filter floatF = new FloatFilter();
-    private static Filter doubleF = new DoubleFilter();
-    private static Filter charF = new CharFilter();
-    private static Filter booleanF = new BooleanFilter();
-    private static Filter binaryF = new BinaryFilter();
+    private static Filter byteF        = new ByteFilter();
+    private static Filter shortF       = new ShortFilter();
+    private static Filter intF         = new IntFilter();
+    private static Filter longF        = new LongFilter();
+    private static Filter stringF      = new StringFilter();
+    private static Filter floatF       = new FloatFilter();
+    private static Filter doubleF      = new DoubleFilter();
+    private static Filter charF        = new CharFilter();
+    private static Filter booleanF     = new BooleanFilter();
+    private static Filter binaryF      = new BinaryFilter();
 
-    private static Filter nullByteF = new NullByteFilter();
-    private static Filter nullShortF = new NullShortFilter();
-    private static Filter nullIntF = new NullIntFilter();
-    private static Filter nullLongF = new NullLongFilter();
-    private static Filter nullStringF = new NullStringFilter();
-    private static Filter nullFloatF = new NullFloatFilter();
-    private static Filter nullDoubleF = new NullDoubleFilter();
-    private static Filter nullCharF = new NullCharFilter();
+    private static Filter nullByteF    = new NullByteFilter();
+    private static Filter nullShortF   = new NullShortFilter();
+    private static Filter nullIntF     = new NullIntFilter();
+    private static Filter nullLongF    = new NullLongFilter();
+    private static Filter nullStringF  = new NullStringFilter();
+    private static Filter nullFloatF   = new NullFloatFilter();
+    private static Filter nullDoubleF  = new NullDoubleFilter();
+    private static Filter nullCharF    = new NullCharFilter();
     private static Filter nullBooleanF = new NullBooleanFilter();
-    private static Filter nullBinaryF = new NullBinaryFilter();
+    private static Filter nullBinaryF  = new NullBinaryFilter();
 
     private Filters(){ }
 
@@ -287,7 +287,14 @@ public final class Filters {
     private static class CharFilter implements Filter {
         @Override
         public Change apply(Change t){
-            return (t.getControlNewText().length() == 1 ? t : null);
+            final String s = t.getControlNewText();
+            if(s.length() == 1){
+                final char c = s.charAt(0);
+                if((c >= 32) && (c <= 126)){//is printable ASCII character
+                    return t;
+                }
+            }
+            return null;
         }
     }
 
@@ -449,8 +456,15 @@ public final class Filters {
             final String s = t.getControlNewText();
             if(s == null || s.isEmpty()){
                 return t;
+            }else{
+                if(s.length() == 1){
+                    final char c = s.charAt(0);
+                    if((c >= 32) && (c <= 126)){//is printable ASCII character
+                        return t;
+                    }
+                }
             }
-            return (t.getControlNewText().length() == 1 ? t : null);
+            return null;
         }
     }
 

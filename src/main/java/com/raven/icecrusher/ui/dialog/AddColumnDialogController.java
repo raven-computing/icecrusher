@@ -67,8 +67,8 @@ public class AddColumnDialogController {
         void onCreate(String name, Column col);
     }
 
-    public static String[] options = new String[]{
-            "Byte", "Short", "Int", "Long", "String", "Float", "Double", "Char", "Boolean", "Binary"};
+    public static String[] options = {"Byte", "Short", "Int", "Long",
+            "String", "Float", "Double", "Char", "Boolean", "Binary"};
 
     @FXML
     private JFXComboBox<String> cBoxColType;
@@ -127,45 +127,25 @@ public class AddColumnDialogController {
         if(type != null){
             switch(type){
             case "Byte":
-                return (useNullable ? new NullableByteColumn(new Byte[size]) : new ByteColumn(new byte[size]));
+                return (useNullable ? new NullableByteColumn(size) : new ByteColumn(size));
             case "Short":
-                return (useNullable ? new NullableShortColumn(new Short[size]) : new ShortColumn(new short[size]));
+                return (useNullable ? new NullableShortColumn(size) : new ShortColumn(size));
             case "Int":
-                return (useNullable ? new NullableIntColumn(new Integer[size]) : new IntColumn(new int[size]));
+                return (useNullable ? new NullableIntColumn(size) : new IntColumn(size));
             case "Long":
-                return (useNullable ? new NullableLongColumn(new Long[size]) : new LongColumn(new long[size]));
+                return (useNullable ? new NullableLongColumn(size) : new LongColumn(size));
             case "String":
-                return (useNullable ? new NullableStringColumn(new String[size]) : new StringColumn(new String[size]));
+                return (useNullable ? new NullableStringColumn(size) : new StringColumn(size));
             case "Float":
-                return (useNullable ? new NullableFloatColumn(new Float[size]) : new FloatColumn(new float[size]));
+                return (useNullable ? new NullableFloatColumn(size) : new FloatColumn(size));
             case "Double":
-                return (useNullable ? new NullableDoubleColumn(new Double[size]) : new DoubleColumn(new double[size]));
+                return (useNullable ? new NullableDoubleColumn(size) : new DoubleColumn(size));
             case "Char":
-                Column col = null;
-                if(useNullable){
-                    col = new NullableCharColumn(new Character[size]);
-                }else{
-                    final char[] chars = new char[size];
-                    for(int i=0; i<chars.length; ++i){
-                        chars[i] = '-';
-                    }
-                    col = new CharColumn(chars);
-                }
-                return col;
+                return (useNullable ? new NullableCharColumn(size) : new CharColumn(size));
             case "Boolean":
-                return (useNullable ? new NullableBooleanColumn(new Boolean[size]) : new BooleanColumn(new boolean[size]));
+                return (useNullable ? new NullableBooleanColumn(size) : new BooleanColumn(size));
             case "Binary":
-                Column colBin = null;
-                if(useNullable){
-                    colBin = new NullableBinaryColumn(new byte[size][]);
-                }else{
-                    final byte[][] bytes = new byte[size][];
-                    for(int i=0; i<bytes.length; ++i){
-                        bytes[i] = new byte[]{0};
-                    }
-                    colBin = new BinaryColumn(bytes);
-                }
-                return colBin;
+                return (useNullable ? new NullableBinaryColumn(size) : new BinaryColumn(size));
             }
         }
         return null;

@@ -65,7 +65,7 @@ public class RowAdder {
         final GridPane grid = new GridPane();
         final Node[] fields = new Node[selected.columns()];
         for(int i=0; i<selected.columns(); ++i){
-            final Column col = selected.getColumnAt(i);
+            final Column col = selected.getColumn(i);
             Node node = null;
             if(col instanceof BooleanColumn || col instanceof NullableBooleanColumn){
                 JFXComboBox<Object> cb = new JFXComboBox<>((col instanceof NullableColumn) 
@@ -110,7 +110,7 @@ public class RowAdder {
                 .editSceneAnchor.getChildren().get(0)).getChildren();
         
         final DataFrame df = this.view.getDataFrame();
-        final boolean NULLABLE = this.view.getDataFrame().isNullable();
+        final boolean NULLABLE = df.isNullable();
         final Object[] row = new Object[nodes.size()];
         for(final Node node : nodes){
             if(node instanceof JFXTextField){
@@ -149,5 +149,4 @@ public class RowAdder {
             }
         }
     }
-
 }

@@ -479,7 +479,7 @@ public class FrameController extends Controller implements ViewListener {
     private void openAllFiles(final List<EditorFile> files){
         openAllFiles(files, null);
     }
-    
+
     private void openAllFiles(final List<EditorFile> files, final History history){
         setLoadingIndication(true);
         labelHint.setVisible(false);
@@ -518,7 +518,7 @@ public class FrameController extends Controller implements ViewListener {
             }
         });
     }
-    
+
     private void openFilesFromDragboard(final Dragboard dragboard){
         final List<EditorFile> files = new LinkedList<>();
         for(final File file : dragboard.getFiles()){
@@ -591,6 +591,7 @@ public class FrameController extends Controller implements ViewListener {
         btnSave.setDisable(value);
         menuSave.setDisable(value);
     }
+
     private void setEditMenuItemsDisabled(final boolean value){
         menuAddRow.setDisable(value);
         menuAddCol.setDisable(value);
@@ -730,8 +731,8 @@ public class FrameController extends Controller implements ViewListener {
         stats.setColumnName(name);
         stats.setMinimum(df.minimum(name));
         stats.setMaximum(df.maximum(name));
-        final double sum = stats.computeSumFor(col);
-        stats.setAverage(sum/df.rows());
+        stats.setSum(df.sum(name));
+        stats.setAverage(df.average(name));
 
         final StatsDialog dialog = new StatsDialog(rootPane, stats);
         dialog.setBackgroundEffect(mainBorderPane, Dialogs.getBackgroundBlur());
@@ -743,10 +744,11 @@ public class FrameController extends Controller implements ViewListener {
         final DataFrame df = tab.getDataFrame();
         df.flush();
         try{
-            final Column col = DataFrames.convertColumn(df.getColumn(event.getColumnName()),
+            final Column col = DataFrames.convertColumn(
+                    df.getColumn(event.getColumnName()),
                     df.rows(), event.getConversionTarget());
 
-            df.setColumnAt(df.getColumnIndex(event.getColumnName()), col);
+            df.setColumn(df.getColumnIndex(event.getColumnName()), col);
         }catch(ConversionException ex){
             showSnackbar(ex.getMessage() + " at index " + ex.getRowIndex() 
             + " (" + ex.getFormattedOffendingValue() + ")");
@@ -1280,5 +1282,4 @@ public class FrameController extends Controller implements ViewListener {
     private void onAbout(ActionEvent event){
         startActivity(Activity.ABOUT);
     }
-    
 }

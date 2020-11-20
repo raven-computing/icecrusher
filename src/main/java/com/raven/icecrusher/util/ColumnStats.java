@@ -16,26 +16,8 @@
 
 package com.raven.icecrusher.util;
 
-import java.math.BigDecimal;
-
-import com.raven.common.struct.Column;
-import com.raven.common.struct.NullableByteColumn;
-import com.raven.common.struct.NullableShortColumn;
-import com.raven.common.struct.NullableIntColumn;
-import com.raven.common.struct.NullableLongColumn;
-import com.raven.common.struct.NullableFloatColumn;
-import com.raven.common.struct.NullableDoubleColumn;
-import com.raven.common.struct.ByteColumn;
-import com.raven.common.struct.ShortColumn;
-import com.raven.common.struct.IntColumn;
-import com.raven.common.struct.LongColumn;
-import com.raven.common.struct.FloatColumn;
-import com.raven.common.struct.DoubleColumn;
-
 /**
- * Holds statistics about a numerical Column and provides a method to compute 
- * the sum of all entries with overflow conscience code since that functionality 
- * is missing in the DataFrame API.
+ * Holds statistics about a numerical Column.
  *
  */
 public class ColumnStats {
@@ -46,179 +28,8 @@ public class ColumnStats {
     private double avg;
     private double sum;
     private boolean usesDecimals;
-    private boolean sumOverflow;
 
     public ColumnStats(){ }
-
-    /**
-     * Computes the sum of all (non-null) entries in the given Column and 
-     * saves it in the internal member field
-     * 
-     * @param col The <code>Column</code> to compute the sum for
-     * @return The computed sum of all entries in the specified column, exluding null values
-     */
-    public double computeSumFor(final Column col){
-        if(col.isNullable()){
-            switch(col.typeCode()){
-            case NullableByteColumn.TYPE_CODE:{
-                long sum = 0;
-                final Byte[] array = ((NullableByteColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    if(array[i] != null){
-                        final long tmp = sum;
-                        sum += array[i];
-                        if(((tmp ^ sum) & (array[i] ^ sum)) < 0){
-                            this.sumOverflow = true;
-                        }
-                    }
-                }
-                this.sum = (double)sum;
-            }
-            break;
-            case NullableShortColumn.TYPE_CODE:{
-                long sum = 0;
-                final Short[] array = ((NullableShortColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    if(array[i] != null){
-                        final long tmp = sum;
-                        sum += array[i];
-                        if(((tmp ^ sum) & (array[i] ^ sum)) < 0){
-                            this.sumOverflow = true;
-                        }
-                    }
-                }
-                this.sum = (double)sum;
-            }
-            break;
-            case NullableIntColumn.TYPE_CODE:{
-                long sum = 0;
-                final Integer[] array = ((NullableIntColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    if(array[i] != null){
-                        final long tmp = sum;
-                        sum += array[i];
-                        if(((tmp ^ sum) & (array[i] ^ sum)) < 0){
-                            this.sumOverflow = true;
-                        }
-                    }
-                }
-                this.sum = (double)sum;
-            }
-            break;
-            case NullableLongColumn.TYPE_CODE:{
-                long sum = 0;
-                final Long[] array = ((NullableLongColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    if(array[i] != null){
-                        final long tmp = sum;
-                        sum += array[i];
-                        if(((tmp ^ sum) & (array[i] ^ sum)) < 0){
-                            this.sumOverflow = true;
-                        }
-                    }
-                }
-                this.sum = (double)sum;
-            }
-            break;
-            case NullableFloatColumn.TYPE_CODE:{
-                BigDecimal sum = BigDecimal.ZERO;
-                final Float[] array = ((NullableFloatColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    if(array[i] != null){
-                        sum = sum.add(new BigDecimal(Float.toString(array[i])));
-                    }
-                }
-                this.sum = sum.doubleValue();
-            }
-            break;
-            case NullableDoubleColumn.TYPE_CODE:{
-                BigDecimal sum = BigDecimal.ZERO;
-                final Double[] array = ((NullableDoubleColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    if(array[i] != null){
-                        sum = sum.add(new BigDecimal(Double.toString(array[i])));
-                    }
-                }
-                this.sum = sum.doubleValue();
-            }
-            break;
-            }
-        }else{
-            switch(col.typeCode()){
-            case ByteColumn.TYPE_CODE:{
-                long sum = 0;
-                final byte[] array = ((ByteColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    final long tmp = sum;
-                    sum += array[i];
-                    if(((tmp ^ sum) & (array[i] ^ sum)) < 0){
-                        this.sumOverflow = true;
-                    }
-                }
-                this.sum = (double)sum;
-            }
-            break;
-            case ShortColumn.TYPE_CODE:{
-                long sum = 0;
-                final short[] array = ((ShortColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    final long tmp = sum;
-                    sum += array[i];
-                    if(((tmp ^ sum) & (array[i] ^ sum)) < 0){
-                        this.sumOverflow = true;
-                    }
-                }
-                this.sum = (double)sum;
-            }
-            break;
-            case IntColumn.TYPE_CODE:{
-                long sum = 0;
-                final int[] array = ((IntColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    final long tmp = sum;
-                    sum += array[i];
-                    if(((tmp ^ sum) & (array[i] ^ sum)) < 0){
-                        this.sumOverflow = true;
-                    }
-                }
-                this.sum = (double)sum;
-            }
-            break;
-            case LongColumn.TYPE_CODE:{
-                long sum = 0;
-                final long[] array = ((LongColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    final long tmp = sum;
-                    sum += array[i];
-                    if(((tmp ^ sum) & (array[i] ^ sum)) < 0){
-                        this.sumOverflow = true;
-                    }
-                }
-                this.sum = (double)sum;
-            }
-            break;
-            case FloatColumn.TYPE_CODE:{
-                BigDecimal sum = BigDecimal.ZERO;
-                final float[] array = ((FloatColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    sum = sum.add(new BigDecimal(Float.toString(array[i])));
-                }
-                this.sum = sum.doubleValue();
-            }
-            break;
-            case DoubleColumn.TYPE_CODE:{
-                BigDecimal sum = BigDecimal.ZERO;
-                final double[] array = ((DoubleColumn)col).asArray();
-                for(int i=0; i<array.length; ++i){
-                    sum = sum.add(new BigDecimal(Double.toString(array[i])));
-                }
-                this.sum = sum.doubleValue();
-            }
-            break;
-            }
-        }
-        return this.sum;
-    }
 
     public double getMinimum(){
         return this.min;
@@ -278,13 +89,5 @@ public class ColumnStats {
 
     public void setUsesDecimals(final boolean usesDecimals){
         this.usesDecimals = usesDecimals;
-    }
-
-    public boolean isSumOverflow(){
-        return this.sumOverflow;
-    }
-
-    public void setSumOverflow(final boolean sumOverflow){
-        this.sumOverflow = sumOverflow;
     }
 }

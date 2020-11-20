@@ -128,10 +128,10 @@ class SingleBarOperator extends BarOperator {
 
     @Override
     public void operate(int index) throws RuntimeException{
-        Object value = colX.getValueAt(index);
+        Object value = colX.getValue(index);
         if(value != null){
             final Object xValue = value;
-            value = colY.getValueAt(index);
+            value = colY.getValue(index);
             final Double yValue = ((value != null)
                     ? Double.valueOf(String.valueOf(value))
                     : null);
@@ -165,10 +165,10 @@ class MinimumBarOperator extends BarOperator {
 
     @Override
     public void operate(int index) throws RuntimeException{
-        Object value = colX.getValueAt(index);
+        Object value = colX.getValue(index);
         if(value != null){
             final Object xValue = value;
-            value = colY.getValueAt(index);
+            value = colY.getValue(index);
             final Double yValue = ((value != null)
                     ? Double.valueOf(String.valueOf(value))
                     : null);
@@ -214,10 +214,10 @@ class MaximumBarOperator extends BarOperator {
 
     @Override
     public void operate(int index) throws RuntimeException{
-        Object value = colX.getValueAt(index);
+        Object value = colX.getValue(index);
         if(value != null){
             final Object xValue = value;
-            value = colY.getValueAt(index);
+            value = colY.getValue(index);
             final Double yValue = ((value != null)
                     ? Double.valueOf(String.valueOf(value))
                     : null);
@@ -266,10 +266,10 @@ class AverageBarOperator extends BarOperator {
 
     @Override
     public void operate(int index) throws RuntimeException{
-        Object value = colX.getValueAt(index);
+        Object value = colX.getValue(index);
         if(value != null){
             final Object xValue = value;
-            value = colY.getValueAt(index);
+            value = colY.getValue(index);
             final Double yValue = ((value != null)
                     ? Double.valueOf(String.valueOf(value))
                     : null);
@@ -319,10 +319,10 @@ class SumBarOperator extends BarOperator {
 
     @Override
     public void operate(int index) throws RuntimeException{
-        Object value = colX.getValueAt(index);
+        Object value = colX.getValue(index);
         if(value != null){
             final Object xValue = value;
-            value = colY.getValueAt(index);
+            value = colY.getValue(index);
             final Double yValue = ((value != null)
                     ? Double.valueOf(String.valueOf(value))
                     : null);

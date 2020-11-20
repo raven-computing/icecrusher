@@ -23,7 +23,6 @@ import java.util.Map;
 
 import com.raven.common.struct.Column;
 import com.raven.common.struct.DataFrame;
-import com.raven.common.struct.NullableColumn;
 import com.raven.icecrusher.io.DataFrames;
 import com.raven.icecrusher.ui.view.DataFrameColumnView.ColumnType;
 
@@ -38,25 +37,29 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 
 /**
- * The DataFrameView control is designed to visualize an instance of a {@link DataFrame}.<br>
- * Behind the scenes, the <code>javafx.scene.control.TableView</code> API is used to do most
- * of the heavy lifting.<br>
- * <p>Every cell inside a DataFrameView is configured to filter user input while in editing mode
- * so that only valid data can be entered and used in each column. For example, the user will not
- * be able to enter text in a cell that belongs to a <code>FloatColumn</code>.<br>
- * It is possible to disable editing and therefore to use a DataFrameView only as a read only view.
- * Use <code>setEditable(false)</code> to disable editing.<br>
+ * The DataFrameView control is designed to visualize an instance
+ * of a {@link DataFrame}.<br>
+ * Behind the scenes, the <code>javafx.scene.control.TableView</code> API is
+ * used to do most of the heavy lifting.<br>
+ * <p>Every cell inside a DataFrameView is configured to filter user input while
+ * in editing mode so that only valid data can be entered and used in each column.
+ * For example, the user will not be able to enter text in a cell that belongs to
+ * a <code>FloatColumn</code>.<br>
+ * It is possible to disable editing and therefore to use a DataFrameView only as
+ * a read only view. Use <code>setEditable(false)</code> to disable editing.
  * 
- * <p>You may set a <code>ViewListener</code> to get notified of various DataFrameView related
- * changes induced by the user.
+ * <p>You may set a <code>ViewListener</code> to get notified of various
+ * DataFrameView related changes induced by the user.
  * 
- * <p>The content of the underlying DataFrame used by a DataFrameView will get updated immediately
- * after the user commits a change. If you hold a reference of that DataFrame you can observe the
- * change of the content, i.e. values of specific cells changed, right away.<br>
- * If you have registered a <code>ViewListener</code> then you get notified right after the change got
- * committed. Please note that by default every column of a DataFrameView exposes a context menu, 
- * allowing the user to perform various column related tasks. The listener, however, will merely 
- * notify you of a context menu event but no other actions will be performed directly.
+ * <p>The content of the underlying DataFrame used by a DataFrameView will
+ * get updated immediately after the user commits a change. If you hold a reference
+ * of that DataFrame you can observe the change of the content, i.e. values of specific
+ * cells changed, right away.<br>
+ * If you have registered a <code>ViewListener</code> then you get notified right
+ * after the change got committed. Please note that by default every column of
+ * a DataFrameView exposes a context menu, allowing the user to perform various 
+ * column related tasks. The listener, however, will merely notify you of a context
+ * menu event but no other actions will be performed directly.
  *
  */
 public class DataFrameView extends TableView<Integer> {
@@ -78,8 +81,8 @@ public class DataFrameView extends TableView<Integer> {
         /**
          * Called when the user selected a menu item from the context menu of a 
          * DataFrameView TableColumn.<br>
-         * A <code>ContextMenuEvent</code> is passed to the ViewListener holding information 
-         * about the event
+         * A <code>ContextMenuEvent</code> is passed to the ViewListener
+         * holding information about the event
          * 
          * @param event The <code>ContextMenuEvent</code> object of the event fired
          */
@@ -111,7 +114,8 @@ public class DataFrameView extends TableView<Integer> {
      * should be displayed on the left-most side of this view
      * 
      * @param df The <code>DataFrame</code> to display in this view
-     * @param showIndexColumn A boolean flag specifying whether to show an index column
+     * @param showIndexColumn A boolean flag specifying whether to
+     *                        show an index column
      */
     public DataFrameView(DataFrame df, boolean showIndexColumn){
         this(df, showIndexColumn, DEFAULT_MENU_FACTORY);
@@ -164,8 +168,9 @@ public class DataFrameView extends TableView<Integer> {
     }
 
     /**
-     * Reloads this DataFrameView and refreshes the entire content. This method can be called when
-     * the internal structure of the DataFrame used by this view has changed
+     * Reloads this DataFrameView and refreshes the entire content. This method
+     * can be called when the internal structure of the DataFrame used
+     * by this view has changed
      * 
      */
     public void reload(){
@@ -259,7 +264,7 @@ public class DataFrameView extends TableView<Integer> {
 
     private void populateColumns(){
         for(int i=0; i<df.columns(); ++i){
-            final Column col = df.getColumnAt(i);
+            final Column col = df.getColumn(i);
             final DataFrameColumnView tableCol = new DataFrameColumnView(col, df.getColumnName(i));
             tableCol.setId(df.getColumnName(i));
             tableCol.setStyle( "-fx-alignment: CENTER;");
@@ -269,7 +274,7 @@ public class DataFrameView extends TableView<Integer> {
             final Tooltip tooltip = Tooltips.columnTooltip(col);
             if(DataFrames.columnUsesBooleans(col)){
                 tableCol.setCellFactory((column)
-                        -> new BooleanCellView(col instanceof NullableColumn, tooltip));
+                        -> new BooleanCellView(col.isNullable(), tooltip));
 
             }else if(DataFrames.columnUsesBinary(col)){
                 tableCol.setEditable(false);
@@ -292,14 +297,14 @@ public class DataFrameView extends TableView<Integer> {
                 if((newVal != null) && (newVal.toString().equals("null"))){
                     newVal = null;
                 }
-                col.setValueAt(iRow, newVal);
+                col.setValue(iRow, newVal);
                 //keep focus on the just edited cell
                 getFocusModel().focus(iRow, tableCol);
                 requestFocus();
             });
             tableCol.setCellValueFactory((cellData) -> {
                 final int rowIndex = cellData.getValue();
-                return new SimpleObjectProperty<>(col.getValueAt(rowIndex));
+                return new SimpleObjectProperty<>(col.getValue(rowIndex));
             });
             this.getColumns().add(tableCol);
         }
@@ -497,7 +502,7 @@ public class DataFrameView extends TableView<Integer> {
                     cols[i] = df.getColumn(list[i]);
                 }
                 for(int i=0; i<cols.length; ++i){
-                    df.setColumnAt(i, cols[i]);
+                    df.setColumn(i, cols[i]);
                 }
                 df.setColumnNames(list);
             }

@@ -191,7 +191,7 @@ public class PieChartController extends ChartController {
             return;
         }
         final boolean hasValues = (values != null);
-        if(hasValues && DataFrames.columnUsesNaNs(values)){
+        if((values != null) && !values.isNumeric()){//compiler NPE warning for 'hasValues'
             showInfo("Values must be numeric");
             return;
         }
@@ -278,7 +278,7 @@ public class PieChartController extends ChartController {
         this.totalNulls = 0;
         final Map<String, Number> map = new HashMap<>();
         for(int i=0; i<df.rows(); ++i){
-            final Object value = keys.getValueAt(i);
+            final Object value = keys.getValue(i);
             if(value != null){
                 final String s = value.toString();
                 final Integer count = (Integer)map.get(s);
@@ -298,8 +298,8 @@ public class PieChartController extends ChartController {
         BigDecimal bdSum = BigDecimal.ZERO;
         final Map<String, Number> map = new HashMap<>();
         for(int i=0; i<df.rows(); ++i){
-            final Object key = keys.getValueAt(i);
-            final Number value = (Number)values.getValueAt(i);
+            final Object key = keys.getValue(i);
+            final Number value = (Number)values.getValue(i);
             if((key != null) && (value != null)){
                 final double dValue = value.doubleValue();
                 if(dValue < 0){
