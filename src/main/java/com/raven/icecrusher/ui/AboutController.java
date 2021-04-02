@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2020 Raven Computing
+ * Copyright (C) 2021 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.raven.icecrusher.Editor;
 import com.raven.icecrusher.application.Controller;
 import com.raven.icecrusher.io.update.Updater;
 import com.raven.icecrusher.io.update.Version;
+import com.raven.icecrusher.ui.dialog.Dialogs;
 import com.raven.icecrusher.io.update.Updater.UpdateHandler;
 import com.raven.icecrusher.util.Const;
 
@@ -55,6 +56,9 @@ public class AboutController extends Controller implements UpdateHandler {
 
     @FXML
     private JFXButton btnUpdate;
+    
+    @FXML
+    private JFXButton btnLicenses;
 
     private Updater updater;
 
@@ -97,6 +101,11 @@ public class AboutController extends Controller implements UpdateHandler {
             this.btnUpdate.setText("Checking for updates...");
             this.updater.checkForUpdates(this);
         }
+    }
+
+    @FXML
+    private void onShowLicenses(ActionEvent event){
+        Dialogs.showLicenseDialog(getStage());
     }
 
     @Override

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2020 Raven Computing
+ * Copyright (C) 2021 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,9 @@ public final class ExceptionHandler {
      * @param throwable The throwable Exception to handle
      */
     public static void handle(final Throwable throwable){
+        if(throwable == null){
+            return;
+        }
         if(Const.DEBUG){
             System.err.println("----- [" + ExceptionHandler.class.getSimpleName()
                     + "] "+"catched Exception: -----");
@@ -56,6 +59,18 @@ public final class ExceptionHandler {
      * @param throwable The throwable Exception to handle and show
      */
     public static void showDialog(final Throwable throwable){
+        if(throwable == null){
+            return;
+        }
         Dialogs.showExceptionDialog(StackedApplication.getMainStage(), throwable);
+    }
+
+    /**
+     * Indicates whether the ExceptionHandler class behaviour is in debug mode
+     * 
+     * @return True if this ExceptionHandler class is in debug mode, false otherwise
+     */
+    public static boolean isDebugEnabled(){
+        return Const.DEBUG;
     }
 }

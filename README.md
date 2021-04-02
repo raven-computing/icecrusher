@@ -1,13 +1,12 @@
-# Icecrusher
-#### An editor and analysis tool for DataFrame files
+# Icecrusher: An Editor and Analysis Tool for DataFrame Files
 
-[![Release](https://img.shields.io/badge/release-2.3.1-blue.svg)](https://raven-computing.com/products/icecrusher) [![DownloadExe](https://img.shields.io/badge/Download_for_Windows-.exe-blue.svg)](https://www.raven-computing.com/assets/file/products/icecrusher/icecrusher-2.3.1.exe) [![DownloadDeb](https://img.shields.io/badge/Download_for_Linux-.deb-orange.svg)](https://www.raven-computing.com/assets/file/products/icecrusher/icecrusher-2.3.1.deb)
+[![Release](https://img.shields.io/badge/Release-2.3.2-blue.svg)](https://raven-computing.com/products/icecrusher) [![DownloadExe](https://img.shields.io/badge/Download_for_Windows-.exe-blue.svg)](https://www.raven-computing.com/assets/file/products/icecrusher/icecrusher-2.3.2.exe) [![DownloadDeb](https://img.shields.io/badge/Download_for_Linux-.deb-orange.svg)](https://www.raven-computing.com/assets/file/products/icecrusher/icecrusher-2.3.2.deb)
 
-Icecrusher is an editor and analysis tool for DataFrame files (.df) with a modern-looking user interface. It is an open-source application and entirely implemented in JavaFX. It can read, edit, filter and create *.df* files. Additionally, it also suppports the capability to import and export CSV files. More information can be found on our [website](https://raven-computing.com/products/icecrusher/).
+Icecrusher is an editor and analysis tool for DataFrame files (.df) with a modern-looking user interface. It is an open-source application and entirely implemented in JavaFX. It can read, edit, filter and create *.df* files. Additionally, it also suppports the capability to import and export CSV files. More information can be found on our [website](https://www.raven-computing.com/products/icecrusher/).
 
-If you want to work with DataFrame files in your Java code, you can use the [Claymore](https://github.com/raven-computing/claymore/) library which is also open source.
+If you want to work with DataFrame files in your code, please take a look at the unified [developer documentation](https://www.raven-computing.com/docs/dataframe/) for the DataFrame specification.
 
-You may download the [Demo](https://github.com/raven-computing/icecrusher/raw/master/demo/demo.df) file and try out Icecrusher for yourself.
+You may download the [Demo](https://github.com/raven-computing/icecrusher/raw/master/demo/demo.df) file and try out Icecrusher for yourself. It contains randomized data about fictitious people.
 
 [![Screenshot1](demo/screenshot1.png)](https://raw.githubusercontent.com/raven-computing/icecrusher/master/demo/screenshot1.png)
 
@@ -20,7 +19,7 @@ You don't necessarily need a JRE and JavaFX as the installer provides a private 
 
 ## Build
 
-If you want to build Icecrusher from source you will need the JDK and JavaFX (both minimum version 8).
+If you want to build Icecrusher from source, you will need the JDK and JavaFX (both version 8).
 We are currently using the *javafx-maven-plugin* to build the packages, although this may change in the future.
 The standard *mvn package* command will package the application as a *jar* and put it into the *build/dist/app/* directory. That will not, however, build a self-contained application bundle that includes a JRE. As long as you have a JRE and JavaFX installed on your system you can directly execute *icecrusher.jar*. If you want to build a native installer, we suggest you use either *dpgk-deb* (on linux) or *Inno Setup* (on windows), depending on your operating system.
 

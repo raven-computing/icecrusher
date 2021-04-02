@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2020 Raven Computing
+ * Copyright (C) 2021 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public class Resources {
     }
     
     /**
-     * Loads and returns bytes of a resource
+     * Loads and returns bytes from a resource
      * 
      * @param directory The directory the resource is located at
      * @param resource The name of the resource
@@ -84,6 +84,23 @@ public class Resources {
                 bis.close();
             }
             return baos.toByteArray();
+        }
+        return null;
+    }
+
+    /**
+     * Loads and returns text from a resource
+     * 
+     * @param directory The directory the resource is located at
+     * @param resource The name of the resource
+     * @return The requested resource as a String or null if no resource could be found 
+     *         in the specified directory with the specified name
+     * @throws IOException If an I/O error occurs during reading of the resource
+     */
+    public static String text(final String directory, final String resource) throws IOException{
+        final byte[] bytes = bytes(directory, resource);
+        if(bytes != null){
+            return new String(bytes, "UTF-8");
         }
         return null;
     }

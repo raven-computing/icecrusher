@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2020 Raven Computing
+ * Copyright (C) 2021 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,15 @@ import static com.raven.icecrusher.util.EditorConfiguration.*;
 import static com.raven.icecrusher.util.EditorConfiguration.Section.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import com.raven.icecrusher.application.Resources;
 import com.raven.icecrusher.util.Const;
 import com.raven.icecrusher.util.EditorConfiguration;
 import com.raven.icecrusher.util.EditorFile;
+import com.raven.icecrusher.util.ExceptionHandler;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -157,7 +160,7 @@ public class Dialogs {
      * This method can be called to give a response to the user in the case of an Exception occurring during
      * some operation
      * 
-     * @param stage The owner stage of the displayed file dialog
+     * @param stage The owner stage of the displayed exception dialog
      * @param ex The throwable Exception that occured
      */
     public static void showExceptionDialog(final Stage stage, final Throwable ex){
@@ -184,6 +187,49 @@ public class Dialogs {
         alert.initOwner(stage);
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.showAndWait();
+    }
+
+    /**
+     * Shows a simple informational dialog displaying license text
+     * 
+     * @param stage The owner stage of the displayed dialog
+     */
+    public static void showLicenseDialog(final Stage stage){
+        final Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Licenses");
+        try{
+            alert.setHeaderText(
+                    "Open Source Licenses\n"
+                    + Const.APPLICATION_NAME + " - " + Const.APPLICATION_VERSION);
+    
+            String copyrightText = Resources.text(Const.DIR_LICENSE, "copyright.txt");
+            if((copyrightText == null) || copyrightText.isEmpty()){
+                copyrightText = "No copyright information provided";
+            }
+            alert.setContentText(copyrightText);
+            final Label label = new Label("Library licenses:");
+            String licenseText = Resources.text(Const.DIR_LICENSE, "libraries.txt");
+            if((licenseText == null) || licenseText.isEmpty()){
+                licenseText = "No license information provided";
+            }
+            final TextArea txt = new TextArea(licenseText);
+            txt.setEditable(false);
+            txt.setWrapText(true);
+            txt.setMaxWidth(Double.MAX_VALUE);
+            txt.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setVgrow(txt, Priority.ALWAYS);
+            GridPane.setHgrow(txt, Priority.ALWAYS);
+            final GridPane grid = new GridPane();
+            grid.setMaxWidth(Double.MAX_VALUE);
+            grid.add(label, 0, 0);
+            grid.add(txt, 0, 1);
+            alert.getDialogPane().setExpandableContent(grid);
+            alert.initOwner(stage);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        }catch(IOException ex){
+            ExceptionHandler.handle(ex);
+        }
     }
 
     /**

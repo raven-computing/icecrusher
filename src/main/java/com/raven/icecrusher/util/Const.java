@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2020 Raven Computing
+ * Copyright (C) 2021 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import static com.raven.icecrusher.application.Resources.*;
  * This class holds various global application constants.
  *
  */
-public class Const {
+public final class Const {
 
     /** Indicates whether this application runs in debug mode **/
     public static final boolean DEBUG = false;
@@ -67,6 +67,9 @@ public class Const {
 
     /** Resource directory for update instruction files **/
     public static final String DIR_UPDATE = "/update/";
+    
+    /** Resource directory for license files **/
+    public static final String DIR_LICENSE = "/license/";
 
     public static final String BUNDLE_KEY_RELOAD_REQUIRED = "view.reload.true";
     public static final String BUNDLE_KEY_EXIT_REQUESTED = "application.exit.true";

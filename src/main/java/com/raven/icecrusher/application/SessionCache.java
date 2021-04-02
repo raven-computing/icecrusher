@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2020 Raven Computing
+ * Copyright (C) 2021 Raven Computing
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,9 @@ public class SessionCache extends Cache {
             this.size -= previous.length();
         }
         if(value != null){
+            if(previous == null){
+                this.size += key.length();
+            }
             this.size += value.length();
             if(size > limit){
                 clear();

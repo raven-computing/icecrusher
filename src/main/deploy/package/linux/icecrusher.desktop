@@ -5,4 +5,6 @@ Exec=/opt/icecrusher/icecrusher
 Icon=/opt/icecrusher/icecrusher.png
 Terminal=false
 Type=Application
-Categories=Unknown
+Categories=Utility
+StartupWMClass=com.raven.icecrusher.Editor
+
